@@ -1,0 +1,27 @@
+name: Keep Supabase Alive
+
+on:
+  schedule:
+    # Runs every 3 days at 00:00 UTC (8:00 AM MYT)
+    - cron: '0 0 */3 * *'
+  # Allows manual triggering from GitHub Actions tab
+  workflow_dispatch:
+
+jobs:
+  ping-supabase:
+    name: Ping Supabase Database
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send keep-alive ping to Supabase REST API
+        run: |
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "apikey: sb_publishable_CyclcVqt3BXznymy7_yfBw_MaLa-0yF" \
+            "https://wnmbqxkhjbnalvfjjhco.supabase.co/rest/v1/categories?select=id&limit=1")
+          
+          echo "Supabase Response HTTP Status: $HTTP_STATUS"
+          
+          if [ "$HTTP_STATUS" -eq 200 ] || [ "$HTTP_STATUS" -eq 206 ]; then
+            echo "✅ Supabase is alive and active!"
+          else
+            echo "⚠️ Unexpected status code: $HTTP_STATUS"
+          fi
