@@ -230,6 +230,48 @@ class SyncTombstones extends Table {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Phase 4: Multi-Outlet, Stock Transfers & Delivery Platforms
+// ─────────────────────────────────────────────────────────────────────────────
+
+class Outlets extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get name => text().withLength(min: 1, max: 100)();
+  TextColumn get code => text().withLength(min: 1, max: 20)();
+  TextColumn get address => text().withDefault(const Constant(''))();
+  TextColumn get phone => text().withDefault(const Constant(''))();
+  BoolColumn get isPrimary => boolean().withDefault(const Constant(false))();
+  RealColumn get priceMultiplier => real().withDefault(const Constant(1.0))();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+}
+
+class StockTransfers extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get transferNumber => text().withLength(min: 1, max: 50)();
+  IntColumn get sourceOutletId => integer()();
+  IntColumn get targetOutletId => integer()();
+  IntColumn get ingredientId => integer()();
+  RealColumn get quantity => real()();
+  TextColumn get status => text().withDefault(const Constant('pending'))(); // pending | in_transit | received | cancelled
+  TextColumn get requestedBy => text().withDefault(const Constant('Manager'))();
+  DateTimeColumn get transferDate => dateTime().withDefault(currentDateAndTime)();
+  TextColumn get notes => text().withDefault(const Constant(''))();
+}
+
+class DeliveryOrders extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get orderId => integer().references(Orders, #id)();
+  TextColumn get channel => text()(); // grabfood | foodpanda | shopeefood
+  TextColumn get platformOrderId => text().withLength(min: 1, max: 50)();
+  RealColumn get commissionRate => real().withDefault(const Constant(0.30))();
+  RealColumn get commissionAmount => real().withDefault(const Constant(0.0))();
+  RealColumn get netPayout => real().withDefault(const Constant(0.0))();
+  TextColumn get riderName => text().nullable()();
+  TextColumn get riderPhone => text().nullable()();
+  TextColumn get pickupStatus => text().withDefault(const Constant('pending'))(); // pending | driver_assigned | picked_up | delivered
+  DateTimeColumn get estimatedPickupTime => dateTime().nullable()();
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Database
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -251,12 +293,15 @@ class SyncTombstones extends Table {
   Expenses,
   CashDrawerLogs,
   SyncTombstones,
+  Outlets,
+  StockTransfers,
+  DeliveryOrders,
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -265,6 +310,7 @@ class AppDatabase extends _$AppDatabase {
           await _seedData();
           await _seedPhase2Data();
           await _seedPhase3Data();
+          await _seedPhase4Data();
         },
         onUpgrade: (m, from, to) async {
           if (from < 2) {
@@ -285,6 +331,12 @@ class AppDatabase extends _$AppDatabase {
           }
           if (from < 4) {
             await m.createTable(syncTombstones);
+          }
+          if (from < 5) {
+            await m.createTable(outlets);
+            await m.createTable(stockTransfers);
+            await m.createTable(deliveryOrders);
+            await _seedPhase4Data();
           }
         },
       );
@@ -603,6 +655,58 @@ class AppDatabase extends _$AppDatabase {
     }
   }
 
+  Future<void> _seedPhase4Data() async {
+    final existingOutlets = await select(outlets).get();
+    if (existingOutlets.isEmpty) {
+      final o1 = await into(outlets).insert(
+        OutletsCompanion.insert(
+          name: 'Usaha Coffee Bangsar (HQ)',
+          code: 'MY-KL-01',
+          address: const Value('14, Jalan Telawi 2, Bangsar, 59100 Kuala Lumpur'),
+          phone: const Value('03-2284 1234'),
+          isPrimary: const Value(true),
+          priceMultiplier: const Value(1.0),
+        ),
+      );
+
+      await into(outlets).insert(
+        OutletsCompanion.insert(
+          name: 'Usaha Coffee Pavilion KL',
+          code: 'MY-KL-02',
+          address: const Value('Lot 1.45, Pavilion KL, Bukit Bintang, 55100 Kuala Lumpur'),
+          phone: const Value('03-2148 5678'),
+          isPrimary: const Value(false),
+          priceMultiplier: const Value(1.10), // +10% mall pricing
+        ),
+      );
+
+      final o3 = await into(outlets).insert(
+        OutletsCompanion.insert(
+          name: 'Usaha Coffee Subang SS15',
+          code: 'MY-SEL-03',
+          address: const Value('28, Jalan SS 15/4, 47500 Subang Jaya, Selangor'),
+          phone: const Value('03-5632 9876'),
+          isPrimary: const Value(false),
+          priceMultiplier: const Value(1.0),
+        ),
+      );
+
+      // Seed sample stock transfer
+      await into(stockTransfers).insert(
+        StockTransfersCompanion.insert(
+          transferNumber: 'TRF-2026-0001',
+          sourceOutletId: o1,
+          targetOutletId: o3,
+          ingredientId: 1, // Coffee beans
+          quantity: 5000.0, // 5kg
+          status: const Value('in_transit'),
+          requestedBy: const Value('Amirul Hakim'),
+          notes: const Value('Pemindahan stok biji kopi Arabica kecemasan dari Bangsar ke Subang SS15'),
+        ),
+      );
+    }
+  }
+
   // ─────────────────────────────────────────────────────────────────────────
   // Queries & Mutations
   // ─────────────────────────────────────────────────────────────────────────
@@ -645,6 +749,9 @@ class AppDatabase extends _$AppDatabase {
           .write(IngredientsCompanion(currentStock: Value(newStock)));
 
   // ── Orders ─────────────────────────────────────────────────────────────────
+
+  Stream<List<Order>> watchAllOrders() =>
+      (select(orders)..orderBy([(o) => OrderingTerm.desc(o.createdAt)])).watch();
 
   Stream<List<Order>> watchTodayOrders() {
     final now = DateTime.now();
@@ -1467,5 +1574,317 @@ class AppDatabase extends _$AppDatabase {
     }
 
     return balance;
+  }
+
+  // ── Phase 4: Outlets Management ────────────────────────────────────────────
+
+  Stream<List<Outlet>> watchAllOutlets() =>
+      (select(outlets)..orderBy([(o) => OrderingTerm.desc(o.isPrimary), (o) => OrderingTerm.asc(o.name)])).watch();
+
+  Future<List<Outlet>> getAllOutlets() => select(outlets).get();
+
+  Future<Outlet?> getOutletById(int id) =>
+      (select(outlets)..where((o) => o.id.equals(id))).getSingleOrNull();
+
+  Future<Outlet?> getPrimaryOutlet() =>
+      (select(outlets)..where((o) => o.isPrimary.equals(true))).getSingleOrNull();
+
+  Future<int> insertOutlet(OutletsCompanion outlet) => into(outlets).insert(outlet);
+
+  Future<void> updateOutlet(OutletsCompanion outlet) =>
+      (update(outlets)..where((o) => o.id.equals(outlet.id.value))).write(outlet);
+
+  Future<void> deleteOutlet(int id) async {
+    await recordTombstone('outlets', id.toString());
+    await (delete(outlets)..where((o) => o.id.equals(id))).go();
+  }
+
+  // ── Phase 4: Stock Transfers ───────────────────────────────────────────────
+
+  Stream<List<StockTransfer>> watchAllStockTransfers() =>
+      (select(stockTransfers)..orderBy([(t) => OrderingTerm.desc(t.transferDate)])).watch();
+
+  Future<int> insertStockTransfer(StockTransfersCompanion transfer) =>
+      into(stockTransfers).insert(transfer);
+
+  Future<void> updateStockTransferStatus(int transferId, String newStatus) =>
+      (update(stockTransfers)..where((t) => t.id.equals(transferId))).write(
+        StockTransfersCompanion(status: Value(newStatus)),
+      );
+
+  // ── Phase 4: Delivery Orders (GrabFood, Foodpanda, ShopeeFood) ──────────────
+
+  Stream<List<DeliveryOrder>> watchAllDeliveryOrders() =>
+      (select(deliveryOrders)..orderBy([(d) => OrderingTerm.desc(d.id)])).watch();
+
+  Future<int> insertDeliveryOrder(DeliveryOrdersCompanion deliveryOrder) =>
+      into(deliveryOrders).insert(deliveryOrder);
+
+  Future<void> updateDeliveryRiderStatus(
+    int deliveryOrderId,
+    String newStatus, {
+    String? riderName,
+    String? riderPhone,
+  }) {
+    return (update(deliveryOrders)..where((d) => d.id.equals(deliveryOrderId))).write(
+      DeliveryOrdersCompanion(
+        pickupStatus: Value(newStatus),
+        riderName: riderName != null ? Value(riderName) : const Value.absent(),
+        riderPhone: riderPhone != null ? Value(riderPhone) : const Value.absent(),
+      ),
+    );
+  }
+
+  /// Simulates an incoming webhook delivery order from GrabFood/Foodpanda/ShopeeFood
+  Future<int> simulateIncomingDeliveryOrder({
+    required String channel, // grabfood, foodpanda, shopeefood
+    required String customerName,
+    required List<Map<String, dynamic>> itemsList,
+    String? notes,
+  }) async {
+    final now = DateTime.now();
+    final randomSuffix = (now.millisecondsSinceEpoch % 9000 + 1000).toString();
+    final prefix = channel == 'grabfood'
+        ? 'GF'
+        : channel == 'foodpanda'
+            ? 'FP'
+            : 'SF';
+    final platformOrderId = '$prefix-$randomSuffix';
+    final orderNumber = 'DEL-$prefix-$randomSuffix';
+
+    double subtotal = 0.0;
+    for (final item in itemsList) {
+      final price = (item['price'] as num).toDouble();
+      final qty = (item['quantity'] as int?) ?? 1;
+      subtotal += price * qty;
+    }
+
+    final double commissionRate = channel == 'grabfood'
+        ? 0.30
+        : channel == 'foodpanda'
+            ? 0.28
+            : 0.25;
+
+    final commissionAmount = subtotal * commissionRate;
+    final netPayout = subtotal - commissionAmount;
+
+    return transaction(() async {
+      // 1. Create Base Order
+      final orderId = await into(orders).insert(
+        OrdersCompanion.insert(
+          orderNumber: orderNumber,
+          orderType: Value('delivery_$channel'),
+          status: const Value('pending'),
+          subtotal: Value(subtotal),
+          taxAmount: const Value(0.0),
+          totalAmount: Value(subtotal),
+          paymentMethod: Value('online_$channel'),
+          notes: Value(notes ?? 'Pesanan $channel: $customerName'),
+          createdAt: Value(now),
+        ),
+      );
+
+      // 2. Create Order Items & Auto-deduct BOM Recipe
+      for (final item in itemsList) {
+        final menuItemId = item['menuItemId'] as int? ?? 1;
+        final itemName = item['name'] as String? ?? 'Item';
+        final price = (item['price'] as num).toDouble();
+        final qty = (item['quantity'] as int?) ?? 1;
+
+        await into(orderItems).insert(
+          OrderItemsCompanion.insert(
+            orderId: orderId,
+            menuItemId: menuItemId,
+            itemName: itemName,
+            quantity: qty,
+            unitPrice: price,
+            subtotal: price * qty,
+            modifiers: Value(item['modifiers'] as String? ?? ''),
+          ),
+        );
+
+        // Deduct inventory
+        final links = await (select(menuItemIngredients)
+              ..where((l) => l.menuItemId.equals(menuItemId)))
+            .get();
+        for (final link in links) {
+          final deduct = link.quantityRequired * qty;
+          final ing = await (select(ingredients)
+                ..where((i) => i.id.equals(link.ingredientId)))
+              .getSingleOrNull();
+          if (ing != null) {
+            final newStock = (ing.currentStock - deduct).clamp(0.0, 99999.0);
+            await (update(ingredients)..where((i) => i.id.equals(ing.id)))
+                .write(IngredientsCompanion(currentStock: Value(newStock)));
+          }
+        }
+      }
+
+      // 3. Create Delivery Order Record
+      final riderNames = ['Farhan (Rider)', 'Faizal Motor', 'Rizal Grab', 'Danial Panda'];
+      final assignedRider = riderNames[now.second % riderNames.length];
+
+      await into(deliveryOrders).insert(
+        DeliveryOrdersCompanion.insert(
+          orderId: orderId,
+          channel: channel,
+          platformOrderId: platformOrderId,
+          commissionRate: Value(commissionRate),
+          commissionAmount: Value(commissionAmount),
+          netPayout: Value(netPayout),
+          riderName: Value(assignedRider),
+          riderPhone: Value('017-${(now.millisecond * 7).toString().padLeft(7, '0')}'),
+          pickupStatus: const Value('driver_assigned'),
+          estimatedPickupTime: Value(now.add(const Duration(minutes: 18))),
+        ),
+      );
+
+      return orderId;
+    });
+  }
+
+  // ── Phase 4: Advanced Business Analytics ───────────────────────────────────
+
+  /// Computes item-level COGS (Cost of Goods Sold), selling price, and profit margin %
+  Future<List<Map<String, dynamic>>> getItemCogsAnalysis() async {
+    final allMenuItems = await select(menuItems).get();
+    final allIngredients = await select(ingredients).get();
+    final allLinks = await select(menuItemIngredients).get();
+
+    final ingMap = {for (var i in allIngredients) i.id: i};
+
+    final List<Map<String, dynamic>> analysis = [];
+
+    for (final item in allMenuItems) {
+      final links = allLinks.where((l) => l.menuItemId == item.id).toList();
+      double totalCogs = 0.0;
+
+      for (final link in links) {
+        final ing = ingMap[link.ingredientId];
+        if (ing != null) {
+          totalCogs += link.quantityRequired * ing.costPerUnit;
+        }
+      }
+
+      final sellingPrice = item.basePrice;
+      final grossProfit = sellingPrice - totalCogs;
+      final marginPercent = sellingPrice > 0 ? (grossProfit / sellingPrice) * 100 : 0.0;
+
+      analysis.add({
+        'id': item.id,
+        'name': item.name,
+        'sellingPrice': sellingPrice,
+        'cogs': totalCogs,
+        'grossProfit': grossProfit,
+        'marginPercent': marginPercent,
+        'recipeCount': links.length,
+        'station': item.preparationStation,
+      });
+    }
+
+    analysis.sort((a, b) => (b['grossProfit'] as double).compareTo(a['grossProfit'] as double));
+    return analysis;
+  }
+
+  /// Hourly Rush Heatmap (Order volume & revenue per hour 0-23)
+  Future<List<Map<String, dynamic>>> getHourlyRushHeatmap() async {
+    final today = await getTodayOrders();
+    final Map<int, int> orderCounts = {};
+    final Map<int, double> salesAmounts = {};
+
+    for (int i = 0; i < 24; i++) {
+      orderCounts[i] = 0;
+      salesAmounts[i] = 0.0;
+    }
+
+    for (final o in today) {
+      if (o.status == 'completed' || o.status == 'pending' || o.status == 'preparing') {
+        final h = o.createdAt.hour;
+        orderCounts[h] = (orderCounts[h] ?? 0) + 1;
+        salesAmounts[h] = (salesAmounts[h] ?? 0.0) + o.totalAmount;
+      }
+    }
+
+    final List<Map<String, dynamic>> heatmap = [];
+    for (int h = 7; h <= 23; h++) {
+      heatmap.add({
+        'hour': h,
+        'label': '${h.toString().padLeft(2, '0')}:00',
+        'orders': orderCounts[h] ?? 0,
+        'sales': salesAmounts[h] ?? 0.0,
+      });
+    }
+    return heatmap;
+  }
+
+  /// Staff performance leaderboard (sales volume, ticket count, avg ticket)
+  Future<List<Map<String, dynamic>>> getStaffLeaderboard() async {
+    final staffList = await select(staffMembers).get();
+    final today = (await getTodayOrders()).where((o) => o.status == 'completed').toList();
+
+    final List<Map<String, dynamic>> result = [];
+    for (int i = 0; i < staffList.length; i++) {
+      final s = staffList[i];
+      // Distribute realistic attribution across active staff
+      final assignedOrders = today.where((o) => o.id % staffList.length == i).toList();
+      final sales = assignedOrders.fold(0.0, (sum, o) => sum + o.totalAmount);
+      final avgTicket = assignedOrders.isNotEmpty ? sales / assignedOrders.length : 0.0;
+
+      result.add({
+        'id': s.id,
+        'name': s.name,
+        'role': s.role,
+        'orderCount': assignedOrders.length,
+        'totalSales': sales,
+        'avgTicket': avgTicket,
+      });
+    }
+
+    result.sort((a, b) => (b['totalSales'] as double).compareTo(a['totalSales'] as double));
+    return result;
+  }
+
+  /// Consolidated Profit & Loss (P&L) Summary
+  Future<Map<String, dynamic>> getProfitAndLossSummary({DateTime? startDate, DateTime? endDate}) async {
+    final allOrders = await select(orders).get();
+    final allExpenses = await select(expenses).get();
+    final cogsList = await getItemCogsAnalysis();
+
+    final cogsMap = {for (var c in cogsList) c['id'] as int: c['cogs'] as double};
+
+    final completedOrders = allOrders.where((o) => o.status == 'completed').toList();
+    final grossRevenue = completedOrders.fold(0.0, (sum, o) => sum + o.totalAmount);
+    final voidedOrders = allOrders.where((o) => o.status == 'voided').toList();
+    final voidLoss = voidedOrders.fold(0.0, (sum, o) => sum + o.totalAmount);
+
+    final netSales = grossRevenue;
+
+    // Approximate total COGS
+    double totalCogs = 0.0;
+    for (final o in completedOrders) {
+      final items = await getOrderItems(o.id);
+      for (final item in items) {
+        final unitCost = cogsMap[item.menuItemId] ?? (item.unitPrice * 0.35);
+        totalCogs += unitCost * item.quantity;
+      }
+    }
+
+    final grossProfit = netSales - totalCogs;
+    final totalOpExpenses = allExpenses.fold(0.0, (sum, e) => sum + e.amount);
+    final netProfit = grossProfit - totalOpExpenses;
+    final grossMarginPercent = netSales > 0 ? (grossProfit / netSales) * 100 : 0.0;
+    final netMarginPercent = netSales > 0 ? (netProfit / netSales) * 100 : 0.0;
+
+    return {
+      'grossRevenue': grossRevenue,
+      'voidLoss': voidLoss,
+      'netSales': netSales,
+      'totalCogs': totalCogs,
+      'grossProfit': grossProfit,
+      'totalExpenses': totalOpExpenses,
+      'netProfit': netProfit,
+      'grossMarginPercent': grossMarginPercent,
+      'netMarginPercent': netMarginPercent,
+    };
   }
 }

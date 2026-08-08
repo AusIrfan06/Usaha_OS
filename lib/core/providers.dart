@@ -66,6 +66,10 @@ final todayOrdersProvider = StreamProvider<List<Order>>((ref) {
   return ref.watch(databaseProvider).watchTodayOrders();
 });
 
+final allOrdersProvider = StreamProvider<List<Order>>((ref) {
+  return ref.watch(databaseProvider).watchAllOrders();
+});
+
 final activeKdsOrdersProvider = StreamProvider<List<Order>>((ref) {
   return ref.watch(databaseProvider).watchActiveKdsOrders();
 });
@@ -203,3 +207,47 @@ final topItemsProvider =
   ref.watch(todayOrdersProvider);
   return ref.watch(databaseProvider).getTopItemsToday();
 });
+
+// ── Phase 4: Multi-Outlet & Stock Transfers ──────────────────────────────────
+
+final allOutletsProvider = StreamProvider<List<Outlet>>((ref) {
+  return ref.watch(databaseProvider).watchAllOutlets();
+});
+
+final activeOutletProvider = StateProvider<Outlet?>((ref) => null);
+
+final allStockTransfersProvider = StreamProvider<List<StockTransfer>>((ref) {
+  return ref.watch(databaseProvider).watchAllStockTransfers();
+});
+
+// ── Phase 4: Delivery Platforms (GrabFood / Foodpanda / ShopeeFood) ───────────
+
+final allDeliveryOrdersProvider = StreamProvider<List<DeliveryOrder>>((ref) {
+  return ref.watch(databaseProvider).watchAllDeliveryOrders();
+});
+
+// ── Phase 4: Advanced Business Analytics ─────────────────────────────────────
+
+final itemCogsAnalysisProvider = FutureProvider<List<Map<String, dynamic>>>((ref) {
+  ref.watch(menuItemsProvider);
+  ref.watch(ingredientsProvider);
+  return ref.watch(databaseProvider).getItemCogsAnalysis();
+});
+
+final hourlyRushHeatmapProvider = FutureProvider<List<Map<String, dynamic>>>((ref) {
+  ref.watch(todayOrdersProvider);
+  return ref.watch(databaseProvider).getHourlyRushHeatmap();
+});
+
+final staffLeaderboardProvider = FutureProvider<List<Map<String, dynamic>>>((ref) {
+  ref.watch(todayOrdersProvider);
+  ref.watch(allStaffProvider);
+  return ref.watch(databaseProvider).getStaffLeaderboard();
+});
+
+final pnlSummaryProvider = FutureProvider<Map<String, dynamic>>((ref) {
+  ref.watch(todayOrdersProvider);
+  ref.watch(todayExpensesProvider);
+  return ref.watch(databaseProvider).getProfitAndLossSummary();
+});
+

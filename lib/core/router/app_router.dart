@@ -15,6 +15,9 @@ import '../../features/orders/orders_screen.dart';
 import '../../features/inventory/inventory_screen.dart';
 import '../../features/reports/reports_screen.dart';
 import '../../features/settings/settings_screen.dart';
+import '../../features/outlets/outlets_screen.dart';
+import '../../features/delivery/delivery_screen.dart';
+import '../../features/analytics/advanced_analytics_screen.dart';
 import '../../core/theme/app_theme.dart';
 
 final appRouter = GoRouter(
@@ -59,6 +62,18 @@ final appRouter = GoRouter(
         GoRoute(
           path: '/expenses',
           builder: (_, __) => const ExpensesScreen(),
+        ),
+        GoRoute(
+          path: '/outlets',
+          builder: (_, __) => const OutletsScreen(),
+        ),
+        GoRoute(
+          path: '/delivery',
+          builder: (_, __) => const DeliveryScreen(),
+        ),
+        GoRoute(
+          path: '/analytics',
+          builder: (_, __) => const AdvancedAnalyticsScreen(),
         ),
         GoRoute(
           path: '/orders',
@@ -114,6 +129,9 @@ class _AppShell extends StatelessWidget {
     (icon: Icons.local_shipping_outlined, activeIcon: Icons.local_shipping_rounded, label: 'Pembekal & PO', path: '/suppliers'),
     (icon: Icons.inventory_outlined, activeIcon: Icons.inventory_rounded, label: 'Stock Take', path: '/stock-take'),
     (icon: Icons.account_balance_wallet_outlined, activeIcon: Icons.account_balance_wallet_rounded, label: 'Perbelanjaan', path: '/expenses'),
+    (icon: Icons.storefront_outlined, activeIcon: Icons.storefront_rounded, label: 'Multi-Outlet', path: '/outlets'),
+    (icon: Icons.delivery_dining_outlined, activeIcon: Icons.delivery_dining_rounded, label: 'Delivery Hub', path: '/delivery'),
+    (icon: Icons.insights_outlined, activeIcon: Icons.insights_rounded, label: 'Analitik Lanjutan', path: '/analytics'),
     (icon: Icons.receipt_long_outlined, activeIcon: Icons.receipt_long_rounded, label: 'Pesanan', path: '/orders'),
     (icon: Icons.inventory_2_outlined, activeIcon: Icons.inventory_2_rounded, label: 'Inventori', path: '/inventory'),
     (icon: Icons.bar_chart_outlined, activeIcon: Icons.bar_chart_rounded, label: 'Laporan', path: '/reports'),

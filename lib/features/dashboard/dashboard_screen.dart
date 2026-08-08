@@ -31,6 +31,10 @@ class DashboardScreen extends ConsumerWidget {
     final drawerBalanceAsync = ref.watch(todayCashDrawerBalanceProvider);
     final totalExpensesAsync = ref.watch(todayTotalExpensesProvider);
     final sstSettings = ref.watch(sstSettingsProvider);
+    final outletsAsync = ref.watch(allOutletsProvider);
+    final activeOutlet = ref.watch(activeOutletProvider);
+    final deliveryOrdersAsync = ref.watch(allDeliveryOrdersProvider);
+    final pnlAsync = ref.watch(pnlSummaryProvider);
 
     final today = DateFormat('EEEE, d MMMM y').format(DateTime.now());
     final isTablet = MediaQuery.of(context).size.width >= 600;
@@ -44,6 +48,8 @@ class DashboardScreen extends ConsumerWidget {
           ref.invalidate(topItemsProvider);
           ref.invalidate(todayTotalExpensesProvider);
           ref.invalidate(todayCashDrawerBalanceProvider);
+          ref.invalidate(itemCogsAnalysisProvider);
+          ref.invalidate(pnlSummaryProvider);
         },
         child: CustomScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
@@ -134,6 +140,19 @@ class DashboardScreen extends ConsumerWidget {
                     drawerBalanceAsync: drawerBalanceAsync,
                     totalExpensesAsync: totalExpensesAsync,
                     sstSettings: sstSettings,
+                    isTablet: isTablet,
+                  ),
+                  const SizedBox(height: 20),
+
+                  // ── Phase 4 Scale & Delivery Hub ────────────────────
+                  const SectionHeader(title: 'Multi-Outlet & Platform Delivery (Fasa 4)'),
+                  const SizedBox(height: 12),
+                  _buildPhase4Hub(
+                    context,
+                    outletsAsync: outletsAsync,
+                    activeOutlet: activeOutlet,
+                    deliveryOrdersAsync: deliveryOrdersAsync,
+                    pnlAsync: pnlAsync,
                     isTablet: isTablet,
                   ),
                   const SizedBox(height: 20),
@@ -403,6 +422,120 @@ class DashboardScreen extends ConsumerWidget {
                       item.value,
                       style: const TextStyle(
                         fontSize: 15,
+                        fontWeight: FontWeight.w800,
+                        color: AppTheme.darkEspresso,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      item.title,
+                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppTheme.mutedText),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  // ── Phase 4 Hub ─────────────────────────────────────────────────────────────
+
+  Widget _buildPhase4Hub(
+    BuildContext context, {
+    required AsyncValue<List<Outlet>> outletsAsync,
+    required Outlet? activeOutlet,
+    required AsyncValue<List<DeliveryOrder>> deliveryOrdersAsync,
+    required AsyncValue<Map<String, dynamic>> pnlAsync,
+    required bool isTablet,
+  }) {
+    final outletsList = outletsAsync.valueOrNull ?? [];
+    final currentOutletName = activeOutlet?.name ?? (outletsList.isNotEmpty ? outletsList.first.name : 'HQ Bangsar');
+    final activeDeliveries = deliveryOrdersAsync.valueOrNull?.where((d) => d.pickupStatus != 'delivered').length ?? 0;
+    final netProfit = pnlAsync.valueOrNull?['netProfit'] as double? ?? 0.0;
+
+    final p4Items = [
+      (
+        title: 'Cawangan Aktif',
+        value: currentOutletName,
+        subtitle: '${outletsList.length} Cawangan Berangkai',
+        icon: Icons.storefront_rounded,
+        color: const Color(0xFF6D4C41),
+        route: '/outlets',
+      ),
+      (
+        title: 'Platform Delivery',
+        value: '$activeDeliveries Pesanan',
+        subtitle: 'Grab, Panda & Shopee',
+        icon: Icons.delivery_dining_rounded,
+        color: const Color(0xFF00897B),
+        route: '/delivery',
+      ),
+      (
+        title: 'Margin COGS',
+        value: 'Resipi BOM',
+        subtitle: 'Analisis Kos Sebenar',
+        icon: Icons.pie_chart_rounded,
+        color: const Color(0xFFE65100),
+        route: '/analytics',
+      ),
+      (
+        title: 'Untung Bersih (P&L)',
+        value: CurrencyFormatter.format(netProfit),
+        subtitle: 'Prestasi Untung Rugi',
+        icon: Icons.insights_rounded,
+        color: const Color(0xFF2E7D32),
+        route: '/analytics',
+      ),
+    ];
+
+    return GridView.count(
+      crossAxisCount: isTablet ? 4 : 2,
+      mainAxisSpacing: 12,
+      crossAxisSpacing: 12,
+      childAspectRatio: isTablet ? 1.4 : 1.3,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      children: p4Items.map((item) {
+        return InkWell(
+          onTap: () => context.go(item.route),
+          borderRadius: BorderRadius.circular(16),
+          child: Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: Theme.of(context).cardColor,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: const Color(0xFFEDE3D8)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: item.color.withOpacity(0.12),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Icon(item.icon, size: 18, color: item.color),
+                    ),
+                    const Icon(Icons.arrow_forward_ios_rounded, size: 12, color: AppTheme.mutedText),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      item.value,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 14,
                         fontWeight: FontWeight.w800,
                         color: AppTheme.darkEspresso,
                       ),
