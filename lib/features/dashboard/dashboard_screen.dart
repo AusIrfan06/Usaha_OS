@@ -477,7 +477,7 @@ class DashboardScreen extends ConsumerWidget {
               ),
               const Spacer(),
               Text(
-                '${summary['completedOrders']} pesanan siap',
+                '${summary['completedOrders'] ?? 0} pesanan siap',
                 style: TextStyle(
                   fontSize: 13,
                   color: Colors.white.withOpacity(0.8),
@@ -565,7 +565,7 @@ class DashboardScreen extends ConsumerWidget {
       Expanded(
         child: StatCard(
           label: 'Jumlah Pesanan',
-          value: '${summary['orderCount']}',
+          value: '${summary['orderCount'] ?? 0}',
           icon: Icons.receipt_long_outlined,
           iconColor: AppTheme.primaryCoffee,
         ),
@@ -574,7 +574,7 @@ class DashboardScreen extends ConsumerWidget {
       Expanded(
         child: StatCard(
           label: 'Purata Tiket',
-          value: CurrencyFormatter.format(summary['avgOrderValue']),
+          value: CurrencyFormatter.format(summary['avgOrderValue'] ?? summary['avgTicket']),
           icon: Icons.analytics_outlined,
           iconColor: AppTheme.duitNowBlue,
         ),
@@ -583,7 +583,7 @@ class DashboardScreen extends ConsumerWidget {
       Expanded(
         child: StatCard(
           label: 'Siap',
-          value: '${summary['completedOrders']}',
+          value: '${summary['completedOrders'] ?? 0}',
           icon: Icons.check_circle_outline,
           iconColor: AppTheme.successGreen,
         ),
@@ -592,7 +592,7 @@ class DashboardScreen extends ConsumerWidget {
       Expanded(
         child: StatCard(
           label: 'Batal (Void)',
-          value: '${summary['voidCount']}',
+          value: '${summary['voidCount'] ?? 0}',
           icon: Icons.remove_circle_outline,
           iconColor: AppTheme.dangerRed,
         ),

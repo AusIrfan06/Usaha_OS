@@ -218,6 +218,18 @@ class CashDrawerLogs extends Table {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Sync Tombstones (Offline / Deletion Tracking)
+// ─────────────────────────────────────────────────────────────────────────────
+
+class SyncTombstones extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get targetTable => text()(); // 'menu_items', 'categories', 'ingredients', 'tasks', 'customers', 'staff_members', 'orders', 'suppliers', 'expenses'
+  TextColumn get recordKey => text()(); // Natural identifier: name, phone, orderNumber, pinCode, etc.
+  DateTimeColumn get deletedAt => dateTime().withDefault(currentDateAndTime)();
+  BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Database
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -238,12 +250,13 @@ class CashDrawerLogs extends Table {
   StockAudits,
   Expenses,
   CashDrawerLogs,
+  SyncTombstones,
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -269,6 +282,9 @@ class AppDatabase extends _$AppDatabase {
             await m.createTable(expenses);
             await m.createTable(cashDrawerLogs);
             await _seedPhase3Data();
+          }
+          if (from < 4) {
+            await m.createTable(syncTombstones);
           }
         },
       );
@@ -735,10 +751,27 @@ class AppDatabase extends _$AppDatabase {
     final double avgTicket =
         completed.isNotEmpty ? totalSales / completed.length : 0.0;
 
+    final double cashSales = completed
+        .where((o) => o.paymentMethod == 'cash')
+        .fold(0.0, (sum, o) => sum + o.totalAmount);
+
+    final double duitNowSales = completed
+        .where((o) => o.paymentMethod == 'qr' || o.paymentMethod == 'duitnow')
+        .fold(0.0, (sum, o) => sum + o.totalAmount);
+
+    final double cardSales = completed
+        .where((o) => o.paymentMethod == 'card')
+        .fold(0.0, (sum, o) => sum + o.totalAmount);
+
     return {
       'totalSales': totalSales,
-      'orderCount': completed.length,
+      'orderCount': all.length,
+      'completedOrders': completed.length,
       'avgTicket': avgTicket,
+      'avgOrderValue': avgTicket,
+      'cashSales': cashSales,
+      'duitNowSales': duitNowSales,
+      'cardSales': cardSales,
       'voidCount': all.where((o) => o.status == 'voided').length,
     };
   }
@@ -780,6 +813,41 @@ class AppDatabase extends _$AppDatabase {
         .toList();
   }
 
+  // ── Sync Tombstones & Deletion Tracking ────────────────────────────────────
+
+  Future<void> recordTombstone(String tableName, String recordKey) async {
+    await into(syncTombstones).insert(
+      SyncTombstonesCompanion.insert(
+        targetTable: tableName,
+        recordKey: recordKey,
+        deletedAt: Value(DateTime.now()),
+        isSynced: const Value(false),
+      ),
+    );
+  }
+
+  Future<List<SyncTombstone>> getPendingTombstones() =>
+      (select(syncTombstones)..where((t) => t.isSynced.equals(false))).get();
+
+  Future<void> markTombstonesSynced(List<int> ids) =>
+      (update(syncTombstones)..where((t) => t.id.isIn(ids)))
+          .write(const SyncTombstonesCompanion(isSynced: Value(true)));
+
+  Future<bool> isTombstoned(String tableName, String recordKey) async {
+    final item = await (select(syncTombstones)
+          ..where((t) => t.targetTable.equals(tableName) & t.recordKey.equals(recordKey)))
+        .getSingleOrNull();
+    return item != null;
+  }
+
+  Future<Set<String>> getActiveTombstoneKeys(String tableName) async {
+    final list = await (select(syncTombstones)..where((t) => t.targetTable.equals(tableName))).get();
+    return list.map((t) => t.recordKey).toSet();
+  }
+
+  Future<void> removeTombstone(String tableName, String recordKey) =>
+      (delete(syncTombstones)..where((t) => t.targetTable.equals(tableName) & t.recordKey.equals(recordKey))).go();
+
   // ── Sync & Categories / Items Methods ──────────────────────────────────────
 
   Future<List<Category>> getAllCategories() => select(categories).get();
@@ -798,14 +866,24 @@ class AppDatabase extends _$AppDatabase {
     }
   }
 
-  Future<void> deleteCategoryById(int id) =>
-      (delete(categories)..where((c) => c.id.equals(id))).go();
+  Future<void> deleteCategoryById(int id) async {
+    final cat = await (select(categories)..where((c) => c.id.equals(id))).getSingleOrNull();
+    if (cat != null) {
+      await recordTombstone('categories', cat.name);
+    }
+    await (delete(categories)..where((c) => c.id.equals(id))).go();
+  }
 
-  Future<void> deleteCategoryByName(String name) =>
-      (delete(categories)..where((c) => c.name.equals(name))).go();
+  Future<void> deleteCategoryByName(String name) async {
+    await recordTombstone('categories', name);
+    await (delete(categories)..where((c) => c.name.equals(name))).go();
+  }
 
   Future<void> deleteCategoriesNotIn(List<int> ids) =>
       (delete(categories)..where((c) => c.id.isNotIn(ids))).go();
+
+  Future<void> reconcileCategories(List<String> activeNames) =>
+      (delete(categories)..where((c) => c.name.isNotIn(activeNames))).go();
 
   Future<List<MenuItem>> getAllMenuItems() => select(menuItems).get();
 
@@ -820,14 +898,24 @@ class AppDatabase extends _$AppDatabase {
     }
   }
 
-  Future<void> deleteMenuItemById(int id) =>
-      (delete(menuItems)..where((m) => m.id.equals(id))).go();
+  Future<void> deleteMenuItemById(int id) async {
+    final item = await (select(menuItems)..where((m) => m.id.equals(id))).getSingleOrNull();
+    if (item != null) {
+      await recordTombstone('menu_items', item.name);
+    }
+    await (delete(menuItems)..where((m) => m.id.equals(id))).go();
+  }
 
-  Future<void> deleteMenuItemByName(String name) =>
-      (delete(menuItems)..where((m) => m.name.equals(name))).go();
+  Future<void> deleteMenuItemByName(String name) async {
+    await recordTombstone('menu_items', name);
+    await (delete(menuItems)..where((m) => m.name.equals(name))).go();
+  }
 
   Future<void> deleteMenuItemsNotIn(List<int> ids) =>
       (delete(menuItems)..where((m) => m.id.isNotIn(ids))).go();
+
+  Future<void> reconcileMenuItems(List<String> activeNames) =>
+      (delete(menuItems)..where((m) => m.name.isNotIn(activeNames))).go();
 
   Future<void> upsertIngredient(IngredientsCompanion ing) async {
     final name = ing.name.value;
@@ -839,11 +927,21 @@ class AppDatabase extends _$AppDatabase {
     }
   }
 
-  Future<void> deleteIngredientByName(String name) =>
-      (delete(ingredients)..where((i) => i.name.equals(name))).go();
+  Future<void> deleteIngredientByName(String name) async {
+    await recordTombstone('ingredients', name);
+    await (delete(ingredients)..where((i) => i.name.equals(name))).go();
+  }
 
-  Future<void> deleteIngredientById(int id) =>
-      (delete(ingredients)..where((i) => i.id.equals(id))).go();
+  Future<void> deleteIngredientById(int id) async {
+    final ing = await (select(ingredients)..where((i) => i.id.equals(id))).getSingleOrNull();
+    if (ing != null) {
+      await recordTombstone('ingredients', ing.name);
+    }
+    await (delete(ingredients)..where((i) => i.id.equals(id))).go();
+  }
+
+  Future<void> reconcileIngredients(List<String> activeNames) =>
+      (delete(ingredients)..where((i) => i.name.isNotIn(activeNames))).go();
 
   Future<Order?> getOrderByOrderNumber(String orderNumber) =>
       (select(orders)..where((o) => o.orderNumber.equals(orderNumber))).getSingleOrNull();
@@ -851,11 +949,16 @@ class AppDatabase extends _$AppDatabase {
   Future<void> deleteOrderByOrderNumber(String orderNumber) async {
     final order = await getOrderByOrderNumber(orderNumber);
     if (order != null) {
+      await recordTombstone('orders', orderNumber);
       await deleteOrderById(order.id);
     }
   }
 
   Future<void> deleteOrderById(int orderId) async {
+    final order = await getOrder(orderId);
+    if (order != null) {
+      await recordTombstone('orders', order.orderNumber);
+    }
     await (delete(orderItems)..where((i) => i.orderId.equals(orderId))).go();
     await (delete(orders)..where((o) => o.id.equals(orderId))).go();
   }
@@ -905,13 +1008,40 @@ class AppDatabase extends _$AppDatabase {
 
   Future<List<Task>> getAllTasks() => select(tasks).get();
 
+  Future<Task?> getTaskByTitle(String title) =>
+      (select(tasks)..where((t) => t.title.equals(title))).getSingleOrNull();
+
   Future<int> insertTask(TasksCompanion task) => into(tasks).insert(task);
+
+  Future<int> upsertTask(TasksCompanion task) async {
+    final title = task.title.value;
+    final existing = await getTaskByTitle(title);
+    if (existing != null) {
+      await (update(tasks)..where((t) => t.id.equals(existing.id))).write(task);
+      return existing.id;
+    } else {
+      return into(tasks).insert(task);
+    }
+  }
 
   Future<void> updateTask(TasksCompanion task) =>
       (update(tasks)..where((t) => t.id.equals(task.id.value))).write(task);
 
-  Future<void> deleteTask(int taskId) =>
-      (delete(tasks)..where((t) => t.id.equals(taskId))).go();
+  Future<void> deleteTask(int taskId) async {
+    final task = await (select(tasks)..where((t) => t.id.equals(taskId))).getSingleOrNull();
+    if (task != null) {
+      await recordTombstone('tasks', task.title);
+    }
+    await (delete(tasks)..where((t) => t.id.equals(taskId))).go();
+  }
+
+  Future<void> deleteTaskByTitle(String title) async {
+    await recordTombstone('tasks', title);
+    await (delete(tasks)..where((t) => t.title.equals(title))).go();
+  }
+
+  Future<void> reconcileTasks(List<String> activeTitles) =>
+      (delete(tasks)..where((t) => t.title.isNotIn(activeTitles))).go();
 
   Future<void> toggleTaskStatus(int taskId, String newStatus, {String? completedBy}) {
     return (update(tasks)..where((t) => t.id.equals(taskId))).write(
@@ -937,11 +1067,35 @@ class AppDatabase extends _$AppDatabase {
   Future<int> insertCustomer(CustomersCompanion customer) =>
       into(customers).insert(customer);
 
+  Future<int> upsertCustomer(CustomersCompanion customer) async {
+    final phone = customer.phone.value;
+    final existing = await getCustomerByPhone(phone);
+    if (existing != null) {
+      await (update(customers)..where((c) => c.id.equals(existing.id))).write(customer);
+      return existing.id;
+    } else {
+      return into(customers).insert(customer);
+    }
+  }
+
   Future<void> updateCustomer(CustomersCompanion customer) =>
       (update(customers)..where((c) => c.id.equals(customer.id.value))).write(customer);
 
-  Future<void> deleteCustomer(int id) =>
-      (delete(customers)..where((c) => c.id.equals(id))).go();
+  Future<void> deleteCustomer(int id) async {
+    final customer = await (select(customers)..where((c) => c.id.equals(id))).getSingleOrNull();
+    if (customer != null) {
+      await recordTombstone('customers', customer.phone);
+    }
+    await (delete(customers)..where((c) => c.id.equals(id))).go();
+  }
+
+  Future<void> deleteCustomerByPhone(String phone) async {
+    await recordTombstone('customers', phone);
+    await (delete(customers)..where((c) => c.phone.equals(phone))).go();
+  }
+
+  Future<void> reconcileCustomers(List<String> activePhones) =>
+      (delete(customers)..where((c) => c.phone.isNotIn(activePhones))).go();
 
   Future<bool> redeemCustomerStamps(int customerId) async {
     final customer = await (select(customers)..where((c) => c.id.equals(customerId))).getSingleOrNull();
@@ -998,11 +1152,35 @@ class AppDatabase extends _$AppDatabase {
   Future<int> insertStaff(StaffMembersCompanion staff) =>
       into(staffMembers).insert(staff);
 
+  Future<int> upsertStaff(StaffMembersCompanion staff) async {
+    final pin = staff.pinCode.value;
+    final existing = await (select(staffMembers)..where((s) => s.pinCode.equals(pin))).getSingleOrNull();
+    if (existing != null) {
+      await (update(staffMembers)..where((s) => s.id.equals(existing.id))).write(staff);
+      return existing.id;
+    } else {
+      return into(staffMembers).insert(staff);
+    }
+  }
+
   Future<void> updateStaff(StaffMembersCompanion staff) =>
       (update(staffMembers)..where((s) => s.id.equals(staff.id.value))).write(staff);
 
-  Future<void> deleteStaff(int id) =>
-      (delete(staffMembers)..where((s) => s.id.equals(id))).go();
+  Future<void> deleteStaff(int id) async {
+    final staff = await (select(staffMembers)..where((s) => s.id.equals(id))).getSingleOrNull();
+    if (staff != null) {
+      await recordTombstone('staff_members', staff.pinCode);
+    }
+    await (delete(staffMembers)..where((c) => c.id.equals(id))).go();
+  }
+
+  Future<void> deleteStaffByPin(String pin) async {
+    await recordTombstone('staff_members', pin);
+    await (delete(staffMembers)..where((s) => s.pinCode.equals(pin))).go();
+  }
+
+  Future<void> reconcileStaff(List<String> activePins) =>
+      (delete(staffMembers)..where((s) => s.pinCode.isNotIn(activePins))).go();
 
   Stream<List<StaffAttendance>> watchTodayAttendance() {
     final now = DateTime.now();
@@ -1079,14 +1257,41 @@ class AppDatabase extends _$AppDatabase {
   Future<Supplier?> getSupplierById(int id) =>
       (select(suppliers)..where((s) => s.id.equals(id))).getSingleOrNull();
 
+  Future<Supplier?> getSupplierByName(String name) =>
+      (select(suppliers)..where((s) => s.name.equals(name))).getSingleOrNull();
+
   Future<int> insertSupplier(SuppliersCompanion supplier) =>
       into(suppliers).insert(supplier);
+
+  Future<int> upsertSupplier(SuppliersCompanion supplier) async {
+    final name = supplier.name.value;
+    final existing = await getSupplierByName(name);
+    if (existing != null) {
+      await (update(suppliers)..where((s) => s.id.equals(existing.id))).write(supplier);
+      return existing.id;
+    } else {
+      return into(suppliers).insert(supplier);
+    }
+  }
 
   Future<void> updateSupplier(SuppliersCompanion supplier) =>
       (update(suppliers)..where((s) => s.id.equals(supplier.id.value))).write(supplier);
 
-  Future<void> deleteSupplier(int id) =>
-      (delete(suppliers)..where((s) => s.id.equals(id))).go();
+  Future<void> deleteSupplier(int id) async {
+    final sup = await (select(suppliers)..where((s) => s.id.equals(id))).getSingleOrNull();
+    if (sup != null) {
+      await recordTombstone('suppliers', sup.name);
+    }
+    await (delete(suppliers)..where((s) => s.id.equals(id))).go();
+  }
+
+  Future<void> deleteSupplierByName(String name) async {
+    await recordTombstone('suppliers', name);
+    await (delete(suppliers)..where((s) => s.name.equals(name))).go();
+  }
+
+  Future<void> reconcileSuppliers(List<String> activeNames) =>
+      (delete(suppliers)..where((s) => s.name.isNotIn(activeNames))).go();
 
   // ── Purchase Orders & Items ───────────────────────────────────────────────
 
@@ -1205,8 +1410,23 @@ class AppDatabase extends _$AppDatabase {
   Future<int> insertExpense(ExpensesCompanion expense) =>
       into(expenses).insert(expense);
 
-  Future<void> deleteExpense(int id) =>
-      (delete(expenses)..where((e) => e.id.equals(id))).go();
+  Future<void> deleteExpense(int id) async {
+    await recordTombstone('expenses', id.toString());
+    await (delete(expenses)..where((e) => e.id.equals(id))).go();
+  }
+
+  Future<void> reconcileExpenses(List<int> activeIds, {DateTime? since}) async {
+    final query = select(expenses);
+    if (since != null) {
+      query.where((e) => e.expenseDate.isBiggerOrEqualValue(since));
+    }
+    final list = await query.get();
+    for (final e in list) {
+      if (!activeIds.contains(e.id)) {
+        await (delete(expenses)..where((ex) => ex.id.equals(e.id))).go();
+      }
+    }
+  }
 
   // ── Cash Drawer Logs ───────────────────────────────────────────────────────
 

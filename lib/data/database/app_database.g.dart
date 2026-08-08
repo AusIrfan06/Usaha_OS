@@ -8518,6 +8518,363 @@ class CashDrawerLogsCompanion extends UpdateCompanion<CashDrawerLog> {
   }
 }
 
+class $SyncTombstonesTable extends SyncTombstones
+    with TableInfo<$SyncTombstonesTable, SyncTombstone> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SyncTombstonesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _targetTableMeta = const VerificationMeta(
+    'targetTable',
+  );
+  @override
+  late final GeneratedColumn<String> targetTable = GeneratedColumn<String>(
+    'target_table',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _recordKeyMeta = const VerificationMeta(
+    'recordKey',
+  );
+  @override
+  late final GeneratedColumn<String> recordKey = GeneratedColumn<String>(
+    'record_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _deletedAtMeta = const VerificationMeta(
+    'deletedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> deletedAt = GeneratedColumn<DateTime>(
+    'deleted_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _isSyncedMeta = const VerificationMeta(
+    'isSynced',
+  );
+  @override
+  late final GeneratedColumn<bool> isSynced = GeneratedColumn<bool>(
+    'is_synced',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_synced" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    targetTable,
+    recordKey,
+    deletedAt,
+    isSynced,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'sync_tombstones';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<SyncTombstone> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('target_table')) {
+      context.handle(
+        _targetTableMeta,
+        targetTable.isAcceptableOrUnknown(
+          data['target_table']!,
+          _targetTableMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_targetTableMeta);
+    }
+    if (data.containsKey('record_key')) {
+      context.handle(
+        _recordKeyMeta,
+        recordKey.isAcceptableOrUnknown(data['record_key']!, _recordKeyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_recordKeyMeta);
+    }
+    if (data.containsKey('deleted_at')) {
+      context.handle(
+        _deletedAtMeta,
+        deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
+      );
+    }
+    if (data.containsKey('is_synced')) {
+      context.handle(
+        _isSyncedMeta,
+        isSynced.isAcceptableOrUnknown(data['is_synced']!, _isSyncedMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  SyncTombstone map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SyncTombstone(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      targetTable: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}target_table'],
+      )!,
+      recordKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}record_key'],
+      )!,
+      deletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}deleted_at'],
+      )!,
+      isSynced: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_synced'],
+      )!,
+    );
+  }
+
+  @override
+  $SyncTombstonesTable createAlias(String alias) {
+    return $SyncTombstonesTable(attachedDatabase, alias);
+  }
+}
+
+class SyncTombstone extends DataClass implements Insertable<SyncTombstone> {
+  final int id;
+  final String targetTable;
+  final String recordKey;
+  final DateTime deletedAt;
+  final bool isSynced;
+  const SyncTombstone({
+    required this.id,
+    required this.targetTable,
+    required this.recordKey,
+    required this.deletedAt,
+    required this.isSynced,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['target_table'] = Variable<String>(targetTable);
+    map['record_key'] = Variable<String>(recordKey);
+    map['deleted_at'] = Variable<DateTime>(deletedAt);
+    map['is_synced'] = Variable<bool>(isSynced);
+    return map;
+  }
+
+  SyncTombstonesCompanion toCompanion(bool nullToAbsent) {
+    return SyncTombstonesCompanion(
+      id: Value(id),
+      targetTable: Value(targetTable),
+      recordKey: Value(recordKey),
+      deletedAt: Value(deletedAt),
+      isSynced: Value(isSynced),
+    );
+  }
+
+  factory SyncTombstone.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SyncTombstone(
+      id: serializer.fromJson<int>(json['id']),
+      targetTable: serializer.fromJson<String>(json['targetTable']),
+      recordKey: serializer.fromJson<String>(json['recordKey']),
+      deletedAt: serializer.fromJson<DateTime>(json['deletedAt']),
+      isSynced: serializer.fromJson<bool>(json['isSynced']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'targetTable': serializer.toJson<String>(targetTable),
+      'recordKey': serializer.toJson<String>(recordKey),
+      'deletedAt': serializer.toJson<DateTime>(deletedAt),
+      'isSynced': serializer.toJson<bool>(isSynced),
+    };
+  }
+
+  SyncTombstone copyWith({
+    int? id,
+    String? targetTable,
+    String? recordKey,
+    DateTime? deletedAt,
+    bool? isSynced,
+  }) => SyncTombstone(
+    id: id ?? this.id,
+    targetTable: targetTable ?? this.targetTable,
+    recordKey: recordKey ?? this.recordKey,
+    deletedAt: deletedAt ?? this.deletedAt,
+    isSynced: isSynced ?? this.isSynced,
+  );
+  SyncTombstone copyWithCompanion(SyncTombstonesCompanion data) {
+    return SyncTombstone(
+      id: data.id.present ? data.id.value : this.id,
+      targetTable: data.targetTable.present
+          ? data.targetTable.value
+          : this.targetTable,
+      recordKey: data.recordKey.present ? data.recordKey.value : this.recordKey,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
+      isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SyncTombstone(')
+          ..write('id: $id, ')
+          ..write('targetTable: $targetTable, ')
+          ..write('recordKey: $recordKey, ')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('isSynced: $isSynced')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, targetTable, recordKey, deletedAt, isSynced);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SyncTombstone &&
+          other.id == this.id &&
+          other.targetTable == this.targetTable &&
+          other.recordKey == this.recordKey &&
+          other.deletedAt == this.deletedAt &&
+          other.isSynced == this.isSynced);
+}
+
+class SyncTombstonesCompanion extends UpdateCompanion<SyncTombstone> {
+  final Value<int> id;
+  final Value<String> targetTable;
+  final Value<String> recordKey;
+  final Value<DateTime> deletedAt;
+  final Value<bool> isSynced;
+  const SyncTombstonesCompanion({
+    this.id = const Value.absent(),
+    this.targetTable = const Value.absent(),
+    this.recordKey = const Value.absent(),
+    this.deletedAt = const Value.absent(),
+    this.isSynced = const Value.absent(),
+  });
+  SyncTombstonesCompanion.insert({
+    this.id = const Value.absent(),
+    required String targetTable,
+    required String recordKey,
+    this.deletedAt = const Value.absent(),
+    this.isSynced = const Value.absent(),
+  }) : targetTable = Value(targetTable),
+       recordKey = Value(recordKey);
+  static Insertable<SyncTombstone> custom({
+    Expression<int>? id,
+    Expression<String>? targetTable,
+    Expression<String>? recordKey,
+    Expression<DateTime>? deletedAt,
+    Expression<bool>? isSynced,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (targetTable != null) 'target_table': targetTable,
+      if (recordKey != null) 'record_key': recordKey,
+      if (deletedAt != null) 'deleted_at': deletedAt,
+      if (isSynced != null) 'is_synced': isSynced,
+    });
+  }
+
+  SyncTombstonesCompanion copyWith({
+    Value<int>? id,
+    Value<String>? targetTable,
+    Value<String>? recordKey,
+    Value<DateTime>? deletedAt,
+    Value<bool>? isSynced,
+  }) {
+    return SyncTombstonesCompanion(
+      id: id ?? this.id,
+      targetTable: targetTable ?? this.targetTable,
+      recordKey: recordKey ?? this.recordKey,
+      deletedAt: deletedAt ?? this.deletedAt,
+      isSynced: isSynced ?? this.isSynced,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (targetTable.present) {
+      map['target_table'] = Variable<String>(targetTable.value);
+    }
+    if (recordKey.present) {
+      map['record_key'] = Variable<String>(recordKey.value);
+    }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt.value);
+    }
+    if (isSynced.present) {
+      map['is_synced'] = Variable<bool>(isSynced.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SyncTombstonesCompanion(')
+          ..write('id: $id, ')
+          ..write('targetTable: $targetTable, ')
+          ..write('recordKey: $recordKey, ')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('isSynced: $isSynced')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -8541,6 +8898,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $StockAuditsTable stockAudits = $StockAuditsTable(this);
   late final $ExpensesTable expenses = $ExpensesTable(this);
   late final $CashDrawerLogsTable cashDrawerLogs = $CashDrawerLogsTable(this);
+  late final $SyncTombstonesTable syncTombstones = $SyncTombstonesTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -8562,6 +8920,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     stockAudits,
     expenses,
     cashDrawerLogs,
+    syncTombstones,
   ];
 }
 
@@ -15000,6 +15359,204 @@ typedef $$CashDrawerLogsTableProcessedTableManager =
       CashDrawerLog,
       PrefetchHooks Function()
     >;
+typedef $$SyncTombstonesTableCreateCompanionBuilder =
+    SyncTombstonesCompanion Function({
+      Value<int> id,
+      required String targetTable,
+      required String recordKey,
+      Value<DateTime> deletedAt,
+      Value<bool> isSynced,
+    });
+typedef $$SyncTombstonesTableUpdateCompanionBuilder =
+    SyncTombstonesCompanion Function({
+      Value<int> id,
+      Value<String> targetTable,
+      Value<String> recordKey,
+      Value<DateTime> deletedAt,
+      Value<bool> isSynced,
+    });
+
+class $$SyncTombstonesTableFilterComposer
+    extends Composer<_$AppDatabase, $SyncTombstonesTable> {
+  $$SyncTombstonesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get targetTable => $composableBuilder(
+    column: $table.targetTable,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get recordKey => $composableBuilder(
+    column: $table.recordKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isSynced => $composableBuilder(
+    column: $table.isSynced,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$SyncTombstonesTableOrderingComposer
+    extends Composer<_$AppDatabase, $SyncTombstonesTable> {
+  $$SyncTombstonesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get targetTable => $composableBuilder(
+    column: $table.targetTable,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get recordKey => $composableBuilder(
+    column: $table.recordKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isSynced => $composableBuilder(
+    column: $table.isSynced,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$SyncTombstonesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SyncTombstonesTable> {
+  $$SyncTombstonesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get targetTable => $composableBuilder(
+    column: $table.targetTable,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get recordKey =>
+      $composableBuilder(column: $table.recordKey, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
+
+  GeneratedColumn<bool> get isSynced =>
+      $composableBuilder(column: $table.isSynced, builder: (column) => column);
+}
+
+class $$SyncTombstonesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $SyncTombstonesTable,
+          SyncTombstone,
+          $$SyncTombstonesTableFilterComposer,
+          $$SyncTombstonesTableOrderingComposer,
+          $$SyncTombstonesTableAnnotationComposer,
+          $$SyncTombstonesTableCreateCompanionBuilder,
+          $$SyncTombstonesTableUpdateCompanionBuilder,
+          (
+            SyncTombstone,
+            BaseReferences<_$AppDatabase, $SyncTombstonesTable, SyncTombstone>,
+          ),
+          SyncTombstone,
+          PrefetchHooks Function()
+        > {
+  $$SyncTombstonesTableTableManager(
+    _$AppDatabase db,
+    $SyncTombstonesTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SyncTombstonesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SyncTombstonesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SyncTombstonesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> targetTable = const Value.absent(),
+                Value<String> recordKey = const Value.absent(),
+                Value<DateTime> deletedAt = const Value.absent(),
+                Value<bool> isSynced = const Value.absent(),
+              }) => SyncTombstonesCompanion(
+                id: id,
+                targetTable: targetTable,
+                recordKey: recordKey,
+                deletedAt: deletedAt,
+                isSynced: isSynced,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String targetTable,
+                required String recordKey,
+                Value<DateTime> deletedAt = const Value.absent(),
+                Value<bool> isSynced = const Value.absent(),
+              }) => SyncTombstonesCompanion.insert(
+                id: id,
+                targetTable: targetTable,
+                recordKey: recordKey,
+                deletedAt: deletedAt,
+                isSynced: isSynced,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$SyncTombstonesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $SyncTombstonesTable,
+      SyncTombstone,
+      $$SyncTombstonesTableFilterComposer,
+      $$SyncTombstonesTableOrderingComposer,
+      $$SyncTombstonesTableAnnotationComposer,
+      $$SyncTombstonesTableCreateCompanionBuilder,
+      $$SyncTombstonesTableUpdateCompanionBuilder,
+      (
+        SyncTombstone,
+        BaseReferences<_$AppDatabase, $SyncTombstonesTable, SyncTombstone>,
+      ),
+      SyncTombstone,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -15036,4 +15593,6 @@ class $AppDatabaseManager {
       $$ExpensesTableTableManager(_db, _db.expenses);
   $$CashDrawerLogsTableTableManager get cashDrawerLogs =>
       $$CashDrawerLogsTableTableManager(_db, _db.cashDrawerLogs);
+  $$SyncTombstonesTableTableManager get syncTombstones =>
+      $$SyncTombstonesTableTableManager(_db, _db.syncTombstones);
 }
