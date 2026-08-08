@@ -468,19 +468,41 @@ class AppDatabase extends _$AppDatabase {
 
   Future<List<Category>> getAllCategories() => select(categories).get();
 
-  Future<void> upsertCategory(CategoriesCompanion category) =>
-      into(categories).insertOnConflictUpdate(category);
+  Future<Category?> getCategoryByName(String name) =>
+      (select(categories)..where((c) => c.name.equals(name))).getSingleOrNull();
+
+  Future<int> upsertCategory(CategoriesCompanion category) async {
+    final name = category.name.value;
+    final existing = await getCategoryByName(name);
+    if (existing != null) {
+      await (update(categories)..where((c) => c.id.equals(existing.id))).write(category);
+      return existing.id;
+    } else {
+      return into(categories).insert(category);
+    }
+  }
 
   Future<void> deleteCategoryById(int id) =>
       (delete(categories)..where((c) => c.id.equals(id))).go();
+
+  Future<void> deleteCategoryByName(String name) =>
+      (delete(categories)..where((c) => c.name.equals(name))).go();
 
   Future<void> deleteCategoriesNotIn(List<int> ids) =>
       (delete(categories)..where((c) => c.id.isNotIn(ids))).go();
 
   Future<List<MenuItem>> getAllMenuItems() => select(menuItems).get();
 
-  Future<void> upsertMenuItem(MenuItemsCompanion item) =>
-      into(menuItems).insertOnConflictUpdate(item);
+  Future<int> upsertMenuItem(MenuItemsCompanion item) async {
+    final name = item.name.value;
+    final existing = await (select(menuItems)..where((m) => m.name.equals(name))).getSingleOrNull();
+    if (existing != null) {
+      await (update(menuItems)..where((m) => m.id.equals(existing.id))).write(item);
+      return existing.id;
+    } else {
+      return into(menuItems).insert(item);
+    }
+  }
 
   Future<void> deleteMenuItemById(int id) =>
       (delete(menuItems)..where((m) => m.id.equals(id))).go();

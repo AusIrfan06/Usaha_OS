@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../features/dashboard/dashboard_screen.dart';
 import '../../features/pos/pos_screen.dart';
+import '../../features/kds/kds_screen.dart';
+import '../../features/tasks/tasks_screen.dart';
+import '../../features/loyalty/loyalty_screen.dart';
+import '../../features/staff/staff_screen.dart';
 import '../../features/payment/payment_screen.dart';
 import '../../features/payment/receipt_screen.dart';
 import '../../features/orders/orders_screen.dart';
@@ -24,6 +28,22 @@ final appRouter = GoRouter(
         GoRoute(
           path: '/pos',
           builder: (_, __) => const PosScreen(),
+        ),
+        GoRoute(
+          path: '/kds',
+          builder: (_, __) => const KdsScreen(),
+        ),
+        GoRoute(
+          path: '/tasks',
+          builder: (_, __) => const TasksScreen(),
+        ),
+        GoRoute(
+          path: '/loyalty',
+          builder: (_, __) => const LoyaltyScreen(),
+        ),
+        GoRoute(
+          path: '/staff',
+          builder: (_, __) => const StaffScreen(),
         ),
         GoRoute(
           path: '/orders',
@@ -60,7 +80,7 @@ final appRouter = GoRouter(
 );
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Adaptive Shell: NavigationRail on tablet, NavigationBar on phone
+// Adaptive Shell: NavigationRail on tablet, NavigationBar + Drawer on phone
 // ─────────────────────────────────────────────────────────────────────────────
 
 class _AppShell extends StatelessWidget {
@@ -69,26 +89,23 @@ class _AppShell extends StatelessWidget {
 
   const _AppShell({required this.location, required this.child});
 
-  int get _index {
-    return switch (location) {
-      '/' => 0,
-      '/pos' => 1,
-      '/orders' => 2,
-      '/inventory' => 3,
-      '/reports' => 4,
-      '/settings' => 5,
-      _ => 0,
-    };
-  }
-
   static const _destinations = [
     (icon: Icons.dashboard_outlined, activeIcon: Icons.dashboard_rounded, label: 'Dashboard', path: '/'),
     (icon: Icons.point_of_sale_outlined, activeIcon: Icons.point_of_sale_rounded, label: 'POS', path: '/pos'),
-    (icon: Icons.receipt_long_outlined, activeIcon: Icons.receipt_long_rounded, label: 'Orders', path: '/orders'),
-    (icon: Icons.inventory_2_outlined, activeIcon: Icons.inventory_2_rounded, label: 'Inventory', path: '/inventory'),
-    (icon: Icons.bar_chart_outlined, activeIcon: Icons.bar_chart_rounded, label: 'Reports', path: '/reports'),
-    (icon: Icons.settings_outlined, activeIcon: Icons.settings_rounded, label: 'Settings', path: '/settings'),
+    (icon: Icons.soup_kitchen_outlined, activeIcon: Icons.soup_kitchen_rounded, label: 'KDS', path: '/kds'),
+    (icon: Icons.assignment_turned_in_outlined, activeIcon: Icons.assignment_turned_in_rounded, label: 'Tugasan', path: '/tasks'),
+    (icon: Icons.card_membership_outlined, activeIcon: Icons.card_membership_rounded, label: 'Loyalty', path: '/loyalty'),
+    (icon: Icons.badge_outlined, activeIcon: Icons.badge_rounded, label: 'Staf', path: '/staff'),
+    (icon: Icons.receipt_long_outlined, activeIcon: Icons.receipt_long_rounded, label: 'Pesanan', path: '/orders'),
+    (icon: Icons.inventory_2_outlined, activeIcon: Icons.inventory_2_rounded, label: 'Inventori', path: '/inventory'),
+    (icon: Icons.bar_chart_outlined, activeIcon: Icons.bar_chart_rounded, label: 'Laporan', path: '/reports'),
+    (icon: Icons.settings_outlined, activeIcon: Icons.settings_rounded, label: 'Tetapan', path: '/settings'),
   ];
+
+  int get _index {
+    final idx = _destinations.indexWhere((d) => d.path == location);
+    return idx >= 0 ? idx : 0;
+  }
 
   void _navigate(BuildContext context, int i) =>
       context.go(_destinations[i].path);
@@ -96,8 +113,8 @@ class _AppShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    final isTablet = width >= 700;
-    final isDesktop = width >= 1100;
+    final isTablet = width >= 800;
+    final isDesktop = width >= 1200;
 
     if (isTablet) {
       return _railLayout(context, isDesktop);
@@ -105,22 +122,105 @@ class _AppShell extends StatelessWidget {
     return _bottomNavLayout(context);
   }
 
-  // ── Phone: NavigationBar ─────────────────────────────────────────────────
+  // ── Phone: NavigationBar + More Menu ─────────────────────────────────────
 
   Widget _bottomNavLayout(BuildContext context) {
-    final phoneDestinations = _destinations.take(5).toList();
+    // Show top 4 primary + More menu
+    final primaryPhoneDestinations = _destinations.take(4).toList();
+    final currentIndex = _index;
+    final isPrimary = currentIndex < 4;
+
     return Scaffold(
       body: child,
       bottomNavigationBar: NavigationBar(
-        selectedIndex: _index.clamp(0, 4),
-        onDestinationSelected: (i) => _navigate(context, i),
-        destinations: phoneDestinations
-            .map((d) => NavigationDestination(
-                  icon: Icon(d.icon),
-                  selectedIcon: Icon(d.activeIcon),
-                  label: d.label,
-                ))
-            .toList(),
+        selectedIndex: isPrimary ? currentIndex : 4,
+        onDestinationSelected: (i) {
+          if (i < 4) {
+            _navigate(context, i);
+          } else {
+            _showMoreMenu(context);
+          }
+        },
+        destinations: [
+          ...primaryPhoneDestinations.map((d) => NavigationDestination(
+                icon: Icon(d.icon),
+                selectedIcon: Icon(d.activeIcon),
+                label: d.label,
+              )),
+          const NavigationDestination(
+            icon: Icon(Icons.more_horiz_rounded),
+            selectedIcon: Icon(Icons.apps_rounded),
+            label: 'Lain-lain',
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showMoreMenu(BuildContext context) {
+    final moreDestinations = _destinations.skip(4).toList();
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Modul Usaha OS',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+            ),
+            const SizedBox(height: 16),
+            GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12,
+                childAspectRatio: 1.1,
+              ),
+              itemCount: moreDestinations.length,
+              itemBuilder: (ctx, i) {
+                final d = moreDestinations[i];
+                final isSelected = location == d.path;
+                return InkWell(
+                  onTap: () {
+                    Navigator.pop(ctx);
+                    context.go(d.path);
+                  },
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: isSelected ? AppTheme.primaryCoffee.withOpacity(0.15) : AppTheme.surfaceVariant,
+                      borderRadius: BorderRadius.circular(12),
+                      border: isSelected ? Border.all(color: AppTheme.primaryCoffee, width: 1.5) : null,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(d.activeIcon, color: isSelected ? AppTheme.primaryCoffee : AppTheme.darkEspresso, size: 28),
+                        const SizedBox(height: 6),
+                        Text(
+                          d.label,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                            color: isSelected ? AppTheme.primaryCoffee : AppTheme.darkEspresso,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -131,42 +231,51 @@ class _AppShell extends StatelessWidget {
     return Scaffold(
       body: Row(
         children: [
-          NavigationRail(
-            extended: extended,
-            selectedIndex: _index,
-            onDestinationSelected: (i) => _navigate(context, i),
-            leading: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              child: Column(
-                children: [
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: AppTheme.primaryCoffee,
-                      borderRadius: BorderRadius.circular(12),
+          SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: MediaQuery.of(context).size.height,
+              ),
+              child: IntrinsicHeight(
+                child: NavigationRail(
+                  extended: extended,
+                  selectedIndex: _index,
+                  onDestinationSelected: (i) => _navigate(context, i),
+                  leading: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    child: Column(
+                      children: [
+                        Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: AppTheme.primaryCoffee,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Icon(Icons.coffee,
+                              color: Colors.white, size: 22),
+                        ),
+                        if (extended) ...[
+                          const SizedBox(height: 8),
+                          const Text('Usaha OS',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 13,
+                                  color: AppTheme.darkEspresso)),
+                        ],
+                      ],
                     ),
-                    child: const Icon(Icons.coffee,
-                        color: Colors.white, size: 22),
                   ),
-                  if (extended) ...[
-                    const SizedBox(height: 8),
-                    const Text('Usaha OS',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w800,
-                            fontSize: 13,
-                            color: AppTheme.darkEspresso)),
-                  ],
-                ],
+                  destinations: _destinations
+                      .map((d) => NavigationRailDestination(
+                            icon: Icon(d.icon),
+                            selectedIcon: Icon(d.activeIcon),
+                            label: Text(d.label),
+                          ))
+                      .toList(),
+                ),
               ),
             ),
-            destinations: _destinations
-                .map((d) => NavigationRailDestination(
-                      icon: Icon(d.icon),
-                      selectedIcon: Icon(d.activeIcon),
-                      label: Text(d.label),
-                    ))
-                .toList(),
           ),
           Container(
               width: 1, color: const Color(0xFFEDE3D8)),

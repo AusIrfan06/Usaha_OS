@@ -44,7 +44,7 @@ final menuItemsProvider = StreamProvider<List<MenuItem>>((ref) {
   return ref.watch(databaseProvider).watchMenuItems(categoryId: categoryId);
 });
 
-// ── Cart ──────────────────────────────────────────────────────────────────────
+// ── Cart & Customer Attachment ────────────────────────────────────────────────
 
 final cartProvider =
     StateNotifierProvider<CartNotifier, List<CartItem>>((ref) {
@@ -57,10 +57,39 @@ final orderTypeProvider = StateProvider<String>((ref) => 'takeaway');
 /// Table number for dine-in orders.
 final tableNumberProvider = StateProvider<int?>((ref) => null);
 
-// ── Orders ────────────────────────────────────────────────────────────────────
+/// Currently selected customer for CRM/Loyalty points attached to the cart
+final selectedCustomerProvider = StateProvider<Customer?>((ref) => null);
+
+// ── Orders & KDS (Phase 2) ────────────────────────────────────────────────────
 
 final todayOrdersProvider = StreamProvider<List<Order>>((ref) {
   return ref.watch(databaseProvider).watchTodayOrders();
+});
+
+final activeKdsOrdersProvider = StreamProvider<List<Order>>((ref) {
+  return ref.watch(databaseProvider).watchActiveKdsOrders();
+});
+
+// ── Operations & Tasks (Phase 2) ──────────────────────────────────────────────
+
+final allTasksProvider = StreamProvider<List<Task>>((ref) {
+  return ref.watch(databaseProvider).watchAllTasks();
+});
+
+// ── Staff & Attendance (Phase 2) ──────────────────────────────────────────────
+
+final allStaffProvider = StreamProvider<List<StaffMember>>((ref) {
+  return ref.watch(databaseProvider).watchAllStaff();
+});
+
+final todayAttendanceProvider = StreamProvider<List<StaffAttendance>>((ref) {
+  return ref.watch(databaseProvider).watchTodayAttendance();
+});
+
+// ── Customers & CRM (Phase 2) ─────────────────────────────────────────────────
+
+final allCustomersProvider = StreamProvider<List<Customer>>((ref) {
+  return ref.watch(databaseProvider).watchAllCustomers();
 });
 
 // ── Inventory ─────────────────────────────────────────────────────────────────
