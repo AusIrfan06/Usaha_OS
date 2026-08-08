@@ -86,6 +86,55 @@ class OrderItems extends Table {
       text().withDefault(const Constant(''))();
 }
 
+class Tasks extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get title => text()();
+  TextColumn get description => text().withDefault(const Constant(''))();
+  TextColumn get category => text().withDefault(const Constant('opening'))(); // opening | closing | cleaning | maintenance | handover | general
+  TextColumn get assignedTo => text().nullable()();
+  TextColumn get status => text().withDefault(const Constant('todo'))(); // todo | in_progress | completed
+  TextColumn get priority => text().withDefault(const Constant('medium'))(); // low | medium | high
+  DateTimeColumn get dueDate => dateTime().nullable()();
+  DateTimeColumn get completedAt => dateTime().nullable()();
+  TextColumn get completedBy => text().nullable()();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+}
+
+class Customers extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get name => text()();
+  TextColumn get phone => text()();
+  TextColumn get email => text().nullable()();
+  IntColumn get points => integer().withDefault(const Constant(0))();
+  TextColumn get tier => text().withDefault(const Constant('Bronze'))(); // Bronze | Silver | Gold | Platinum
+  RealColumn get totalSpent => real().withDefault(const Constant(0.0))();
+  IntColumn get stampsCount => integer().withDefault(const Constant(0))();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get lastVisitedAt => dateTime().nullable()();
+}
+
+class StaffMembers extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get name => text()();
+  TextColumn get role => text().withDefault(const Constant('Cashier'))(); // Cashier | Barista | Kitchen Staff | Shift Manager | Owner
+  TextColumn get pinCode => text().withDefault(const Constant('1234'))();
+  TextColumn get phone => text().nullable()();
+  BoolColumn get isActive => boolean().withDefault(const Constant(true))();
+  RealColumn get hourlyRate => real().withDefault(const Constant(10.0))();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+}
+
+class StaffAttendances extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get staffId => integer().references(StaffMembers, #id)();
+  TextColumn get staffName => text()();
+  DateTimeColumn get clockInTime => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get clockOutTime => dateTime().nullable()();
+  IntColumn get totalMinutes => integer().withDefault(const Constant(0))();
+  TextColumn get notes => text().withDefault(const Constant(''))();
+  TextColumn get date => text()(); // YYYY-MM-DD
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Database
 // ─────────────────────────────────────────────────────────────────────────────
@@ -97,18 +146,32 @@ class OrderItems extends Table {
   MenuItemIngredients,
   Orders,
   OrderItems,
+  Tasks,
+  Customers,
+  StaffMembers,
+  StaffAttendances,
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
         onCreate: (m) async {
           await m.createAll();
           await _seedData();
+          await _seedPhase2Data();
+        },
+        onUpgrade: (m, from, to) async {
+          if (from < 2) {
+            await m.createTable(tasks);
+            await m.createTable(customers);
+            await m.createTable(staffMembers);
+            await m.createTable(staffAttendances);
+            await _seedPhase2Data();
+          }
         },
       );
 
@@ -492,5 +555,310 @@ class AppDatabase extends _$AppDatabase {
       await into(orderItems).insert(item.copyWith(orderId: Value(localOrderId)));
     }
   }
+
+  // ── Phase 2: Seed Data ──────────────────────────────────────────────────────
+
+  Future<void> _seedPhase2Data() async {
+    // Seed Tasks
+    final existingTasks = await select(tasks).get();
+    if (existingTasks.isEmpty) {
+      final taskSeeds = [
+        // Opening Checklist
+        (t: 'Float Count Verification', d: 'Count cash float (RM200) in cash drawer', c: 'opening', p: 'high'),
+        (t: 'Espresso Machine Warmup & Flush', d: 'Turn on group heads & steam wand purge', c: 'opening', p: 'high'),
+        (t: 'Inspect Fridge & Chiller Temps', d: 'Ensure milk chiller is under 4°C', c: 'opening', p: 'medium'),
+        (t: 'Restock Milk, Cups & Lids', d: 'Check front counter stock levels', c: 'opening', p: 'medium'),
+        (t: 'Sanitize Workstations & Tables', d: 'Wipe all dining tables and POS counter', c: 'opening', p: 'low'),
+        // Closing Checklist
+        (t: 'Deep Clean Steam Wand & Group Heads', d: 'Backflush espresso machine with Cafiza', c: 'closing', p: 'high'),
+        (t: 'Empty Coffee Puck Bin & Drip Tray', d: 'Wash and sanitize knock box', c: 'closing', p: 'medium'),
+        (t: 'Reconcile Cash Drawer & Print Daily Z-Report', d: 'Match cash total against system sales', c: 'closing', p: 'high'),
+        (t: 'Discard Expired Pastries & Clear Display', d: 'Log wastage in system', c: 'closing', p: 'medium'),
+        (t: 'Lock Doors & Turn Off Signage/AC', d: 'Ensure main breaker & lights are secured', c: 'closing', p: 'high'),
+        // Shift Handover
+        (t: 'Oat Milk delivery arriving at 10 AM', d: 'Supplier contacted, invoice ready on clipboard', c: 'handover', p: 'medium'),
+        (t: 'Grinder 2 calibrated for Dark Roast', d: 'Dose set to 18.5g extraction at 27s', c: 'handover', p: 'low'),
+      ];
+
+      for (final s in taskSeeds) {
+        await into(tasks).insert(
+          TasksCompanion.insert(
+            title: s.t,
+            description: Value(s.d),
+            category: Value(s.c),
+            priority: Value(s.p),
+            status: const Value('todo'),
+          ),
+        );
+      }
+    }
+
+    // Seed Staff Members
+    final existingStaff = await select(staffMembers).get();
+    if (existingStaff.isEmpty) {
+      final staffSeeds = [
+        (n: 'Amirul Hakim', r: 'Shift Manager', p: '8888', ph: '012-3456789', hr: 16.0),
+        (n: 'Sarah Tan', r: 'Barista', p: '1111', ph: '017-8899112', hr: 12.0),
+        (n: 'Haziq Fahmi', r: 'Cashier', p: '2222', ph: '019-2233445', hr: 10.0),
+        (n: 'Chef Ramli', r: 'Kitchen Staff', p: '3333', ph: '013-5566778', hr: 14.0),
+      ];
+
+      for (final s in staffSeeds) {
+        await into(staffMembers).insert(
+          StaffMembersCompanion.insert(
+            name: s.n,
+            role: Value(s.r),
+            pinCode: Value(s.p),
+            phone: Value(s.ph),
+            hourlyRate: Value(s.hr),
+            isActive: const Value(true),
+          ),
+        );
+      }
+    }
+
+    // Seed Customers (CRM / Loyalty)
+    final existingCustomers = await select(customers).get();
+    if (existingCustomers.isEmpty) {
+      final customerSeeds = [
+        (n: 'Ahmad Faizal', ph: '0123456789', e: 'faizal@gmail.com', pts: 120, t: 'Gold', s: 6, sp: 280.0),
+        (n: 'Nurul Huda', ph: '0198765432', e: 'huda@yahoo.com', pts: 45, t: 'Silver', s: 4, sp: 95.50),
+        (n: 'Tan Wei Lun', ph: '0161122334', e: 'weilun@hotmail.com', pts: 230, t: 'Platinum', s: 9, sp: 450.0),
+        (n: 'Siti Aisyah', ph: '0179988776', e: 'aisyah@gmail.com', pts: 15, t: 'Bronze', s: 2, sp: 32.0),
+      ];
+
+      for (final c in customerSeeds) {
+        await into(customers).insert(
+          CustomersCompanion.insert(
+            name: c.n,
+            phone: c.ph,
+            email: Value(c.e),
+            points: Value(c.pts),
+            tier: Value(c.t),
+            stampsCount: Value(c.s),
+            totalSpent: Value(c.sp),
+          ),
+        );
+      }
+    }
+  }
+
+  // ── Phase 2: Tasks Queries ──────────────────────────────────────────────────
+
+  Stream<List<Task>> watchAllTasks() =>
+      (select(tasks)..orderBy([(t) => OrderingTerm.desc(t.createdAt)])).watch();
+
+  Stream<List<Task>> watchTasksByCategory(String category) =>
+      (select(tasks)
+        ..where((t) => t.category.equals(category))
+        ..orderBy([(t) => OrderingTerm.desc(t.createdAt)]))
+      .watch();
+
+  Future<int> insertTask(TasksCompanion task) => into(tasks).insert(task);
+
+  Future<void> updateTaskStatus(int id, String status, {String? completedBy}) async {
+    await (update(tasks)..where((t) => t.id.equals(id))).write(
+      TasksCompanion(
+        status: Value(status),
+        completedAt: Value(status == 'completed' ? DateTime.now() : null),
+        completedBy: Value(completedBy),
+      ),
+    );
+  }
+
+  Future<void> deleteTask(int id) =>
+      (delete(tasks)..where((t) => t.id.equals(id))).go();
+
+  Future<void> upsertTask(TasksCompanion task) async {
+    final id = task.id.present ? task.id.value : null;
+    if (id != null) {
+      final existing = await (select(tasks)..where((t) => t.id.equals(id))).getSingleOrNull();
+      if (existing != null) {
+        await (update(tasks)..where((t) => t.id.equals(id))).write(task);
+        return;
+      }
+    }
+    await into(tasks).insert(task);
+  }
+
+  // ── Phase 2: Customers & Loyalty Queries ─────────────────────────────────────
+
+  Stream<List<Customer>> watchAllCustomers() =>
+      (select(customers)..orderBy([(c) => OrderingTerm.desc(c.totalSpent)])).watch();
+
+  Future<Customer?> getCustomerById(int id) =>
+      (select(customers)..where((c) => c.id.equals(id))).getSingleOrNull();
+
+  Future<Customer?> getCustomerByPhone(String phone) =>
+      (select(customers)..where((c) => c.phone.equals(phone))).getSingleOrNull();
+
+  Future<int> insertCustomer(CustomersCompanion customer) =>
+      into(customers).insert(customer);
+
+  Future<void> updateCustomer(CustomersCompanion customer) =>
+      (update(customers)..where((c) => c.id.equals(customer.id.value))).write(customer);
+
+  Future<void> deleteCustomer(int id) =>
+      (delete(customers)..where((c) => c.id.equals(id))).go();
+
+  Future<void> awardCustomerPointsAndStamps(int customerId, double amountSpent) async {
+    final customer = await getCustomerById(customerId);
+    if (customer == null) return;
+
+    final earnedPoints = amountSpent.floor(); // 1 point per RM1
+    final newPoints = customer.points + earnedPoints;
+    final newTotalSpent = customer.totalSpent + amountSpent;
+    final newStamps = (customer.stampsCount + 1) % 10;
+
+    String newTier = customer.tier;
+    if (newTotalSpent >= 400) {
+      newTier = 'Platinum';
+    } else if (newTotalSpent >= 200) {
+      newTier = 'Gold';
+    } else if (newTotalSpent >= 80) {
+      newTier = 'Silver';
+    }
+
+    await (update(customers)..where((c) => c.id.equals(customerId))).write(
+      CustomersCompanion(
+        points: Value(newPoints),
+        stampsCount: Value(newStamps),
+        totalSpent: Value(newTotalSpent),
+        tier: Value(newTier),
+        lastVisitedAt: Value(DateTime.now()),
+      ),
+    );
+  }
+
+  Future<bool> redeemCustomerStamps(int customerId) async {
+    final customer = await getCustomerById(customerId);
+    if (customer == null || customer.stampsCount < 10) return false;
+
+    await (update(customers)..where((c) => c.id.equals(customerId))).write(
+      CustomersCompanion(
+        stampsCount: Value(customer.stampsCount - 10),
+      ),
+    );
+    return true;
+  }
+
+  Future<void> upsertCustomer(CustomersCompanion customer) async {
+    final phone = customer.phone.value;
+    final existing = await getCustomerByPhone(phone);
+    if (existing != null) {
+      await (update(customers)..where((c) => c.id.equals(existing.id))).write(customer);
+    } else {
+      await into(customers).insert(customer);
+    }
+  }
+
+  // ── Phase 2: Staff & Attendance Queries ──────────────────────────────────────
+
+  Stream<List<StaffMember>> watchAllStaff() =>
+      (select(staffMembers)..orderBy([(s) => OrderingTerm.asc(s.name)])).watch();
+
+  Future<StaffMember?> getStaffById(int id) =>
+      (select(staffMembers)..where((s) => s.id.equals(id))).getSingleOrNull();
+
+  Future<StaffMember?> verifyStaffPin(String pin) =>
+      (select(staffMembers)..where((s) => s.pinCode.equals(pin) & s.isActive.equals(true)))
+          .getSingleOrNull();
+
+  Future<int> insertStaff(StaffMembersCompanion staff) =>
+      into(staffMembers).insert(staff);
+
+  Future<void> updateStaff(StaffMembersCompanion staff) =>
+      (update(staffMembers)..where((s) => s.id.equals(staff.id.value))).write(staff);
+
+  Future<void> deleteStaff(int id) =>
+      (delete(staffMembers)..where((s) => s.id.equals(id))).go();
+
+  Future<void> upsertStaff(StaffMembersCompanion staff) async {
+    final id = staff.id.present ? staff.id.value : null;
+    if (id != null) {
+      final existing = await getStaffById(id);
+      if (existing != null) {
+        await (update(staffMembers)..where((s) => s.id.equals(id))).write(staff);
+        return;
+      }
+    }
+    await into(staffMembers).insert(staff);
+  }
+
+  Stream<List<StaffAttendance>> watchTodayAttendance() {
+    final now = DateTime.now();
+    final todayStr = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+    return (select(staffAttendances)
+          ..where((a) => a.date.equals(todayStr))
+          ..orderBy([(a) => OrderingTerm.desc(a.clockInTime)]))
+        .watch();
+  }
+
+  Future<StaffAttendance?> getActiveAttendance(int staffId) {
+    final now = DateTime.now();
+    final todayStr = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+    return (select(staffAttendances)
+          ..where((a) => a.staffId.equals(staffId) & a.date.equals(todayStr) & a.clockOutTime.isNull()))
+        .getSingleOrNull();
+  }
+
+  Future<int> clockInStaff(int staffId, String staffName, {String? notes}) {
+    final now = DateTime.now();
+    final todayStr = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+    return into(staffAttendances).insert(
+      StaffAttendancesCompanion.insert(
+        staffId: staffId,
+        staffName: staffName,
+        clockInTime: Value(now),
+        notes: Value(notes ?? ''),
+        date: todayStr,
+      ),
+    );
+  }
+
+  Future<void> clockOutStaff(int attendanceId) async {
+    final attendance = await (select(staffAttendances)..where((a) => a.id.equals(attendanceId))).getSingleOrNull();
+    if (attendance == null) return;
+    final now = DateTime.now();
+    final duration = now.difference(attendance.clockInTime).inMinutes;
+
+    await (update(staffAttendances)..where((a) => a.id.equals(attendanceId))).write(
+      StaffAttendancesCompanion(
+        clockOutTime: Value(now),
+        totalMinutes: Value(duration),
+      ),
+    );
+  }
+
+  Future<void> upsertAttendance(StaffAttendancesCompanion attendance) async {
+    final id = attendance.id.present ? attendance.id.value : null;
+    if (id != null) {
+      final existing = await (select(staffAttendances)..where((a) => a.id.equals(id))).getSingleOrNull();
+      if (existing != null) {
+        await (update(staffAttendances)..where((a) => a.id.equals(id))).write(attendance);
+        return;
+      }
+    }
+    await into(staffAttendances).insert(attendance);
+  }
+
+  // ── Phase 2: KDS Queries ────────────────────────────────────────────────────
+
+  Stream<List<Order>> watchActiveKdsOrders() {
+    return (select(orders)
+          ..where((o) => o.status.isIn(['pending', 'in_progress', 'ready']))
+          ..orderBy([(o) => OrderingTerm.asc(o.createdAt)]))
+        .watch();
+  }
+
+  Future<void> updateOrderStatus(int orderId, String status) async {
+    await (update(orders)..where((o) => o.id.equals(orderId))).write(
+      OrdersCompanion(
+        status: Value(status),
+        completedAt: Value(status == 'completed' ? DateTime.now() : null),
+      ),
+    );
+  }
 }
+
 
