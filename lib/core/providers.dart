@@ -98,6 +98,92 @@ final ingredientsProvider = StreamProvider<List<Ingredient>>((ref) {
   return ref.watch(databaseProvider).watchIngredients();
 });
 
+// ── Phase 3: Suppliers & Purchase Orders ──────────────────────────────────────
+
+final allSuppliersProvider = StreamProvider<List<Supplier>>((ref) {
+  return ref.watch(databaseProvider).watchAllSuppliers();
+});
+
+final allPurchaseOrdersProvider = StreamProvider<List<PurchaseOrder>>((ref) {
+  return ref.watch(databaseProvider).watchAllPurchaseOrders();
+});
+
+final purchaseOrderItemsProvider =
+    StreamProvider.family<List<PurchaseOrderItem>, int>((ref, poId) {
+  return ref.watch(databaseProvider).watchPurchaseOrderItems(poId);
+});
+
+// ── Phase 3: Stock Audits (Stock Take) ────────────────────────────────────────
+
+final allStockAuditsProvider = StreamProvider<List<StockAudit>>((ref) {
+  return ref.watch(databaseProvider).watchAllStockAudits();
+});
+
+// ── Phase 3: Expenses & Petty Cash ────────────────────────────────────────────
+
+final allExpensesProvider = StreamProvider<List<Expense>>((ref) {
+  return ref.watch(databaseProvider).watchAllExpenses();
+});
+
+final todayExpensesProvider = StreamProvider<List<Expense>>((ref) {
+  return ref.watch(databaseProvider).watchTodayExpenses();
+});
+
+final todayTotalExpensesProvider = FutureProvider<double>((ref) {
+  ref.watch(todayExpensesProvider);
+  return ref.watch(databaseProvider).getTodayTotalExpenses();
+});
+
+final cashDrawerLogsProvider = StreamProvider<List<CashDrawerLog>>((ref) {
+  return ref.watch(databaseProvider).watchCashDrawerLogs();
+});
+
+final todayCashDrawerBalanceProvider = FutureProvider<double>((ref) {
+  ref.watch(todayOrdersProvider);
+  ref.watch(todayExpensesProvider);
+  ref.watch(cashDrawerLogsProvider);
+  return ref.watch(databaseProvider).getTodayCashDrawerBalance();
+});
+
+// ── Phase 3: SST Tax & Business Settings ──────────────────────────────────────
+
+class SstSettings {
+  final bool isEnabled;
+  final double rate; // e.g. 0.06 for 6%
+  final String sstNumber;
+
+  const SstSettings({
+    this.isEnabled = true,
+    this.rate = 0.06,
+    this.sstNumber = 'W10-2308-32000000',
+  });
+
+  SstSettings copyWith({
+    bool? isEnabled,
+    double? rate,
+    String? sstNumber,
+  }) {
+    return SstSettings(
+      isEnabled: isEnabled ?? this.isEnabled,
+      rate: rate ?? this.rate,
+      sstNumber: sstNumber ?? this.sstNumber,
+    );
+  }
+}
+
+class SstSettingsNotifier extends StateNotifier<SstSettings> {
+  SstSettingsNotifier() : super(const SstSettings());
+
+  void toggleSst(bool enabled) => state = state.copyWith(isEnabled: enabled);
+  void updateRate(double rate) => state = state.copyWith(rate: rate);
+  void updateSstNumber(String number) => state = state.copyWith(sstNumber: number);
+}
+
+final sstSettingsProvider =
+    StateNotifierProvider<SstSettingsNotifier, SstSettings>((ref) {
+  return SstSettingsNotifier();
+});
+
 // ── Reports ───────────────────────────────────────────────────────────────────
 
 final todaySummaryProvider = FutureProvider<Map<String, dynamic>>((ref) {

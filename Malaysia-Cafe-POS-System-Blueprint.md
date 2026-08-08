@@ -23,39 +23,39 @@ A POS built as the **operational nerve center** of the cafe, not just a cash reg
 Building everything in **Flutter** is the right call here — one codebase compiles natively to Android tablets, iOS/iPad, Windows (counter PCs), macOS, Linux, and Web. That means the cashier POS, KDS, customer display, manager app, and owner dashboard are all the *same app*, just with different role-based layouts/routes — not five separate builds to maintain.
 
 ```
-                         ┌─────────────────────────────┐
-                         │      CLOUD BACKEND (SG/MY    │
-                         │   data center — PDPA compliant)│
-                         │  • Central database (orders,  │
-                         │    menu, live stock, staff,    │
-                         │    tasks)                       │
-                         │  • SST tax engine (F&B 6%)       │
-                         │  • Analytics & reporting engine │
-                         │  • Multi-outlet sync layer       │
+                         ┌───────────────────────────────────┐
+                         │      CLOUD BACKEND (SG/MY         │
+                         │   data center — PDPA compliant)   │
+                         │  • Central database (orders,      │
+                         │    menu, live stock, staff,       │
+                         │    tasks)                         │
+                         │  • SST tax engine (F&B 6%)        │
+                         │  • Analytics & reporting engine   │
+                         │  • Multi-outlet sync layer        │
                          │  (e-Invoice/MyInvois module:      │
                          │   built-in but OFF by default —   │
                          │   flip on later if you cross      │
                          │   RM1M turnover)                  │
-                         └───────────────┬─────────────┘
+                         └───────────────┬───────────────────┘
                                          │ (real-time sync, WebSocket/Firestore-style + REST)
         ┌────────────────┬─────────────┼─────────────┬────────────────┐
         │                │             │             │                │
- ┌──────▼──────┐  ┌──────▼──────┐ ┌────▼─────┐ ┌─────▼──────┐ ┌───────▼───────┐
+ ┌──────▼──────┐  ┌──────▼──────┐ ┌────▼─────┐ ┌─────▼──────┐ ┌───────▼────────┐
  │ Cashier POS │  │ Kitchen     │ │Customer  │ │ Manager App│ │ Owner Dashboard│
- │ (Flutter —  │  │ Display     │ │Display / │ │ (Flutter — │  │ (Flutter Web/  │
- │ Android/iPad│  │ (Flutter,   │ │Self-order│ │ phone)     │  │ Windows/macOS) │
- │ /Windows)   │  │ same app)   │ │(Flutter) │ │            │  │                │
+ │ (Flutter —  │  │ Display     │ │Display / │ │ (Flutter — │ │ (Flutter Web/  │
+ │ Android/iPad│  │ (Flutter,   │ │Self-order│ │ phone)     │ │ Windows/macOS) │
+ │ /Windows)   │  │ same app)   │ │(Flutter) │ │            │ │                │
  └──────┬──────┘  └─────────────┘ └──────────┘ └────────────┘ └────────────────┘
         │              ▲ all built from ONE Flutter codebase, role/screen-size aware ▲
         │
         │ Local SQLite (via drift/sqflite) — offline cache, keeps selling if WiFi drops
         │
- ┌──────▼───────────────────────────────────────────────────┐
+ ┌──────▼───────────────────────────────────────────────────────┐
  │ HARDWARE ECOSYSTEM LAYER (Bluetooth/USB/LAN plugins)         │
  │ Receipt printer • Cash drawer • Barcode/QR scanner •         │
  │ Card/DuitNow QR terminal • Kitchen printer • Customer display│
  │ • Weighing scale (for bakery/by-weight items)                │
- └───────────────────────────────────────────────────────────┘
+ └──────────────────────────────────────────────────────────────┘
 ```
 
 **Key architectural decisions:**

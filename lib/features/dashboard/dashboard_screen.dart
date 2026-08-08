@@ -27,6 +27,10 @@ class DashboardScreen extends ConsumerWidget {
     final tasksAsync = ref.watch(allTasksProvider);
     final staffAttAsync = ref.watch(todayAttendanceProvider);
     final customersAsync = ref.watch(allCustomersProvider);
+    final posAsync = ref.watch(allPurchaseOrdersProvider);
+    final drawerBalanceAsync = ref.watch(todayCashDrawerBalanceProvider);
+    final totalExpensesAsync = ref.watch(todayTotalExpensesProvider);
+    final sstSettings = ref.watch(sstSettingsProvider);
 
     final today = DateFormat('EEEE, d MMMM y').format(DateTime.now());
     final isTablet = MediaQuery.of(context).size.width >= 600;
@@ -38,6 +42,8 @@ class DashboardScreen extends ConsumerWidget {
           ref.invalidate(todaySummaryProvider);
           ref.invalidate(hourlySalesProvider);
           ref.invalidate(topItemsProvider);
+          ref.invalidate(todayTotalExpensesProvider);
+          ref.invalidate(todayCashDrawerBalanceProvider);
         },
         child: CustomScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
@@ -119,6 +125,19 @@ class DashboardScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: 20),
 
+                  // ── Phase 3 Procurement & Finance Hub ───────────────
+                  const SectionHeader(title: 'Pengurusan Inventori & Aliran Tunai (Fasa 3)'),
+                  const SizedBox(height: 12),
+                  _buildPhase3Hub(
+                    context,
+                    posAsync: posAsync,
+                    drawerBalanceAsync: drawerBalanceAsync,
+                    totalExpensesAsync: totalExpensesAsync,
+                    sstSettings: sstSettings,
+                    isTablet: isTablet,
+                  ),
+                  const SizedBox(height: 20),
+
                   // ── Low Stock Alert ─────────────────────────────────
                   ingredientsAsync.when(
                     loading: () => const SizedBox.shrink(),
@@ -179,6 +198,8 @@ class DashboardScreen extends ConsumerWidget {
       ),
     );
   }
+
+  // ── Phase 2 Hub ─────────────────────────────────────────────────────────────
 
   Widget _buildPhase2Hub(
     BuildContext context, {
@@ -269,7 +290,118 @@ class DashboardScreen extends ConsumerWidget {
                   children: [
                     Text(
                       item.value,
-                      style: TextStyle(
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w800,
+                        color: AppTheme.darkEspresso,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      item.title,
+                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppTheme.mutedText),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  // ── Phase 3 Hub ─────────────────────────────────────────────────────────────
+
+  Widget _buildPhase3Hub(
+    BuildContext context, {
+    required AsyncValue<List<PurchaseOrder>> posAsync,
+    required AsyncValue<double> drawerBalanceAsync,
+    required AsyncValue<double> totalExpensesAsync,
+    required SstSettings sstSettings,
+    required bool isTablet,
+  }) {
+    final pendingPOs = posAsync.valueOrNull?.where((p) => p.status == 'ordered').length ?? 0;
+    final drawerBal = drawerBalanceAsync.valueOrNull ?? 0.0;
+    final expenses = totalExpensesAsync.valueOrNull ?? 0.0;
+
+    final p3Items = [
+      (
+        title: 'PO Pembekal',
+        value: '$pendingPOs Menunggu',
+        subtitle: 'Pesanan bekalan aktif',
+        icon: Icons.local_shipping_rounded,
+        color: const Color(0xFF00897B),
+        route: '/suppliers',
+      ),
+      (
+        title: 'Audit Varians Stok',
+        value: 'Kiraan Fizikal',
+        subtitle: 'Stock Take & Pelarasan',
+        icon: Icons.inventory_rounded,
+        color: const Color(0xFFD84315),
+        route: '/stock-take',
+      ),
+      (
+        title: 'Baki Laci Tunai',
+        value: 'RM ${drawerBal.toStringAsFixed(2)}',
+        subtitle: 'Cash Drawer Float',
+        icon: Icons.point_of_sale_rounded,
+        color: const Color(0xFF2E7D32),
+        route: '/expenses',
+      ),
+      (
+        title: 'Belanja & Tunai Runcit',
+        value: 'RM ${expenses.toStringAsFixed(2)}',
+        subtitle: sstSettings.isEnabled ? 'SST 6% Aktif' : 'SST Dinyahaktif',
+        icon: Icons.account_balance_wallet_rounded,
+        color: const Color(0xFFC2185B),
+        route: '/expenses',
+      ),
+    ];
+
+    return GridView.count(
+      crossAxisCount: isTablet ? 4 : 2,
+      mainAxisSpacing: 12,
+      crossAxisSpacing: 12,
+      childAspectRatio: isTablet ? 1.4 : 1.3,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      children: p3Items.map((item) {
+        return InkWell(
+          onTap: () => context.go(item.route),
+          borderRadius: BorderRadius.circular(16),
+          child: Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: Theme.of(context).cardColor,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: const Color(0xFFEDE3D8)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: item.color.withOpacity(0.12),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Icon(item.icon, size: 18, color: item.color),
+                    ),
+                    const Icon(Icons.arrow_forward_ios_rounded, size: 12, color: AppTheme.mutedText),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      item.value,
+                      style: const TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w800,
                         color: AppTheme.darkEspresso,
@@ -298,15 +430,18 @@ class DashboardScreen extends ConsumerWidget {
     return Container(
       decoration: BoxDecoration(
         gradient: const LinearGradient(
+          colors: [
+            AppTheme.primaryCoffee,
+            AppTheme.darkEspresso,
+          ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFFC17F3A), Color(0xFF8D4E1C)],
         ),
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.primaryCoffee.withOpacity(0.30),
-            blurRadius: 24,
+            color: AppTheme.primaryCoffee.withOpacity(0.25),
+            blurRadius: 20,
             offset: const Offset(0, 8),
           ),
         ],
@@ -315,37 +450,69 @@ class DashboardScreen extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
-            children: [
-              Icon(Icons.attach_money_rounded,
-                  color: Colors.white70, size: 18),
-              SizedBox(width: 6),
-              Text("Jumlah Jualan Hari Ini",
-                  style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500)),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Text(
-            CurrencyFormatter.format(
-                summary['totalSales'] as double),
-            style: tt.displayLarge?.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.w800,
-                fontSize: 40),
-          ),
-          const SizedBox(height: 16),
           Row(
             children: [
-              _revenueStat(
-                  '${summary['orderCount']} pesanan',
-                  Icons.receipt_long_outlined),
-              const SizedBox(width: 24),
-              _revenueStat(
-                  '${summary['voidCount']} batal (void)',
-                  Icons.remove_circle_outline),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.15),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: const Row(
+                  children: [
+                    Icon(Icons.trending_up, size: 14, color: Colors.white),
+                    SizedBox(width: 4),
+                    Text(
+                      'JUALAN HARI INI',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                        letterSpacing: 0.8,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Spacer(),
+              Text(
+                '${summary['completedOrders']} pesanan siap',
+                style: TextStyle(
+                  fontSize: 13,
+                  color: Colors.white.withOpacity(0.8),
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Text(
+            CurrencyFormatter.format(summary['totalSales']),
+            style: tt.headlineLarge?.copyWith(
+              color: Colors.white,
+              fontWeight: FontWeight.w900,
+              fontSize: 36,
+              letterSpacing: -0.5,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              _paymentPill(
+                'Tunai: ${CurrencyFormatter.format(summary['cashSales'])}',
+                Icons.money,
+              ),
+              const SizedBox(width: 8),
+              _paymentPill(
+                'QR: ${CurrencyFormatter.format(summary['duitNowSales'])}',
+                Icons.qr_code_2,
+              ),
+              const SizedBox(width: 8),
+              _paymentPill(
+                'Kad: ${CurrencyFormatter.format(summary['cardSales'])}',
+                Icons.credit_card,
+              ),
             ],
           ),
         ],
@@ -353,18 +520,28 @@ class DashboardScreen extends ConsumerWidget {
     );
   }
 
-  Widget _revenueStat(String label, IconData icon) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, color: Colors.white60, size: 14),
-        const SizedBox(width: 4),
-        Text(label,
+  Widget _paymentPill(String label, IconData icon) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.12),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 12, color: Colors.white70),
+          const SizedBox(width: 4),
+          Text(
+            label,
             style: const TextStyle(
-                color: Colors.white70,
-                fontSize: 13,
-                fontWeight: FontWeight.w500)),
-      ],
+              fontSize: 11,
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -372,8 +549,11 @@ class DashboardScreen extends ConsumerWidget {
     return Container(
       height: 160,
       decoration: BoxDecoration(
-        color: AppTheme.surfaceVariant,
-        borderRadius: BorderRadius.circular(24),
+        color: AppTheme.primaryCoffee.withOpacity(0.3),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: const Center(
+        child: CircularProgressIndicator(color: Colors.white),
       ),
     );
   }
@@ -384,19 +564,27 @@ class DashboardScreen extends ConsumerWidget {
     final children = [
       Expanded(
         child: StatCard(
-          label: 'Pesanan',
+          label: 'Jumlah Pesanan',
           value: '${summary['orderCount']}',
-          icon: Icons.shopping_bag_outlined,
+          icon: Icons.receipt_long_outlined,
           iconColor: AppTheme.primaryCoffee,
         ),
       ),
       const SizedBox(width: 12),
       Expanded(
         child: StatCard(
-          label: 'Purata Resit',
-          value: CurrencyFormatter.format(
-              summary['avgTicket'] as double),
-          icon: Icons.bar_chart_rounded,
+          label: 'Purata Tiket',
+          value: CurrencyFormatter.format(summary['avgOrderValue']),
+          icon: Icons.analytics_outlined,
+          iconColor: AppTheme.duitNowBlue,
+        ),
+      ),
+      const SizedBox(width: 12),
+      Expanded(
+        child: StatCard(
+          label: 'Siap',
+          value: '${summary['completedOrders']}',
+          icon: Icons.check_circle_outline,
           iconColor: AppTheme.successGreen,
         ),
       ),
@@ -487,6 +675,30 @@ class DashboardScreen extends ConsumerWidget {
         color: const Color(0xFF6A1B9A),
         route: '/loyalty'
       ),
+      (
+        icon: Icons.local_shipping_rounded,
+        label: 'Pembekal & PO',
+        color: const Color(0xFF00897B),
+        route: '/suppliers'
+      ),
+      (
+        icon: Icons.inventory_rounded,
+        label: 'Stock Take',
+        color: const Color(0xFFD84315),
+        route: '/stock-take'
+      ),
+      (
+        icon: Icons.account_balance_wallet_rounded,
+        label: 'Perbelanjaan',
+        color: const Color(0xFFC2185B),
+        route: '/expenses'
+      ),
+      (
+        icon: Icons.bar_chart_rounded,
+        label: 'Laporan Jualan',
+        color: const Color(0xFF455A64),
+        route: '/reports'
+      ),
     ];
 
     return GridView.count(
@@ -528,61 +740,64 @@ class DashboardScreen extends ConsumerWidget {
   // ── Recent Order Tile ──────────────────────────────────────────────────────
 
   Widget _recentOrderTile(BuildContext context, Order order) {
-    final timeStr = DateFormat('HH:mm').format(order.createdAt);
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: UCard(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        onTap: () => context.go('/orders'),
+        padding: const EdgeInsets.all(14),
         child: Row(
           children: [
-            // Icon
             Container(
-              width: 40,
-              height: 40,
+              width: 36,
+              height: 36,
               decoration: BoxDecoration(
-                color: AppTheme.surfaceVariant,
-                borderRadius: BorderRadius.circular(12),
+                color: AppTheme.primaryCoffee.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(10),
               ),
               child: const Icon(Icons.receipt_outlined,
-                  color: AppTheme.primaryCoffee, size: 18),
+                  size: 18, color: AppTheme.primaryCoffee),
             ),
             const SizedBox(width: 12),
-            // Details
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(order.orderNumber,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 14,
-                          color: AppTheme.darkEspresso)),
                   Row(
                     children: [
-                      OrderTypeBadge(orderType: order.orderType),
+                      Text(
+                        order.orderNumber,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 14,
+                          color: AppTheme.darkEspresso,
+                        ),
+                      ),
                       const SizedBox(width: 8),
-                      Text(timeStr,
-                          style: const TextStyle(
-                              fontSize: 12,
-                              color: AppTheme.mutedText)),
+                      OrderTypeBadge(orderType: order.orderType),
                     ],
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    DateFormat('hh:mm a').format(order.createdAt),
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: AppTheme.mutedText,
+                    ),
                   ),
                 ],
               ),
             ),
-            // Status + Amount
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
                   CurrencyFormatter.format(order.totalAmount),
                   style: const TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 14,
-                      color: AppTheme.darkEspresso),
+                    fontWeight: FontWeight.w800,
+                    fontSize: 15,
+                    color: AppTheme.darkEspresso,
+                  ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 2),
                 StatusBadge(status: order.status),
               ],
             ),

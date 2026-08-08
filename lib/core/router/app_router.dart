@@ -6,6 +6,9 @@ import '../../features/kds/kds_screen.dart';
 import '../../features/tasks/tasks_screen.dart';
 import '../../features/loyalty/loyalty_screen.dart';
 import '../../features/staff/staff_screen.dart';
+import '../../features/suppliers/suppliers_po_screen.dart';
+import '../../features/inventory/stock_take_screen.dart';
+import '../../features/expenses/expenses_screen.dart';
 import '../../features/payment/payment_screen.dart';
 import '../../features/payment/receipt_screen.dart';
 import '../../features/orders/orders_screen.dart';
@@ -44,6 +47,18 @@ final appRouter = GoRouter(
         GoRoute(
           path: '/staff',
           builder: (_, __) => const StaffScreen(),
+        ),
+        GoRoute(
+          path: '/suppliers',
+          builder: (_, __) => const SuppliersPoScreen(),
+        ),
+        GoRoute(
+          path: '/stock-take',
+          builder: (_, __) => const StockTakeScreen(),
+        ),
+        GoRoute(
+          path: '/expenses',
+          builder: (_, __) => const ExpensesScreen(),
         ),
         GoRoute(
           path: '/orders',
@@ -96,6 +111,9 @@ class _AppShell extends StatelessWidget {
     (icon: Icons.assignment_turned_in_outlined, activeIcon: Icons.assignment_turned_in_rounded, label: 'Tugasan', path: '/tasks'),
     (icon: Icons.card_membership_outlined, activeIcon: Icons.card_membership_rounded, label: 'Loyalty', path: '/loyalty'),
     (icon: Icons.badge_outlined, activeIcon: Icons.badge_rounded, label: 'Staf', path: '/staff'),
+    (icon: Icons.local_shipping_outlined, activeIcon: Icons.local_shipping_rounded, label: 'Pembekal & PO', path: '/suppliers'),
+    (icon: Icons.inventory_outlined, activeIcon: Icons.inventory_rounded, label: 'Stock Take', path: '/stock-take'),
+    (icon: Icons.account_balance_wallet_outlined, activeIcon: Icons.account_balance_wallet_rounded, label: 'Perbelanjaan', path: '/expenses'),
     (icon: Icons.receipt_long_outlined, activeIcon: Icons.receipt_long_rounded, label: 'Pesanan', path: '/orders'),
     (icon: Icons.inventory_2_outlined, activeIcon: Icons.inventory_2_rounded, label: 'Inventori', path: '/inventory'),
     (icon: Icons.bar_chart_outlined, activeIcon: Icons.bar_chart_rounded, label: 'Laporan', path: '/reports'),
@@ -203,12 +221,13 @@ class _AppShell extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(d.activeIcon, color: isSelected ? AppTheme.primaryCoffee : AppTheme.darkEspresso, size: 28),
+                        Icon(d.activeIcon, color: isSelected ? AppTheme.primaryCoffee : AppTheme.darkEspresso, size: 26),
                         const SizedBox(height: 6),
                         Text(
                           d.label,
+                          textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 11,
                             fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
                             color: isSelected ? AppTheme.primaryCoffee : AppTheme.darkEspresso,
                           ),

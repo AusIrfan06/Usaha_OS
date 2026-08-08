@@ -224,7 +224,9 @@ class _ReceiptScreenState extends ConsumerState<ReceiptScreen> {
                 // Totals
                 _receiptRow('Subtotal',
                     CurrencyFormatter.format(_order!.subtotal)),
-                _receiptRow('SST', 'RM 0.00 (disabled)',
+                _receiptRow(
+                    _order!.taxAmount > 0 ? 'SST (6%)' : 'SST (0%)',
+                    CurrencyFormatter.format(_order!.taxAmount),
                     small: true),
 
                 const SizedBox(height: 8),

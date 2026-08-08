@@ -86,6 +86,10 @@ class OrderItems extends Table {
       text().withDefault(const Constant(''))();
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Phase 2 Tables: Tasks, Customers (CRM/Loyalty), Staff & Attendance
+// ─────────────────────────────────────────────────────────────────────────────
+
 class Tasks extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get title => text()();
@@ -136,6 +140,84 @@ class StaffAttendances extends Table {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Phase 3 Tables: Suppliers, Purchase Orders, Stock Audits, Expenses, Petty Cash
+// ─────────────────────────────────────────────────────────────────────────────
+
+class Suppliers extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get name => text()();
+  TextColumn get contactPerson => text().nullable()();
+  TextColumn get phone => text().nullable()();
+  TextColumn get email => text().nullable()();
+  TextColumn get address => text().nullable()();
+  TextColumn get paymentTerms => text().withDefault(const Constant('COD'))(); // COD | 14_days | 30_days
+  TextColumn get category => text().withDefault(const Constant('Coffee Beans'))(); // Coffee Beans | Dairy & Milk | Syrups | Packaging | Fresh Food | Equipment
+  BoolColumn get isActive => boolean().withDefault(const Constant(true))();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+}
+
+class PurchaseOrders extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get poNumber => text()();
+  IntColumn get supplierId => integer().references(Suppliers, #id)();
+  TextColumn get supplierName => text()();
+  TextColumn get status => text().withDefault(const Constant('draft'))(); // draft | ordered | received | cancelled
+  RealColumn get totalAmount => real().withDefault(const Constant(0.0))();
+  DateTimeColumn get orderDate => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get expectedDate => dateTime().nullable()();
+  DateTimeColumn get receivedDate => dateTime().nullable()();
+  TextColumn get notes => text().withDefault(const Constant(''))();
+}
+
+class PurchaseOrderItems extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get poId => integer().references(PurchaseOrders, #id)();
+  IntColumn get ingredientId => integer().references(Ingredients, #id)();
+  TextColumn get ingredientName => text()();
+  TextColumn get unit => text().withDefault(const Constant('unit'))();
+  RealColumn get quantityOrdered => real().withDefault(const Constant(1.0))();
+  RealColumn get quantityReceived => real().withDefault(const Constant(0.0))();
+  RealColumn get unitCost => real().withDefault(const Constant(0.0))();
+  RealColumn get subtotal => real().withDefault(const Constant(0.0))();
+}
+
+class StockAudits extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get ingredientId => integer().references(Ingredients, #id)();
+  TextColumn get ingredientName => text()();
+  TextColumn get unit => text().withDefault(const Constant('unit'))();
+  RealColumn get expectedStock => real().withDefault(const Constant(0.0))();
+  RealColumn get actualStock => real().withDefault(const Constant(0.0))();
+  RealColumn get varianceQuantity => real().withDefault(const Constant(0.0))(); // actual - expected
+  RealColumn get varianceValue => real().withDefault(const Constant(0.0))(); // varianceQuantity * costPerUnit
+  TextColumn get reason => text().withDefault(const Constant('Routine Check'))(); // Routine Check | Wastage | Expiry | Spillage | Staff Meal | Discrepancy
+  TextColumn get auditedBy => text().withDefault(const Constant('Shift Manager'))();
+  DateTimeColumn get auditedAt => dateTime().withDefault(currentDateAndTime)();
+  TextColumn get notes => text().withDefault(const Constant(''))();
+}
+
+class Expenses extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get category => text().withDefault(const Constant('Petty Cash'))(); // Petty Cash | Ingredients | Utilities | Maintenance | Staff Wages | Marketing | Miscellaneous
+  RealColumn get amount => real().withDefault(const Constant(0.0))();
+  TextColumn get paymentMethod => text().withDefault(const Constant('cash'))(); // cash | duitnow | bank_transfer
+  TextColumn get recipient => text().withDefault(const Constant(''))(); // Supplier, Kedai Runcit, TNB, etc.
+  TextColumn get description => text().withDefault(const Constant(''))();
+  TextColumn get receiptNumber => text().nullable()();
+  TextColumn get recordedBy => text().withDefault(const Constant('Staff'))();
+  DateTimeColumn get expenseDate => dateTime().withDefault(currentDateAndTime)();
+}
+
+class CashDrawerLogs extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get type => text()(); // float_in | cash_in | cash_out | drop | audit
+  RealColumn get amount => real().withDefault(const Constant(0.0))();
+  TextColumn get reason => text().withDefault(const Constant(''))();
+  TextColumn get recordedBy => text().withDefault(const Constant('Staff'))();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Database
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -150,12 +232,18 @@ class StaffAttendances extends Table {
   Customers,
   StaffMembers,
   StaffAttendances,
+  Suppliers,
+  PurchaseOrders,
+  PurchaseOrderItems,
+  StockAudits,
+  Expenses,
+  CashDrawerLogs,
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -163,6 +251,7 @@ class AppDatabase extends _$AppDatabase {
           await m.createAll();
           await _seedData();
           await _seedPhase2Data();
+          await _seedPhase3Data();
         },
         onUpgrade: (m, from, to) async {
           if (from < 2) {
@@ -172,6 +261,15 @@ class AppDatabase extends _$AppDatabase {
             await m.createTable(staffAttendances);
             await _seedPhase2Data();
           }
+          if (from < 3) {
+            await m.createTable(suppliers);
+            await m.createTable(purchaseOrders);
+            await m.createTable(purchaseOrderItems);
+            await m.createTable(stockAudits);
+            await m.createTable(expenses);
+            await m.createTable(cashDrawerLogs);
+            await _seedPhase3Data();
+          }
         },
       );
 
@@ -179,22 +277,24 @@ class AppDatabase extends _$AppDatabase {
     return driftDatabase(name: 'usaha_os');
   }
 
-  // ── Seed Data ──────────────────────────────────────────────────────────────
+  // ─────────────────────────────────────────────────────────────────────────
+  // Seed Data
+  // ─────────────────────────────────────────────────────────────────────────
 
   Future<void> _seedData() async {
     // Categories
     final hotId = await into(categories).insert(
       CategoriesCompanion.insert(
         name: 'Hot Drinks',
-        iconCode: const Value('e5b3'),
-        colorHex: const Value('#8D4E1C'),
+        iconCode: const Value('e532'),
+        colorHex: const Value('#C17F3A'),
         sortOrder: const Value(0),
       ),
     );
     final coldId = await into(categories).insert(
       CategoriesCompanion.insert(
         name: 'Cold Drinks',
-        iconCode: const Value('e798'),
+        iconCode: const Value('e30e'),
         colorHex: const Value('#1565C0'),
         sortOrder: const Value(1),
       ),
@@ -218,7 +318,6 @@ class AppDatabase extends _$AppDatabase {
 
     // Menu Items
     final menuSeed = [
-      // Hot Drinks
       (c: hotId, n: 'Kopi O', p: 2.50, d: 'Classic black coffee', s: 'bar'),
       (c: hotId, n: 'Teh Tarik', p: 3.00, d: 'Pulled milk tea', s: 'bar'),
       (c: hotId, n: 'Kopi C', p: 3.50, d: 'Coffee with evaporated milk', s: 'bar'),
@@ -227,7 +326,6 @@ class AppDatabase extends _$AppDatabase {
       (c: hotId, n: 'Americano', p: 7.00, d: 'Espresso with hot water', s: 'bar'),
       (c: hotId, n: 'Milo Panas', p: 4.00, d: 'Hot chocolate malt drink', s: 'bar'),
       (c: hotId, n: 'Horlicks', p: 4.50, d: 'Hot malt milk drink', s: 'bar'),
-      // Cold Drinks
       (c: coldId, n: 'Iced Kopi O', p: 3.00, d: 'Iced black coffee', s: 'bar'),
       (c: coldId, n: 'Iced Teh Tarik', p: 3.50, d: 'Iced pulled milk tea', s: 'bar'),
       (c: coldId, n: 'Iced Latte', p: 9.00, d: 'Iced espresso with fresh milk', s: 'bar'),
@@ -235,7 +333,6 @@ class AppDatabase extends _$AppDatabase {
       (c: coldId, n: 'Fresh Orange', p: 7.50, d: 'Freshly squeezed orange juice', s: 'bar'),
       (c: coldId, n: 'Lemon Ais', p: 5.00, d: 'Iced lemon with soda', s: 'bar'),
       (c: coldId, n: 'Bandung', p: 4.50, d: 'Rose syrup with evaporated milk', s: 'bar'),
-      // Food
       (c: foodId, n: 'Nasi Lemak', p: 8.00, d: 'Coconut rice, sambal, egg & anchovies', s: 'kitchen'),
       (c: foodId, n: 'Roti Bakar', p: 4.50, d: 'Toasted bread with butter & kaya', s: 'kitchen'),
       (c: foodId, n: 'Mee Goreng', p: 9.50, d: 'Fried noodles Malaysian style', s: 'kitchen'),
@@ -243,7 +340,6 @@ class AppDatabase extends _$AppDatabase {
       (c: foodId, n: 'Sandwich', p: 6.50, d: 'Toasted club sandwich', s: 'kitchen'),
       (c: foodId, n: 'Char Kway Teow', p: 10.00, d: 'Fried flat rice noodles', s: 'kitchen'),
       (c: foodId, n: 'Nasi Goreng', p: 10.00, d: 'Malaysian fried rice', s: 'kitchen'),
-      // Pastries
       (c: pastryId, n: 'Croissant', p: 5.50, d: 'Butter croissant', s: 'pastry'),
       (c: pastryId, n: 'Banana Cake', p: 4.50, d: 'Homemade banana cake slice', s: 'pastry'),
       (c: pastryId, n: 'Curry Puff', p: 2.50, d: 'Crispy curry puff', s: 'pastry'),
@@ -278,9 +374,6 @@ class AppDatabase extends _$AppDatabase {
       (n: 'Orange', u: 'pcs', s: 30.0, r: 10.0, c: 0.80),
       (n: 'Milo Powder', u: 'g', s: 150.0, r: 200.0, c: 0.04),
       (n: 'Butter', u: 'g', s: 500.0, r: 100.0, c: 0.02),
-      (n: 'Flour', u: 'g', s: 2000.0, r: 500.0, c: 0.003),
-      (n: 'Coconut Milk', u: 'ml', s: 1000.0, r: 200.0, c: 0.007),
-      (n: 'Kaya', u: 'g', s: 300.0, r: 100.0, c: 0.03),
     ];
 
     for (final ing in ingredientSeed) {
@@ -296,134 +389,360 @@ class AppDatabase extends _$AppDatabase {
     }
   }
 
+  // ── Phase 2: Seed Data ──────────────────────────────────────────────────────
+
+  Future<void> _seedPhase2Data() async {
+    // Seed Tasks
+    final existingTasks = await select(tasks).get();
+    if (existingTasks.isEmpty) {
+      final taskSeeds = [
+        (t: 'Float Count Verification', d: 'Count cash float (RM200) in cash drawer', c: 'opening', p: 'high'),
+        (t: 'Espresso Machine Warmup & Flush', d: 'Turn on group heads & steam wand purge', c: 'opening', p: 'high'),
+        (t: 'Inspect Fridge & Chiller Temps', d: 'Ensure milk chiller is under 4°C', c: 'opening', p: 'medium'),
+        (t: 'Restock Milk, Cups & Lids', d: 'Check front counter stock levels', c: 'opening', p: 'medium'),
+        (t: 'Sanitize Workstations & Tables', d: 'Wipe all dining tables and POS counter', c: 'opening', p: 'low'),
+        (t: 'Deep Clean Steam Wand & Group Heads', d: 'Backflush espresso machine with Cafiza', c: 'closing', p: 'high'),
+        (t: 'Empty Coffee Puck Bin & Drip Tray', d: 'Wash and sanitize knock box', c: 'closing', p: 'medium'),
+        (t: 'Reconcile Cash Drawer & Print Daily Z-Report', d: 'Match cash total against system sales', c: 'closing', p: 'high'),
+        (t: 'Discard Expired Pastries & Clear Display', d: 'Log wastage in system', c: 'closing', p: 'medium'),
+        (t: 'Lock Doors & Turn Off Signage/AC', d: 'Ensure main breaker & lights are secured', c: 'closing', p: 'high'),
+        (t: 'Oat Milk delivery arriving at 10 AM', d: 'Supplier contacted, invoice ready on clipboard', c: 'handover', p: 'medium'),
+        (t: 'Grinder 2 calibrated for Dark Roast', d: 'Dose set to 18.5g extraction at 27s', c: 'handover', p: 'low'),
+      ];
+
+      for (final s in taskSeeds) {
+        await into(tasks).insert(
+          TasksCompanion.insert(
+            title: s.t,
+            description: Value(s.d),
+            category: Value(s.c),
+            priority: Value(s.p),
+            status: const Value('todo'),
+          ),
+        );
+      }
+    }
+
+    // Seed Staff Members
+    final existingStaff = await select(staffMembers).get();
+    if (existingStaff.isEmpty) {
+      final staffSeeds = [
+        (n: 'Amirul Hakim', r: 'Shift Manager', p: '8888', ph: '012-3456789', hr: 16.0),
+        (n: 'Nurul Huda', r: 'Barista', p: '1234', ph: '017-9876543', hr: 12.0),
+        (n: 'Mohd Faiz', r: 'Kitchen Staff', p: '2345', ph: '013-1122334', hr: 11.5),
+        (n: 'Siti Sarah', r: 'Cashier', p: '3456', ph: '019-4455667', hr: 10.0),
+      ];
+
+      for (final s in staffSeeds) {
+        await into(staffMembers).insert(
+          StaffMembersCompanion.insert(
+            name: s.n,
+            role: Value(s.r),
+            pinCode: Value(s.p),
+            phone: Value(s.ph),
+            hourlyRate: Value(s.hr),
+            isActive: const Value(true),
+          ),
+        );
+      }
+    }
+
+    // Seed Customers (CRM)
+    final existingCustomers = await select(customers).get();
+    if (existingCustomers.isEmpty) {
+      final customerSeeds = [
+        (n: 'Dato Adam Haris', p: '012-2345678', e: 'adam@haris.my', pts: 420, t: 'Gold', s: 7, sp: 480.50),
+        (n: 'Farhan Azman', p: '019-8765432', e: 'farhan.a@gmail.com', pts: 150, t: 'Silver', s: 3, sp: 165.00),
+        (n: 'Aisyah Razak', p: '013-5566778', e: 'aisyah_r@yahoo.com', pts: 60, t: 'Bronze', s: 2, sp: 65.00),
+        (n: 'Khairul Anwar', p: '017-2233445', e: 'khairul@pos.com', pts: 890, t: 'Platinum', s: 8, sp: 1120.00),
+      ];
+
+      for (final c in customerSeeds) {
+        await into(customers).insert(
+          CustomersCompanion.insert(
+            name: c.n,
+            phone: c.p,
+            email: Value(c.e),
+            points: Value(c.pts),
+            tier: Value(c.t),
+            stampsCount: Value(c.s),
+            totalSpent: Value(c.sp),
+          ),
+        );
+      }
+    }
+  }
+
+  // ── Phase 3: Seed Data ──────────────────────────────────────────────────────
+
+  Future<void> _seedPhase3Data() async {
+    // Seed Suppliers
+    final existingSuppliers = await select(suppliers).get();
+    if (existingSuppliers.isEmpty) {
+      final s1 = await into(suppliers).insert(
+        SuppliersCompanion.insert(
+          name: 'Nusantara Roastery Sdn Bhd',
+          contactPerson: const Value('En. Zainal Abidin'),
+          phone: const Value('03-78901234'),
+          email: const Value('order@nusantararoastery.my'),
+          address: const Value('No. 12, Jalan Kilang 51/205, Petaling Jaya, Selangor'),
+          paymentTerms: const Value('30_days'),
+          category: const Value('Coffee Beans'),
+          isActive: const Value(true),
+        ),
+      );
+
+      await into(suppliers).insert(
+        SuppliersCompanion.insert(
+          name: 'Farm Fresh Milk Supply',
+          contactPerson: const Value('Pn. Laili'),
+          phone: const Value('016-5544332'),
+          email: const Value('sales@farmfreshdairy.my'),
+          address: const Value('Ladang Farm Fresh, UPM Serdang, Selangor'),
+          paymentTerms: const Value('COD'),
+          category: const Value('Dairy & Milk'),
+          isActive: const Value(true),
+        ),
+      );
+
+      await into(suppliers).insert(
+        SuppliersCompanion.insert(
+          name: 'EcoPack Packaging Industries',
+          contactPerson: const Value('Mr. Kevin Tan'),
+          phone: const Value('03-88992211'),
+          email: const Value('orders@ecopack.com.my'),
+          address: const Value('Kawasan Perindustrian Balakong, Cheras'),
+          paymentTerms: const Value('14_days'),
+          category: const Value('Packaging'),
+          isActive: const Value(true),
+        ),
+      );
+
+      // Seed Sample Purchase Order
+      final poId = await into(purchaseOrders).insert(
+        PurchaseOrdersCompanion.insert(
+          poNumber: 'PO-20260808-001',
+          supplierId: s1,
+          supplierName: 'Nusantara Roastery Sdn Bhd',
+          status: const Value('ordered'),
+          totalAmount: const Value(360.00),
+          orderDate: Value(DateTime.now().subtract(const Duration(days: 1))),
+          expectedDate: Value(DateTime.now().add(const Duration(days: 1))),
+          notes: const Value('Bekalan biji kopi Arabica House Blend 5kg'),
+        ),
+      );
+
+      await into(purchaseOrderItems).insert(
+        PurchaseOrderItemsCompanion.insert(
+          poId: poId,
+          ingredientId: 1, // Coffee Beans
+          ingredientName: 'Coffee Beans',
+          unit: const Value('g'),
+          quantityOrdered: const Value(4500.0),
+          quantityReceived: const Value(0.0),
+          unitCost: const Value(0.08),
+          subtotal: const Value(360.00),
+        ),
+      );
+    }
+
+    // Seed Sample Petty Cash Expenses & Cash Drawer
+    final existingExpenses = await select(expenses).get();
+    if (existingExpenses.isEmpty) {
+      await into(expenses).insert(
+        ExpensesCompanion.insert(
+          category: const Value('Petty Cash'),
+          amount: const Value(25.00),
+          paymentMethod: const Value('cash'),
+          recipient: const Value('Kilang Ais Batu Bersih'),
+          description: const Value('Beli 5 beg ais kiub kecemasan'),
+          receiptNumber: const Value('ICE-9821'),
+          recordedBy: const Value('Amirul Hakim'),
+          expenseDate: Value(DateTime.now().subtract(const Duration(hours: 3))),
+        ),
+      );
+
+      await into(expenses).insert(
+        ExpensesCompanion.insert(
+          category: const Value('Ingredients'),
+          amount: const Value(48.50),
+          paymentMethod: const Value('cash'),
+          recipient: const Value('Pasar Mini Seri Kembangan'),
+          description: const Value('Beli 6 botol Susu Segar & Telur Gred A'),
+          receiptNumber: const Value('PM-44321'),
+          recordedBy: const Value('Nurul Huda'),
+          expenseDate: Value(DateTime.now().subtract(const Duration(hours: 1))),
+        ),
+      );
+
+      await into(cashDrawerLogs).insert(
+        CashDrawerLogsCompanion.insert(
+          type: 'float_in',
+          amount: const Value(200.00),
+          reason: const Value('Wang apungan permulaan syif pagi (Float In)'),
+          recordedBy: const Value('Amirul Hakim'),
+          createdAt: Value(DateTime.now().subtract(const Duration(hours: 6))),
+        ),
+      );
+    }
+  }
+
   // ─────────────────────────────────────────────────────────────────────────
-  // Category Queries
+  // Queries & Mutations
   // ─────────────────────────────────────────────────────────────────────────
 
-  Stream<List<Category>> watchCategories() =>
-      (select(categories)
-            ..orderBy([(c) => OrderingTerm.asc(c.sortOrder)]))
+  Stream<List<Category>> watchAllCategories() =>
+      (select(categories)..orderBy([(c) => OrderingTerm.asc(c.sortOrder)]))
           .watch();
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Menu Item Queries
-  // ─────────────────────────────────────────────────────────────────────────
+  Stream<List<Category>> watchCategories() => watchAllCategories();
 
   Stream<List<MenuItem>> watchMenuItems({int? categoryId}) {
-    final query = select(menuItems)
-      ..where((m) => m.isAvailable.equals(true))
-      ..orderBy([(m) => OrderingTerm.asc(m.name)]);
+    final query = select(menuItems)..where((m) => m.isAvailable.equals(true));
     if (categoryId != null) {
       query.where((m) => m.categoryId.equals(categoryId));
     }
     return query.watch();
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Ingredient Queries
-  // ─────────────────────────────────────────────────────────────────────────
-
-  Stream<List<Ingredient>> watchIngredients() =>
-      (select(ingredients)
-            ..orderBy([(i) => OrderingTerm.asc(i.name)]))
+  Stream<List<MenuItem>> watchMenuItemsByCategory(int categoryId) =>
+      (select(menuItems)
+            ..where((m) =>
+                m.categoryId.equals(categoryId) & m.isAvailable.equals(true)))
           .watch();
 
-  Future<List<Ingredient>> getLowStockIngredients() async {
-    final all = await select(ingredients).get();
-    return all.where((i) => i.currentStock <= i.reorderPoint).toList();
-  }
+  Stream<List<MenuItem>> watchAllMenuItems() =>
+      (select(menuItems)..where((m) => m.isAvailable.equals(true))).watch();
 
-  Future<void> adjustIngredientStock(int id, double delta) async {
-    final ing = await (select(ingredients)
-          ..where((i) => i.id.equals(id)))
-        .getSingleOrNull();
-    if (ing == null) return;
-    final newStock = (ing.currentStock + delta).clamp(0.0, double.infinity);
-    await (update(ingredients)..where((i) => i.id.equals(id))).write(
-      IngredientsCompanion(currentStock: Value(newStock)),
-    );
-  }
+  Stream<List<Ingredient>> watchAllIngredients() =>
+      select(ingredients).watch();
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Order Queries
-  // ─────────────────────────────────────────────────────────────────────────
+  Stream<List<Ingredient>> watchIngredients() => watchAllIngredients();
 
-  Future<int> createOrder(OrdersCompanion order) =>
-      into(orders).insert(order);
+  Future<List<Ingredient>> getAllIngredients() => select(ingredients).get();
 
-  Future<void> addOrderItem(OrderItemsCompanion item) =>
-      into(orderItems).insert(item);
+  Future<Ingredient?> getIngredientById(int id) =>
+      (select(ingredients)..where((i) => i.id.equals(id))).getSingleOrNull();
 
-  Future<Order?> getOrder(int orderId) =>
-      (select(orders)..where((o) => o.id.equals(orderId)))
-          .getSingleOrNull();
+  Future<void> updateIngredientStock(int ingredientId, double newStock) =>
+      (update(ingredients)..where((i) => i.id.equals(ingredientId)))
+          .write(IngredientsCompanion(currentStock: Value(newStock)));
 
-  Future<List<OrderItem>> getOrderItems(int orderId) =>
-      (select(orderItems)..where((i) => i.orderId.equals(orderId))).get();
+  // ── Orders ─────────────────────────────────────────────────────────────────
 
   Stream<List<Order>> watchTodayOrders() {
-    final today = DateTime.now();
-    final start = DateTime(today.year, today.month, today.day);
-    final end = start.add(const Duration(days: 1));
+    final now = DateTime.now();
+    final startOfDay = DateTime(now.year, now.month, now.day);
     return (select(orders)
-          ..where((o) =>
-              o.createdAt.isBiggerOrEqualValue(start) &
-              o.createdAt.isSmallerThanValue(end))
+          ..where((o) => o.createdAt.isBiggerOrEqualValue(startOfDay))
           ..orderBy([(o) => OrderingTerm.desc(o.createdAt)]))
         .watch();
   }
 
-  Future<List<Order>> getTodayOrders() async {
-    final today = DateTime.now();
-    final start = DateTime(today.year, today.month, today.day);
-    final end = start.add(const Duration(days: 1));
+  Stream<List<Order>> watchPendingOrders() =>
+      (select(orders)
+            ..where((o) => o.status.equals('pending'))
+            ..orderBy([(o) => OrderingTerm.desc(o.createdAt)]))
+          .watch();
+
+  Future<List<Order>> getTodayOrders() {
+    final now = DateTime.now();
+    final startOfDay = DateTime(now.year, now.month, now.day);
     return (select(orders)
-          ..where((o) =>
-              o.createdAt.isBiggerOrEqualValue(start) &
-              o.createdAt.isSmallerThanValue(end)))
+          ..where((o) => o.createdAt.isBiggerOrEqualValue(startOfDay))
+          ..orderBy([(o) => OrderingTerm.desc(o.createdAt)]))
         .get();
+  }
+
+  Future<Order?> getOrder(int id) =>
+      (select(orders)..where((o) => o.id.equals(id))).getSingleOrNull();
+
+  Future<List<OrderItem>> getOrderItems(int orderId) =>
+      (select(orderItems)..where((i) => i.orderId.equals(orderId))).get();
+
+  Stream<List<OrderItem>> watchOrderItems(int orderId) =>
+      (select(orderItems)..where((i) => i.orderId.equals(orderId))).watch();
+
+  Future<int> createOrder(OrdersCompanion order) => into(orders).insert(order);
+
+  Future<int> addOrderItem(OrderItemsCompanion item) => into(orderItems).insert(item);
+
+  Future<int> insertOrder(
+    OrdersCompanion order,
+    List<OrderItemsCompanion> items,
+  ) {
+    return transaction(() async {
+      final orderId = await into(orders).insert(order);
+      for (final item in items) {
+        await into(orderItems).insert(item.copyWith(orderId: Value(orderId)));
+      }
+      return orderId;
+    });
   }
 
   Future<void> completeOrder({
     required int orderId,
     required String paymentMethod,
-    required double tendered,
-  }) =>
-      (update(orders)..where((o) => o.id.equals(orderId))).write(
+    double? tendered,
+    double? tenderedAmount,
+  }) {
+    final amount = tendered ?? tenderedAmount;
+    return transaction(() async {
+      await (update(orders)..where((o) => o.id.equals(orderId))).write(
         OrdersCompanion(
           status: const Value('completed'),
           completedAt: Value(DateTime.now()),
           paymentMethod: Value(paymentMethod),
-          tenderedAmount: Value(tendered),
+          tenderedAmount: Value(amount),
         ),
       );
 
-  Future<void> voidOrder(int orderId) =>
-      (update(orders)..where((o) => o.id.equals(orderId))).write(
+      final items = await getOrderItems(orderId);
+      for (final item in items) {
+        final links = await (select(menuItemIngredients)
+              ..where((l) => l.menuItemId.equals(item.menuItemId)))
+            .get();
+        for (final link in links) {
+          final deduct = link.quantityRequired * item.quantity;
+          final ing = await (select(ingredients)
+                ..where((i) => i.id.equals(link.ingredientId)))
+              .getSingleOrNull();
+          if (ing != null) {
+            final newStock = (ing.currentStock - deduct).clamp(0.0, 99999.0);
+            await (update(ingredients)..where((i) => i.id.equals(ing.id)))
+                .write(IngredientsCompanion(currentStock: Value(newStock)));
+          }
+        }
+      }
+    });
+  }
+
+  Future<void> voidOrder(int orderId) {
+    return transaction(() async {
+      await (update(orders)..where((o) => o.id.equals(orderId))).write(
         const OrdersCompanion(status: Value('voided')),
       );
+    });
+  }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Reporting Queries
-  // ─────────────────────────────────────────────────────────────────────────
+  // ── Dashboard / Reports Queries ───────────────────────────────────────────
 
   Future<Map<String, dynamic>> getTodaySummary() async {
     final all = await getTodayOrders();
-    final completed =
-        all.where((o) => o.status == 'completed').toList();
-    final total =
+    final completed = all.where((o) => o.status == 'completed').toList();
+    final double totalSales =
         completed.fold(0.0, (sum, o) => sum + o.totalAmount);
-    final avgTicket =
-        completed.isEmpty ? 0.0 : total / completed.length;
+    final double avgTicket =
+        completed.isNotEmpty ? totalSales / completed.length : 0.0;
+
     return {
-      'totalSales': total,
+      'totalSales': totalSales,
       'orderCount': completed.length,
       'avgTicket': avgTicket,
       'voidCount': all.where((o) => o.status == 'voided').length,
     };
   }
 
-  /// Returns hourly sales map {hour: amount} for today (0..23).
   Future<Map<int, double>> getTodayHourlySales() async {
     final completed = (await getTodayOrders())
         .where((o) => o.status == 'completed');
@@ -435,7 +754,6 @@ class AppDatabase extends _$AppDatabase {
     return hourly;
   }
 
-  /// Top menu items by quantity sold today.
   Future<List<Map<String, dynamic>>> getTopItemsToday() async {
     final todayOrders = await getTodayOrders();
     final completedIds = todayOrders
@@ -462,9 +780,7 @@ class AppDatabase extends _$AppDatabase {
         .toList();
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Sync & Reconciliation Methods
-  // ─────────────────────────────────────────────────────────────────────────
+  // ── Sync & Categories / Items Methods ──────────────────────────────────────
 
   Future<List<Category>> getAllCategories() => select(categories).get();
 
@@ -512,8 +828,6 @@ class AppDatabase extends _$AppDatabase {
 
   Future<void> deleteMenuItemsNotIn(List<int> ids) =>
       (delete(menuItems)..where((m) => m.id.isNotIn(ids))).go();
-
-  Future<List<Ingredient>> getAllIngredients() => select(ingredients).get();
 
   Future<void> upsertIngredient(IngredientsCompanion ing) async {
     final name = ing.name.value;
@@ -578,138 +892,44 @@ class AppDatabase extends _$AppDatabase {
     }
   }
 
-  // ── Phase 2: Seed Data ──────────────────────────────────────────────────────
-
-  Future<void> _seedPhase2Data() async {
-    // Seed Tasks
-    final existingTasks = await select(tasks).get();
-    if (existingTasks.isEmpty) {
-      final taskSeeds = [
-        // Opening Checklist
-        (t: 'Float Count Verification', d: 'Count cash float (RM200) in cash drawer', c: 'opening', p: 'high'),
-        (t: 'Espresso Machine Warmup & Flush', d: 'Turn on group heads & steam wand purge', c: 'opening', p: 'high'),
-        (t: 'Inspect Fridge & Chiller Temps', d: 'Ensure milk chiller is under 4°C', c: 'opening', p: 'medium'),
-        (t: 'Restock Milk, Cups & Lids', d: 'Check front counter stock levels', c: 'opening', p: 'medium'),
-        (t: 'Sanitize Workstations & Tables', d: 'Wipe all dining tables and POS counter', c: 'opening', p: 'low'),
-        // Closing Checklist
-        (t: 'Deep Clean Steam Wand & Group Heads', d: 'Backflush espresso machine with Cafiza', c: 'closing', p: 'high'),
-        (t: 'Empty Coffee Puck Bin & Drip Tray', d: 'Wash and sanitize knock box', c: 'closing', p: 'medium'),
-        (t: 'Reconcile Cash Drawer & Print Daily Z-Report', d: 'Match cash total against system sales', c: 'closing', p: 'high'),
-        (t: 'Discard Expired Pastries & Clear Display', d: 'Log wastage in system', c: 'closing', p: 'medium'),
-        (t: 'Lock Doors & Turn Off Signage/AC', d: 'Ensure main breaker & lights are secured', c: 'closing', p: 'high'),
-        // Shift Handover
-        (t: 'Oat Milk delivery arriving at 10 AM', d: 'Supplier contacted, invoice ready on clipboard', c: 'handover', p: 'medium'),
-        (t: 'Grinder 2 calibrated for Dark Roast', d: 'Dose set to 18.5g extraction at 27s', c: 'handover', p: 'low'),
-      ];
-
-      for (final s in taskSeeds) {
-        await into(tasks).insert(
-          TasksCompanion.insert(
-            title: s.t,
-            description: Value(s.d),
-            category: Value(s.c),
-            priority: Value(s.p),
-            status: const Value('todo'),
-          ),
-        );
-      }
-    }
-
-    // Seed Staff Members
-    final existingStaff = await select(staffMembers).get();
-    if (existingStaff.isEmpty) {
-      final staffSeeds = [
-        (n: 'Amirul Hakim', r: 'Shift Manager', p: '8888', ph: '012-3456789', hr: 16.0),
-        (n: 'Sarah Tan', r: 'Barista', p: '1111', ph: '017-8899112', hr: 12.0),
-        (n: 'Haziq Fahmi', r: 'Cashier', p: '2222', ph: '019-2233445', hr: 10.0),
-        (n: 'Chef Ramli', r: 'Kitchen Staff', p: '3333', ph: '013-5566778', hr: 14.0),
-      ];
-
-      for (final s in staffSeeds) {
-        await into(staffMembers).insert(
-          StaffMembersCompanion.insert(
-            name: s.n,
-            role: Value(s.r),
-            pinCode: Value(s.p),
-            phone: Value(s.ph),
-            hourlyRate: Value(s.hr),
-            isActive: const Value(true),
-          ),
-        );
-      }
-    }
-
-    // Seed Customers (CRM / Loyalty)
-    final existingCustomers = await select(customers).get();
-    if (existingCustomers.isEmpty) {
-      final customerSeeds = [
-        (n: 'Ahmad Faizal', ph: '0123456789', e: 'faizal@gmail.com', pts: 120, t: 'Gold', s: 6, sp: 280.0),
-        (n: 'Nurul Huda', ph: '0198765432', e: 'huda@yahoo.com', pts: 45, t: 'Silver', s: 4, sp: 95.50),
-        (n: 'Tan Wei Lun', ph: '0161122334', e: 'weilun@hotmail.com', pts: 230, t: 'Platinum', s: 9, sp: 450.0),
-        (n: 'Siti Aisyah', ph: '0179988776', e: 'aisyah@gmail.com', pts: 15, t: 'Bronze', s: 2, sp: 32.0),
-      ];
-
-      for (final c in customerSeeds) {
-        await into(customers).insert(
-          CustomersCompanion.insert(
-            name: c.n,
-            phone: c.ph,
-            email: Value(c.e),
-            points: Value(c.pts),
-            tier: Value(c.t),
-            stampsCount: Value(c.s),
-            totalSpent: Value(c.sp),
-          ),
-        );
-      }
-    }
-  }
-
-  // ── Phase 2: Tasks Queries ──────────────────────────────────────────────────
+  // ── Phase 2: Tasks, Customers, Staff & Attendance ──────────────────────────
 
   Stream<List<Task>> watchAllTasks() =>
       (select(tasks)..orderBy([(t) => OrderingTerm.desc(t.createdAt)])).watch();
 
   Stream<List<Task>> watchTasksByCategory(String category) =>
       (select(tasks)
-        ..where((t) => t.category.equals(category))
-        ..orderBy([(t) => OrderingTerm.desc(t.createdAt)]))
-      .watch();
+            ..where((t) => t.category.equals(category))
+            ..orderBy([(t) => OrderingTerm.asc(t.priority), (t) => OrderingTerm.asc(t.title)]))
+          .watch();
+
+  Future<List<Task>> getAllTasks() => select(tasks).get();
 
   Future<int> insertTask(TasksCompanion task) => into(tasks).insert(task);
 
-  Future<void> updateTaskStatus(int id, String status, {String? completedBy}) async {
-    await (update(tasks)..where((t) => t.id.equals(id))).write(
+  Future<void> updateTask(TasksCompanion task) =>
+      (update(tasks)..where((t) => t.id.equals(task.id.value))).write(task);
+
+  Future<void> deleteTask(int taskId) =>
+      (delete(tasks)..where((t) => t.id.equals(taskId))).go();
+
+  Future<void> toggleTaskStatus(int taskId, String newStatus, {String? completedBy}) {
+    return (update(tasks)..where((t) => t.id.equals(taskId))).write(
       TasksCompanion(
-        status: Value(status),
-        completedAt: Value(status == 'completed' ? DateTime.now() : null),
-        completedBy: Value(completedBy),
+        status: Value(newStatus),
+        completedAt: Value(newStatus == 'completed' ? DateTime.now() : null),
+        completedBy: Value(newStatus == 'completed' ? completedBy : null),
       ),
     );
   }
 
-  Future<void> deleteTask(int id) =>
-      (delete(tasks)..where((t) => t.id.equals(id))).go();
-
-  Future<void> upsertTask(TasksCompanion task) async {
-    final id = task.id.present ? task.id.value : null;
-    if (id != null) {
-      final existing = await (select(tasks)..where((t) => t.id.equals(id))).getSingleOrNull();
-      if (existing != null) {
-        await (update(tasks)..where((t) => t.id.equals(id))).write(task);
-        return;
-      }
-    }
-    await into(tasks).insert(task);
-  }
-
-  // ── Phase 2: Customers & Loyalty Queries ─────────────────────────────────────
+  Future<void> updateTaskStatus(int taskId, String newStatus, {String? completedBy}) =>
+      toggleTaskStatus(taskId, newStatus, completedBy: completedBy);
 
   Stream<List<Customer>> watchAllCustomers() =>
       (select(customers)..orderBy([(c) => OrderingTerm.desc(c.totalSpent)])).watch();
 
-  Future<Customer?> getCustomerById(int id) =>
-      (select(customers)..where((c) => c.id.equals(id))).getSingleOrNull();
+  Future<List<Customer>> getAllCustomers() => select(customers).get();
 
   Future<Customer?> getCustomerByPhone(String phone) =>
       (select(customers)..where((c) => c.phone.equals(phone))).getSingleOrNull();
@@ -723,68 +943,57 @@ class AppDatabase extends _$AppDatabase {
   Future<void> deleteCustomer(int id) =>
       (delete(customers)..where((c) => c.id.equals(id))).go();
 
-  Future<void> awardCustomerPointsAndStamps(int customerId, double amountSpent) async {
-    final customer = await getCustomerById(customerId);
-    if (customer == null) return;
-
-    final earnedPoints = amountSpent.floor(); // 1 point per RM1
-    final newPoints = customer.points + earnedPoints;
-    final newTotalSpent = customer.totalSpent + amountSpent;
-    final newStamps = (customer.stampsCount + 1) % 10;
-
-    String newTier = customer.tier;
-    if (newTotalSpent >= 400) {
-      newTier = 'Platinum';
-    } else if (newTotalSpent >= 200) {
-      newTier = 'Gold';
-    } else if (newTotalSpent >= 80) {
-      newTier = 'Silver';
-    }
-
-    await (update(customers)..where((c) => c.id.equals(customerId))).write(
-      CustomersCompanion(
-        points: Value(newPoints),
-        stampsCount: Value(newStamps),
-        totalSpent: Value(newTotalSpent),
-        tier: Value(newTier),
-        lastVisitedAt: Value(DateTime.now()),
-      ),
-    );
-  }
-
   Future<bool> redeemCustomerStamps(int customerId) async {
-    final customer = await getCustomerById(customerId);
-    if (customer == null || customer.stampsCount < 10) return false;
-
+    final customer = await (select(customers)..where((c) => c.id.equals(customerId))).getSingleOrNull();
+    if (customer == null || customer.stampsCount < 9) return false;
     await (update(customers)..where((c) => c.id.equals(customerId))).write(
       CustomersCompanion(
-        stampsCount: Value(customer.stampsCount - 10),
+        stampsCount: Value(customer.stampsCount - 9),
+        lastVisitedAt: Value(DateTime.now()),
       ),
     );
     return true;
   }
 
-  Future<void> upsertCustomer(CustomersCompanion customer) async {
-    final phone = customer.phone.value;
-    final existing = await getCustomerByPhone(phone);
-    if (existing != null) {
-      await (update(customers)..where((c) => c.id.equals(existing.id))).write(customer);
-    } else {
-      await into(customers).insert(customer);
-    }
-  }
+  Future<void> addCustomerPointsAndSpend(int customerId, double spentAmount) async {
+    final customer = await (select(customers)..where((c) => c.id.equals(customerId))).getSingleOrNull();
+    if (customer == null) return;
+    final newPoints = customer.points + spentAmount.floor();
+    final newTotalSpent = customer.totalSpent + spentAmount;
+    final newStamps = (customer.stampsCount + 1) % 9;
 
-  // ── Phase 2: Staff & Attendance Queries ──────────────────────────────────────
+    String tier = 'Bronze';
+    if (newTotalSpent > 1000) {
+      tier = 'Platinum';
+    } else if (newTotalSpent > 500) {
+      tier = 'Gold';
+    } else if (newTotalSpent > 150) {
+      tier = 'Silver';
+    }
+
+    await (update(customers)..where((c) => c.id.equals(customerId))).write(
+      CustomersCompanion(
+        points: Value(newPoints),
+        totalSpent: Value(newTotalSpent),
+        stampsCount: Value(newStamps),
+        tier: Value(tier),
+        lastVisitedAt: Value(DateTime.now()),
+      ),
+    );
+  }
 
   Stream<List<StaffMember>> watchAllStaff() =>
       (select(staffMembers)..orderBy([(s) => OrderingTerm.asc(s.name)])).watch();
 
+  Future<List<StaffMember>> getAllStaff() => select(staffMembers).get();
+
+  Future<StaffMember?> getStaffByPin(String pin) =>
+      (select(staffMembers)..where((s) => s.pinCode.equals(pin) & s.isActive.equals(true))).getSingleOrNull();
+
+  Future<StaffMember?> verifyStaffPin(String pin) => getStaffByPin(pin);
+
   Future<StaffMember?> getStaffById(int id) =>
       (select(staffMembers)..where((s) => s.id.equals(id))).getSingleOrNull();
-
-  Future<StaffMember?> verifyStaffPin(String pin) =>
-      (select(staffMembers)..where((s) => s.pinCode.equals(pin) & s.isActive.equals(true)))
-          .getSingleOrNull();
 
   Future<int> insertStaff(StaffMembersCompanion staff) =>
       into(staffMembers).insert(staff);
@@ -794,18 +1003,6 @@ class AppDatabase extends _$AppDatabase {
 
   Future<void> deleteStaff(int id) =>
       (delete(staffMembers)..where((s) => s.id.equals(id))).go();
-
-  Future<void> upsertStaff(StaffMembersCompanion staff) async {
-    final id = staff.id.present ? staff.id.value : null;
-    if (id != null) {
-      final existing = await getStaffById(id);
-      if (existing != null) {
-        await (update(staffMembers)..where((s) => s.id.equals(id))).write(staff);
-        return;
-      }
-    }
-    await into(staffMembers).insert(staff);
-  }
 
   Stream<List<StaffAttendance>> watchTodayAttendance() {
     final now = DateTime.now();
@@ -852,20 +1049,6 @@ class AppDatabase extends _$AppDatabase {
     );
   }
 
-  Future<void> upsertAttendance(StaffAttendancesCompanion attendance) async {
-    final id = attendance.id.present ? attendance.id.value : null;
-    if (id != null) {
-      final existing = await (select(staffAttendances)..where((a) => a.id.equals(id))).getSingleOrNull();
-      if (existing != null) {
-        await (update(staffAttendances)..where((a) => a.id.equals(id))).write(attendance);
-        return;
-      }
-    }
-    await into(staffAttendances).insert(attendance);
-  }
-
-  // ── Phase 2: KDS Queries ────────────────────────────────────────────────────
-
   Stream<List<Order>> watchActiveKdsOrders() {
     return (select(orders)
           ..where((o) => o.status.isIn(['pending', 'in_progress', 'ready']))
@@ -881,6 +1064,188 @@ class AppDatabase extends _$AppDatabase {
       ),
     );
   }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // Phase 3: Suppliers, Purchase Orders, Stock Audits, Expenses & Petty Cash
+  // ─────────────────────────────────────────────────────────────────────────
+
+  // ── Suppliers ─────────────────────────────────────────────────────────────
+
+  Stream<List<Supplier>> watchAllSuppliers() =>
+      (select(suppliers)..orderBy([(s) => OrderingTerm.asc(s.name)])).watch();
+
+  Future<List<Supplier>> getAllSuppliers() => select(suppliers).get();
+
+  Future<Supplier?> getSupplierById(int id) =>
+      (select(suppliers)..where((s) => s.id.equals(id))).getSingleOrNull();
+
+  Future<int> insertSupplier(SuppliersCompanion supplier) =>
+      into(suppliers).insert(supplier);
+
+  Future<void> updateSupplier(SuppliersCompanion supplier) =>
+      (update(suppliers)..where((s) => s.id.equals(supplier.id.value))).write(supplier);
+
+  Future<void> deleteSupplier(int id) =>
+      (delete(suppliers)..where((s) => s.id.equals(id))).go();
+
+  // ── Purchase Orders & Items ───────────────────────────────────────────────
+
+  Stream<List<PurchaseOrder>> watchAllPurchaseOrders() =>
+      (select(purchaseOrders)..orderBy([(p) => OrderingTerm.desc(p.orderDate)])).watch();
+
+  Future<List<PurchaseOrder>> getAllPurchaseOrders() =>
+      (select(purchaseOrders)..orderBy([(p) => OrderingTerm.desc(p.orderDate)])).get();
+
+  Future<PurchaseOrder?> getPurchaseOrderById(int id) =>
+      (select(purchaseOrders)..where((p) => p.id.equals(id))).getSingleOrNull();
+
+  Stream<List<PurchaseOrderItem>> watchPurchaseOrderItems(int poId) =>
+      (select(purchaseOrderItems)..where((i) => i.poId.equals(poId))).watch();
+
+  Future<List<PurchaseOrderItem>> getPurchaseOrderItems(int poId) =>
+      (select(purchaseOrderItems)..where((i) => i.poId.equals(poId))).get();
+
+  Future<int> insertPurchaseOrder(
+    PurchaseOrdersCompanion po,
+    List<PurchaseOrderItemsCompanion> items,
+  ) {
+    return transaction(() async {
+      final poId = await into(purchaseOrders).insert(po);
+      for (final item in items) {
+        await into(purchaseOrderItems).insert(item.copyWith(poId: Value(poId)));
+      }
+      return poId;
+    });
+  }
+
+  Future<void> updatePurchaseOrderStatus(int poId, String status) async {
+    await (update(purchaseOrders)..where((p) => p.id.equals(poId))).write(
+      PurchaseOrdersCompanion(status: Value(status)),
+    );
+  }
+
+  /// Mark PO as received and automatically add received quantities to Ingredient stock.
+  Future<void> receivePurchaseOrder(int poId) {
+    return transaction(() async {
+      await (update(purchaseOrders)..where((p) => p.id.equals(poId))).write(
+        PurchaseOrdersCompanion(
+          status: const Value('received'),
+          receivedDate: Value(DateTime.now()),
+        ),
+      );
+
+      final items = await getPurchaseOrderItems(poId);
+      for (final item in items) {
+        final ing = await getIngredientById(item.ingredientId);
+        if (ing != null) {
+          final newStock = ing.currentStock + item.quantityOrdered;
+          await updateIngredientStock(ing.id, newStock);
+        }
+        await (update(purchaseOrderItems)..where((i) => i.id.equals(item.id))).write(
+          PurchaseOrderItemsCompanion(
+            quantityReceived: Value(item.quantityOrdered),
+          ),
+        );
+      }
+    });
+  }
+
+  // ── Stock Audits (Stock Take) ──────────────────────────────────────────────
+
+  Stream<List<StockAudit>> watchAllStockAudits() =>
+      (select(stockAudits)..orderBy([(a) => OrderingTerm.desc(a.auditedAt)])).watch();
+
+  Future<List<StockAudit>> getAllStockAudits() =>
+      (select(stockAudits)..orderBy([(a) => OrderingTerm.desc(a.auditedAt)])).get();
+
+  /// Insert a stock audit and optionally adjust the ingredient's current stock immediately.
+  Future<int> insertStockAudit(
+    StockAuditsCompanion audit, {
+    bool adjustInventory = true,
+  }) {
+    return transaction(() async {
+      final auditId = await into(stockAudits).insert(audit);
+      if (adjustInventory) {
+        final ingredientId = audit.ingredientId.value;
+        final actualStock = audit.actualStock.value;
+        await updateIngredientStock(ingredientId, actualStock);
+      }
+      return auditId;
+    });
+  }
+
+  // ── Expenses & Petty Cash ──────────────────────────────────────────────────
+
+  Stream<List<Expense>> watchAllExpenses() =>
+      (select(expenses)..orderBy([(e) => OrderingTerm.desc(e.expenseDate)])).watch();
+
+  Stream<List<Expense>> watchTodayExpenses() {
+    final now = DateTime.now();
+    final startOfDay = DateTime(now.year, now.month, now.day);
+    return (select(expenses)
+          ..where((e) => e.expenseDate.isBiggerOrEqualValue(startOfDay))
+          ..orderBy([(e) => OrderingTerm.desc(e.expenseDate)]))
+        .watch();
+  }
+
+  Future<List<Expense>> getTodayExpenses() {
+    final now = DateTime.now();
+    final startOfDay = DateTime(now.year, now.month, now.day);
+    return (select(expenses)
+          ..where((e) => e.expenseDate.isBiggerOrEqualValue(startOfDay))
+          ..orderBy([(e) => OrderingTerm.desc(e.expenseDate)]))
+        .get();
+  }
+
+  Future<double> getTodayTotalExpenses() async {
+    final list = await getTodayExpenses();
+    return list.fold<double>(0.0, (double sum, Expense e) => sum + e.amount);
+  }
+
+  Future<int> insertExpense(ExpensesCompanion expense) =>
+      into(expenses).insert(expense);
+
+  Future<void> deleteExpense(int id) =>
+      (delete(expenses)..where((e) => e.id.equals(id))).go();
+
+  // ── Cash Drawer Logs ───────────────────────────────────────────────────────
+
+  Stream<List<CashDrawerLog>> watchCashDrawerLogs() =>
+      (select(cashDrawerLogs)..orderBy([(l) => OrderingTerm.desc(l.createdAt)])).watch();
+
+  Future<int> insertCashDrawerLog(CashDrawerLogsCompanion log) =>
+      into(cashDrawerLogs).insert(log);
+
+  Future<double> getTodayCashDrawerBalance() async {
+    final now = DateTime.now();
+    final startOfDay = DateTime(now.year, now.month, now.day);
+    final logs = await (select(cashDrawerLogs)
+          ..where((l) => l.createdAt.isBiggerOrEqualValue(startOfDay)))
+        .get();
+
+    double balance = 0.0;
+    for (final l in logs) {
+      if (l.type == 'float_in' || l.type == 'cash_in') {
+        balance += l.amount;
+      } else if (l.type == 'cash_out' || l.type == 'drop') {
+        balance -= l.amount;
+      }
+    }
+
+    // Add cash sales today
+    final ordersToday = await getTodayOrders();
+    final cashOrders = ordersToday.where((o) => o.status == 'completed' && o.paymentMethod == 'cash');
+    for (final o in cashOrders) {
+      balance += o.totalAmount;
+    }
+
+    // Subtract cash expenses today
+    final expensesToday = await getTodayExpenses();
+    final cashExpenses = expensesToday.where((e) => e.paymentMethod == 'cash');
+    for (final e in cashExpenses) {
+      balance -= e.amount;
+    }
+
+    return balance;
+  }
 }
-
-

@@ -3,8 +3,8 @@ class FeatureFlags {
   FeatureFlags._();
 
   /// SST (Service & Sales Tax) 6% on F&B service.
-  /// Enable when annual F&B service revenue crosses RM1.5 million (Phase 3).
-  static const bool sstEnabled = false;
+  /// Phase 3: Active and configurable in settings.
+  static const bool sstEnabled = true;
   static const double sstRate = 0.06;
 
   /// LHDN e-Invoice (MyInvois) — built dormant, zero cashier impact.
@@ -22,6 +22,15 @@ class FeatureFlags {
 
   /// Staff Attendance & Shift Logs — Phase 2 [ACTIVE].
   static const bool staffEnabled = true;
+
+  /// Supplier & Purchase Order Management — Phase 3 [ACTIVE].
+  static const bool suppliersEnabled = true;
+
+  /// Stock Take & Inventory Variance Audit — Phase 3 [ACTIVE].
+  static const bool stockTakeEnabled = true;
+
+  /// Expense & Petty Cash Management — Phase 3 [ACTIVE].
+  static const bool expensesEnabled = true;
 
   /// Multi-outlet sync — Phase 4.
   static const bool multiOutletEnabled = false;
