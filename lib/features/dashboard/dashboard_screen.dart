@@ -151,6 +151,11 @@ class DashboardScreen extends ConsumerWidget {
                     );
                   }),
                   const SizedBox(height: 20),
+                  // ── Phase 5 Enterprise & AI Hub ────────────────────
+                  const SectionHeader(title: 'Enterprise, AI & E-Invoice (Fasa 5)'),
+                  const SizedBox(height: 12),
+                  _buildPhase5Hub(context, isTablet: isTablet),
+                  const SizedBox(height: 20),
 
                   // ── Low Stock Alert ─────────────────────────────────
                   Consumer(builder: (context, ref, _) {
@@ -507,6 +512,102 @@ class DashboardScreen extends ConsumerWidget {
           borderRadius: BorderRadius.circular(16),
           child: Container(
             padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: Theme.of(context).cardColor,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: const Color(0xFFEDE3D8)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: item.color.withOpacity(0.12),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: item.icon is IconData 
+                          ? Icon(item.icon as IconData, size: 18, color: item.color)
+                          : HugeIcon(icon: item.icon, size: 18, color: item.color),
+                    ),
+                    const Icon(Icons.arrow_forward_ios_rounded, size: 12, color: AppTheme.mutedText),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      item.value,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w800,
+                        color: AppTheme.darkEspresso,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      item.title,
+                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppTheme.mutedText),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  // ── Phase 5 Hub ────────────────────────────────────────────────────────────
+
+  Widget _buildPhase5Hub(BuildContext context, {required bool isTablet}) {
+    final List<({String title, String value, String subtitle, dynamic icon, Color color, String route})> p5Items = [
+      (
+        title: 'Kiosk Layan Diri',
+        value: 'Self-Order Mode',
+        subtitle: 'Buka mod Kiosk',
+        icon: HugeIcons.strokeRoundedTouchInteraction01 as dynamic,
+        color: const Color(0xFFE65100),
+        route: '/kiosk',
+      ),
+      (
+        title: 'AI Forecast',
+        value: 'Ramalan AI',
+        subtitle: 'Trend & Stok',
+        icon: HugeIcons.strokeRoundedAiNetwork as dynamic,
+        color: const Color(0xFF6A1B9A),
+        route: '/ai-forecast',
+      ),
+      (
+        title: 'LHDN E-Invoice',
+        value: 'Modul Aktif',
+        subtitle: 'Auto-penjanaan (TIN)',
+        icon: HugeIcons.strokeRoundedTaxes as dynamic,
+        color: const Color(0xFF0D47A1),
+        route: '/einvoice',
+      ),
+    ];
+
+    return GridView.count(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      crossAxisCount: isTablet ? 3 : 2,
+      crossAxisSpacing: 16,
+      mainAxisSpacing: 16,
+      childAspectRatio: isTablet ? 2.8 : 2.2,
+      children: p5Items.map((item) {
+        return InkWell(
+          onTap: () => context.push(item.route),
+          borderRadius: BorderRadius.circular(16),
+          child: Container(
+            padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(16),

@@ -19,6 +19,9 @@ import '../../features/settings/settings_screen.dart';
 import '../../features/outlets/outlets_screen.dart';
 import '../../features/delivery/delivery_screen.dart';
 import '../../features/analytics/advanced_analytics_screen.dart';
+import '../../features/kiosk/kiosk_mode_screen.dart';
+import '../../features/ai_forecast/ai_forecast_screen.dart';
+import '../../features/einvoice/einvoice_screen.dart';
 import '../../core/theme/app_theme.dart';
 
 final appRouter = GoRouter(
@@ -91,6 +94,18 @@ final appRouter = GoRouter(
         GoRoute(
           path: '/settings',
           builder: (_, __) => const SettingsScreen(),
+        ),
+        GoRoute(
+          path: '/kiosk',
+          builder: (_, __) => const KioskModeScreen(),
+        ),
+        GoRoute(
+          path: '/ai-forecast',
+          builder: (_, __) => const AiForecastScreen(),
+        ),
+        GoRoute(
+          path: '/einvoice',
+          builder: (_, __) => const EinvoiceScreen(),
         ),
       ],
     ),
