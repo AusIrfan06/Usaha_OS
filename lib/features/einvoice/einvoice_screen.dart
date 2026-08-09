@@ -9,7 +9,7 @@ class EinvoiceScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.creamBackground,
+      backgroundColor: AppTheme.warmCream,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -75,7 +75,7 @@ class EinvoiceScreen extends StatelessWidget {
       child: ListTile(
         contentPadding: const EdgeInsets.all(16),
         leading: const CircleAvatar(
-          backgroundColor: AppTheme.creamBackground,
+          backgroundColor: AppTheme.warmCream,
           child: HugeIcon(icon: HugeIcons.strokeRoundedInvoice01, color: AppTheme.primaryCoffee, size: 24),
         ),
         title: Text(id, style: const TextStyle(fontWeight: FontWeight.bold)),

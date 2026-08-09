@@ -9,7 +9,7 @@ class AiForecastScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.creamBackground,
+      backgroundColor: AppTheme.warmCream,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -62,7 +62,7 @@ class AiForecastScreen extends StatelessWidget {
                 children: [
                   _buildForecastItem('Biji Kopi Arabica (Brazil)', 'Tinggal 5kg. Jangkaan habis dalam 3 hari.', 'Pesan 20kg', HugeIcons.strokeRoundedCoffee01, Colors.brown),
                   _buildForecastItem('Susu Segar (Farm Fresh)', 'Permintaan tinggi hujung minggu.', 'Pesan 15 Karton', HugeIcons.strokeRoundedMilkBottle, Colors.blue),
-                  _buildForecastItem('Cawan Kertas (Cup)', 'Stok mencukupi untuk 2 minggu.', 'Tiada Tindakan', HugeIcons.strokeRoundedCup01, Colors.grey),
+                  _buildForecastItem('Cawan Kertas (Cup)', 'Stok mencukupi untuk 2 minggu.', 'Tiada Tindakan', HugeIcons.strokeRoundedCoffee02, Colors.grey),
                 ],
               ),
             ),

@@ -9,7 +9,7 @@ class KioskModeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.creamBackground,
+      backgroundColor: AppTheme.warmCream,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
