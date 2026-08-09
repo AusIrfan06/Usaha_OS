@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:intl/intl.dart';
 import '../../core/providers.dart';
 import '../../core/theme/app_theme.dart';
@@ -20,22 +21,6 @@ class DashboardScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final summaryAsync = ref.watch(todaySummaryProvider);
-    final ordersAsync = ref.watch(todayOrdersProvider);
-    final ingredientsAsync = ref.watch(ingredientsProvider);
-    final kdsAsync = ref.watch(activeKdsOrdersProvider);
-    final tasksAsync = ref.watch(allTasksProvider);
-    final staffAttAsync = ref.watch(todayAttendanceProvider);
-    final customersAsync = ref.watch(allCustomersProvider);
-    final posAsync = ref.watch(allPurchaseOrdersProvider);
-    final drawerBalanceAsync = ref.watch(todayCashDrawerBalanceProvider);
-    final totalExpensesAsync = ref.watch(todayTotalExpensesProvider);
-    final sstSettings = ref.watch(sstSettingsProvider);
-    final outletsAsync = ref.watch(allOutletsProvider);
-    final activeOutlet = ref.watch(activeOutletProvider);
-    final deliveryOrdersAsync = ref.watch(allDeliveryOrdersProvider);
-    final pnlAsync = ref.watch(pnlSummaryProvider);
-
     final today = DateFormat('EEEE, d MMMM y').format(DateTime.now());
     final isTablet = MediaQuery.of(context).size.width >= 600;
 
@@ -103,75 +88,87 @@ class DashboardScreen extends ConsumerWidget {
               sliver: SliverList(
                 delegate: SliverChildListDelegate([
                   // ── Revenue Hero Card ───────────────────────────────
-                  summaryAsync.when(
-                    loading: () => _revenueCardShimmer(),
-                    error: (_, __) => const SizedBox.shrink(),
-                    data: (summary) => _revenueCard(context, summary),
-                  ),
+                  Consumer(builder: (context, ref, _) {
+                    return ref.watch(todaySummaryProvider).when(
+                      loading: () => _revenueCardShimmer(),
+                      error: (_, __) => const SizedBox.shrink(),
+                      data: (summary) => _revenueCard(context, summary),
+                    );
+                  }),
                   const SizedBox(height: 16),
 
                   // ── Stat Row ────────────────────────────────────────
-                  summaryAsync.when(
-                    loading: () => const SizedBox(height: 80),
-                    error: (_, __) => const SizedBox.shrink(),
-                    data: (summary) => _statRow(summary, isTablet),
-                  ),
+                  Consumer(builder: (context, ref, _) {
+                    return ref.watch(todaySummaryProvider).when(
+                      loading: () => const SizedBox(height: 80),
+                      error: (_, __) => const SizedBox.shrink(),
+                      data: (summary) => _statRow(summary, isTablet),
+                    );
+                  }),
                   const SizedBox(height: 20),
 
                   // ── Phase 2 Operations Snapshot Row ─────────────────
                   const SectionHeader(title: 'Status Operasi Semasa (Live Hub)'),
                   const SizedBox(height: 12),
-                  _buildPhase2Hub(
-                    context,
-                    kdsAsync: kdsAsync,
-                    tasksAsync: tasksAsync,
-                    staffAttAsync: staffAttAsync,
-                    customersAsync: customersAsync,
-                    isTablet: isTablet,
-                  ),
+                  Consumer(builder: (context, ref, _) {
+                    return _buildPhase2Hub(
+                      context,
+                      kdsAsync: ref.watch(activeKdsOrdersProvider),
+                      tasksAsync: ref.watch(allTasksProvider),
+                      staffAttAsync: ref.watch(todayAttendanceProvider),
+                      customersAsync: ref.watch(allCustomersProvider),
+                      isTablet: isTablet,
+                    );
+                  }),
                   const SizedBox(height: 20),
 
                   // ── Phase 3 Procurement & Finance Hub ───────────────
                   const SectionHeader(title: 'Pengurusan Inventori & Aliran Tunai (Fasa 3)'),
                   const SizedBox(height: 12),
-                  _buildPhase3Hub(
-                    context,
-                    posAsync: posAsync,
-                    drawerBalanceAsync: drawerBalanceAsync,
-                    totalExpensesAsync: totalExpensesAsync,
-                    sstSettings: sstSettings,
-                    isTablet: isTablet,
-                  ),
+                  Consumer(builder: (context, ref, _) {
+                    return _buildPhase3Hub(
+                      context,
+                      posAsync: ref.watch(allPurchaseOrdersProvider),
+                      drawerBalanceAsync: ref.watch(todayCashDrawerBalanceProvider),
+                      totalExpensesAsync: ref.watch(todayTotalExpensesProvider),
+                      sstSettings: ref.watch(sstSettingsProvider),
+                      isTablet: isTablet,
+                    );
+                  }),
                   const SizedBox(height: 20),
 
                   // ── Phase 4 Scale & Delivery Hub ────────────────────
                   const SectionHeader(title: 'Multi-Outlet & Platform Delivery (Fasa 4)'),
                   const SizedBox(height: 12),
-                  _buildPhase4Hub(
-                    context,
-                    outletsAsync: outletsAsync,
-                    activeOutlet: activeOutlet,
-                    deliveryOrdersAsync: deliveryOrdersAsync,
-                    pnlAsync: pnlAsync,
-                    isTablet: isTablet,
-                  ),
+                  Consumer(builder: (context, ref, _) {
+                    return _buildPhase4Hub(
+                      context,
+                      outletsAsync: ref.watch(allOutletsProvider),
+                      activeOutlet: ref.watch(activeOutletProvider),
+                      deliveryOrdersAsync: ref.watch(allDeliveryOrdersProvider),
+                      pnlAsync: ref.watch(pnlSummaryProvider),
+                      isTablet: isTablet,
+                    );
+                  }),
                   const SizedBox(height: 20),
 
                   // ── Low Stock Alert ─────────────────────────────────
-                  ingredientsAsync.when(
-                    loading: () => const SizedBox.shrink(),
-                    error: (_, __) => const SizedBox.shrink(),
-                    data: (ingredients) {
-                      final low = ingredients
-                          .where((i) => i.currentStock <= i.reorderPoint)
-                          .toList();
-                      if (low.isEmpty) return const SizedBox.shrink();
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
-                        child: _lowStockBanner(context, low),
-                      );
-                    },
-                  ),
+                  Consumer(builder: (context, ref, _) {
+                    return ref.watch(ingredientsProvider).when(
+                      loading: () => const SizedBox.shrink(),
+                      error: (_, __) => const SizedBox.shrink(),
+                      data: (ingredients) {
+                        final low = ingredients
+                            .where((i) => i.currentStock <= i.reorderPoint)
+                            .toList();
+                        if (low.isEmpty) return const SizedBox.shrink();
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: _lowStockBanner(context, low),
+                        );
+                      },
+                    );
+                  }),
 
                   // ── Quick Actions ───────────────────────────────────
                   const SectionHeader(title: 'Tindakan Pantas'),
@@ -188,26 +185,28 @@ class DashboardScreen extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  ordersAsync.when(
-                    loading: () =>
-                        const Center(child: CircularProgressIndicator()),
-                    error: (_, __) => const SizedBox.shrink(),
-                    data: (orders) {
-                      if (orders.isEmpty) {
-                        return const EmptyState(
-                          icon: Icons.receipt_long_outlined,
-                          title: 'Belum ada pesanan hari ini',
-                          subtitle: 'Buka skrin POS untuk mula terima pesanan',
+                  Consumer(builder: (context, ref, _) {
+                    return ref.watch(todayOrdersProvider).when(
+                      loading: () =>
+                          const Center(child: CircularProgressIndicator()),
+                      error: (_, __) => const SizedBox.shrink(),
+                      data: (orders) {
+                        if (orders.isEmpty) {
+                          return const EmptyState(
+                            icon: Icons.receipt_long_outlined,
+                            title: 'Belum ada pesanan hari ini',
+                            subtitle: 'Buka skrin POS untuk mula terima pesanan',
+                          );
+                        }
+                        return Column(
+                          children: orders
+                              .take(5)
+                              .map((o) => _recentOrderTile(context, o))
+                              .toList(),
                         );
-                      }
-                      return Column(
-                        children: orders
-                            .take(5)
-                            .map((o) => _recentOrderTile(context, o))
-                            .toList(),
-                      );
-                    },
-                  ),
+                      },
+                    );
+                  }),
                   const SizedBox(height: 24),
                 ]),
               ),
@@ -238,7 +237,7 @@ class DashboardScreen extends ConsumerWidget {
         title: 'Dapur KDS',
         value: '$kdsCount Pesanan',
         subtitle: kdsCount > 0 ? 'Sedang diproses' : 'Semua siap',
-        icon: Icons.soup_kitchen_rounded,
+        icon: HugeIcons.strokeRoundedRestaurant01 as dynamic,
         color: const Color(0xFF1565C0),
         route: '/kds',
       ),
@@ -246,7 +245,7 @@ class DashboardScreen extends ConsumerWidget {
         title: 'Tugasan Syif',
         value: '$pendingTasks Belum Siap',
         subtitle: 'Checklist buka/tutup',
-        icon: Icons.assignment_turned_in_rounded,
+        icon: HugeIcons.strokeRoundedTask01,
         color: const Color(0xFFE65100),
         route: '/tasks',
       ),
@@ -254,7 +253,7 @@ class DashboardScreen extends ConsumerWidget {
         title: 'Staf Bertugas',
         value: '$onDutyStaff Aktif',
         subtitle: 'Clock-in hari ini',
-        icon: Icons.badge_rounded,
+        icon: HugeIcons.strokeRoundedUserAccount,
         color: AppTheme.successGreen,
         route: '/staff',
       ),
@@ -262,7 +261,7 @@ class DashboardScreen extends ConsumerWidget {
         title: 'Ahli Kesetiaan',
         value: '$totalMembers Ahli',
         subtitle: 'Program CRM & Cop',
-        icon: Icons.card_membership_rounded,
+        icon: HugeIcons.strokeRoundedCardExchange01,
         color: const Color(0xFF6A1B9A),
         route: '/loyalty',
       ),
@@ -299,7 +298,9 @@ class DashboardScreen extends ConsumerWidget {
                         color: item.color.withOpacity(0.12),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Icon(item.icon, size: 18, color: item.color),
+                      child: item.icon is IconData 
+                          ? Icon(item.icon as IconData, size: 18, color: item.color)
+                          : HugeIcon(icon: item.icon, size: 18, color: item.color),
                     ),
                     const Icon(Icons.arrow_forward_ios_rounded, size: 12, color: AppTheme.mutedText),
                   ],
@@ -349,7 +350,7 @@ class DashboardScreen extends ConsumerWidget {
         title: 'PO Pembekal',
         value: '$pendingPOs Menunggu',
         subtitle: 'Pesanan bekalan aktif',
-        icon: Icons.local_shipping_rounded,
+        icon: HugeIcons.strokeRoundedTruckDelivery as dynamic,
         color: const Color(0xFF00897B),
         route: '/suppliers',
       ),
@@ -365,7 +366,7 @@ class DashboardScreen extends ConsumerWidget {
         title: 'Baki Laci Tunai',
         value: 'RM ${drawerBal.toStringAsFixed(2)}',
         subtitle: 'Cash Drawer Float',
-        icon: Icons.point_of_sale_rounded,
+        icon: HugeIcons.strokeRoundedStore01,
         color: const Color(0xFF2E7D32),
         route: '/expenses',
       ),
@@ -373,7 +374,7 @@ class DashboardScreen extends ConsumerWidget {
         title: 'Belanja & Tunai Runcit',
         value: 'RM ${expenses.toStringAsFixed(2)}',
         subtitle: sstSettings.isEnabled ? 'SST 6% Aktif' : 'SST Dinyahaktif',
-        icon: Icons.account_balance_wallet_rounded,
+        icon: HugeIcons.strokeRoundedWallet01,
         color: const Color(0xFFC2185B),
         route: '/expenses',
       ),
@@ -410,7 +411,9 @@ class DashboardScreen extends ConsumerWidget {
                         color: item.color.withOpacity(0.12),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Icon(item.icon, size: 18, color: item.color),
+                      child: item.icon is IconData 
+                          ? Icon(item.icon as IconData, size: 18, color: item.color)
+                          : HugeIcon(icon: item.icon, size: 18, color: item.color),
                     ),
                     const Icon(Icons.arrow_forward_ios_rounded, size: 12, color: AppTheme.mutedText),
                   ],
@@ -461,7 +464,7 @@ class DashboardScreen extends ConsumerWidget {
         title: 'Cawangan Aktif',
         value: currentOutletName,
         subtitle: '${outletsList.length} Cawangan Berangkai',
-        icon: Icons.storefront_rounded,
+        icon: HugeIcons.strokeRoundedStore01 as dynamic,
         color: const Color(0xFF6D4C41),
         route: '/outlets',
       ),
@@ -469,7 +472,7 @@ class DashboardScreen extends ConsumerWidget {
         title: 'Platform Delivery',
         value: '$activeDeliveries Pesanan',
         subtitle: 'Grab, Panda & Shopee',
-        icon: Icons.delivery_dining_rounded,
+        icon: HugeIcons.strokeRoundedTruckDelivery,
         color: const Color(0xFF00897B),
         route: '/delivery',
       ),
@@ -477,7 +480,7 @@ class DashboardScreen extends ConsumerWidget {
         title: 'Margin COGS',
         value: 'Resipi BOM',
         subtitle: 'Analisis Kos Sebenar',
-        icon: Icons.pie_chart_rounded,
+        icon: HugeIcons.strokeRoundedPieChart01,
         color: const Color(0xFFE65100),
         route: '/analytics',
       ),
@@ -485,7 +488,7 @@ class DashboardScreen extends ConsumerWidget {
         title: 'Untung Bersih (P&L)',
         value: CurrencyFormatter.format(netProfit),
         subtitle: 'Prestasi Untung Rugi',
-        icon: Icons.insights_rounded,
+        icon: HugeIcons.strokeRoundedChartAnalysis,
         color: const Color(0xFF2E7D32),
         route: '/analytics',
       ),
@@ -522,7 +525,9 @@ class DashboardScreen extends ConsumerWidget {
                         color: item.color.withOpacity(0.12),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Icon(item.icon, size: 18, color: item.color),
+                      child: item.icon is IconData 
+                          ? Icon(item.icon as IconData, size: 18, color: item.color)
+                          : HugeIcon(icon: item.icon, size: 18, color: item.color),
                     ),
                     const Icon(Icons.arrow_forward_ios_rounded, size: 12, color: AppTheme.mutedText),
                   ],

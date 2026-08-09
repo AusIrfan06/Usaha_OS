@@ -64,9 +64,9 @@ class AppTheme {
 
       // Cards
       cardTheme: CardThemeData(
-        elevation: 0,
+        elevation: 4,
         color: cardBg,
-        shadowColor: Colors.transparent,
+        shadowColor: const Color(0x1A000000), // Soft 10% shadow
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         margin: EdgeInsets.zero,
       ),
@@ -154,40 +154,41 @@ class AppTheme {
       // Navigation Rail (tablet)
       navigationRailTheme: NavigationRailThemeData(
         backgroundColor: cardBg,
-        selectedIconTheme: const IconThemeData(color: primaryCoffee, size: 22),
+        elevation: 2,
+        selectedIconTheme: const IconThemeData(color: primaryCoffee, size: 24),
         selectedLabelTextStyle: GoogleFonts.inter(
-            color: primaryCoffee, fontWeight: FontWeight.w700, fontSize: 11),
-        unselectedIconTheme: const IconThemeData(color: mutedText, size: 22),
+            color: primaryCoffee, fontWeight: FontWeight.w800, fontSize: 11),
+        unselectedIconTheme: const IconThemeData(color: mutedText, size: 24),
         unselectedLabelTextStyle:
-            GoogleFonts.inter(color: mutedText, fontSize: 11),
+            GoogleFonts.inter(color: mutedText, fontSize: 11, fontWeight: FontWeight.w500),
         indicatorColor: primaryCoffee.withOpacity(0.12),
         useIndicator: true,
-        minWidth: 72,
-        minExtendedWidth: 200,
+        minWidth: 80,
+        minExtendedWidth: 220,
       ),
 
       // Navigation Bar (phone)
       navigationBarTheme: NavigationBarThemeData(
-        backgroundColor: cardBg,
+        backgroundColor: cardBg.withOpacity(0.95), // Slight transparency for modern look
         indicatorColor: primaryCoffee.withOpacity(0.14),
-        elevation: 0,
+        elevation: 8,
         iconTheme: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
-            return const IconThemeData(color: primaryCoffee, size: 22);
+            return const IconThemeData(color: primaryCoffee, size: 24);
           }
-          return const IconThemeData(color: mutedText, size: 22);
+          return const IconThemeData(color: mutedText, size: 24);
         }),
         labelTextStyle: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
             return GoogleFonts.inter(
                 color: primaryCoffee,
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w800,
                 fontSize: 11);
           }
-          return GoogleFonts.inter(color: mutedText, fontSize: 11);
+          return GoogleFonts.inter(color: mutedText, fontSize: 11, fontWeight: FontWeight.w500);
         }),
         surfaceTintColor: Colors.transparent,
-        shadowColor: const Color(0x14000000),
+        shadowColor: const Color(0x20000000), // Subtle shadow
       ),
 
       // Tab Bar

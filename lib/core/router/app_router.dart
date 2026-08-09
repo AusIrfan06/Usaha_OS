@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hugeicons/hugeicons.dart';
 import '../../features/dashboard/dashboard_screen.dart';
 import '../../features/pos/pos_screen.dart';
 import '../../features/kds/kds_screen.dart';
@@ -113,6 +114,14 @@ final appRouter = GoRouter(
 // Adaptive Shell: NavigationRail on tablet, NavigationBar + Drawer on phone
 // ─────────────────────────────────────────────────────────────────────────────
 
+class _Dest {
+  final dynamic icon;
+  final dynamic activeIcon;
+  final String label;
+  final String path;
+  const _Dest(this.icon, this.activeIcon, this.label, this.path);
+}
+
 class _AppShell extends StatelessWidget {
   final String location;
   final Widget child;
@@ -120,22 +129,22 @@ class _AppShell extends StatelessWidget {
   const _AppShell({required this.location, required this.child});
 
   static const _destinations = [
-    (icon: Icons.dashboard_outlined, activeIcon: Icons.dashboard_rounded, label: 'Dashboard', path: '/'),
-    (icon: Icons.point_of_sale_outlined, activeIcon: Icons.point_of_sale_rounded, label: 'POS', path: '/pos'),
-    (icon: Icons.soup_kitchen_outlined, activeIcon: Icons.soup_kitchen_rounded, label: 'KDS', path: '/kds'),
-    (icon: Icons.assignment_turned_in_outlined, activeIcon: Icons.assignment_turned_in_rounded, label: 'Tugasan', path: '/tasks'),
-    (icon: Icons.card_membership_outlined, activeIcon: Icons.card_membership_rounded, label: 'Loyalty', path: '/loyalty'),
-    (icon: Icons.badge_outlined, activeIcon: Icons.badge_rounded, label: 'Staf', path: '/staff'),
-    (icon: Icons.local_shipping_outlined, activeIcon: Icons.local_shipping_rounded, label: 'Pembekal & PO', path: '/suppliers'),
-    (icon: Icons.inventory_outlined, activeIcon: Icons.inventory_rounded, label: 'Stock Take', path: '/stock-take'),
-    (icon: Icons.account_balance_wallet_outlined, activeIcon: Icons.account_balance_wallet_rounded, label: 'Perbelanjaan', path: '/expenses'),
-    (icon: Icons.storefront_outlined, activeIcon: Icons.storefront_rounded, label: 'Multi-Outlet', path: '/outlets'),
-    (icon: Icons.delivery_dining_outlined, activeIcon: Icons.delivery_dining_rounded, label: 'Delivery Hub', path: '/delivery'),
-    (icon: Icons.insights_outlined, activeIcon: Icons.insights_rounded, label: 'Analitik Lanjutan', path: '/analytics'),
-    (icon: Icons.receipt_long_outlined, activeIcon: Icons.receipt_long_rounded, label: 'Pesanan', path: '/orders'),
-    (icon: Icons.inventory_2_outlined, activeIcon: Icons.inventory_2_rounded, label: 'Inventori', path: '/inventory'),
-    (icon: Icons.bar_chart_outlined, activeIcon: Icons.bar_chart_rounded, label: 'Laporan', path: '/reports'),
-    (icon: Icons.settings_outlined, activeIcon: Icons.settings_rounded, label: 'Tetapan', path: '/settings'),
+    _Dest(HugeIcons.strokeRoundedHome01, HugeIcons.strokeRoundedHome01, 'Dashboard', '/'),
+    _Dest(HugeIcons.strokeRoundedShoppingCart01, HugeIcons.strokeRoundedShoppingCart01, 'POS', '/pos'),
+    _Dest(HugeIcons.strokeRoundedRestaurant01, HugeIcons.strokeRoundedRestaurant01, 'KDS', '/kds'),
+    _Dest(Icons.assignment_turned_in_outlined, Icons.assignment_turned_in_rounded, 'Tugasan', '/tasks'),
+    _Dest(Icons.card_membership_outlined, Icons.card_membership_rounded, 'Loyalty', '/loyalty'),
+    _Dest(Icons.badge_outlined, Icons.badge_rounded, 'Staf', '/staff'),
+    _Dest(Icons.local_shipping_outlined, Icons.local_shipping_rounded, 'Pembekal & PO', '/suppliers'),
+    _Dest(Icons.inventory_outlined, Icons.inventory_rounded, 'Stock Take', '/stock-take'),
+    _Dest(Icons.account_balance_wallet_outlined, Icons.account_balance_wallet_rounded, 'Perbelanjaan', '/expenses'),
+    _Dest(Icons.storefront_outlined, Icons.storefront_rounded, 'Multi-Outlet', '/outlets'),
+    _Dest(Icons.delivery_dining_outlined, Icons.delivery_dining_rounded, 'Delivery Hub', '/delivery'),
+    _Dest(Icons.insights_outlined, Icons.insights_rounded, 'Analitik Lanjutan', '/analytics'),
+    _Dest(Icons.receipt_long_outlined, Icons.receipt_long_rounded, 'Pesanan', '/orders'),
+    _Dest(Icons.inventory_2_outlined, Icons.inventory_2_rounded, 'Inventori', '/inventory'),
+    _Dest(Icons.bar_chart_outlined, Icons.bar_chart_rounded, 'Laporan', '/reports'),
+    _Dest(HugeIcons.strokeRoundedSettings02, HugeIcons.strokeRoundedSettings02, 'Tetapan', '/settings'),
   ];
 
   int get _index {
@@ -178,11 +187,18 @@ class _AppShell extends StatelessWidget {
           }
         },
         destinations: [
-          ...primaryPhoneDestinations.map((d) => NavigationDestination(
-                icon: Icon(d.icon),
-                selectedIcon: Icon(d.activeIcon),
-                label: d.label,
-              )),
+          ...primaryPhoneDestinations.map((d) {
+            final isHuge = d.icon is List<List<dynamic>>;
+            return NavigationDestination(
+              icon: isHuge
+                  ? HugeIcon(icon: d.icon as List<List<dynamic>>, size: 24, color: AppTheme.mutedText)
+                  : Icon(d.icon as IconData, color: AppTheme.mutedText),
+              selectedIcon: isHuge
+                  ? HugeIcon(icon: d.activeIcon as List<List<dynamic>>, size: 24, color: AppTheme.primaryCoffee)
+                  : Icon(d.activeIcon as IconData, color: AppTheme.primaryCoffee),
+              label: d.label,
+            );
+          }),
           const NavigationDestination(
             icon: Icon(Icons.more_horiz_rounded),
             selectedIcon: Icon(Icons.apps_rounded),
@@ -224,6 +240,9 @@ class _AppShell extends StatelessWidget {
               itemBuilder: (ctx, i) {
                 final d = moreDestinations[i];
                 final isSelected = location == d.path;
+                final isHuge = d.activeIcon is List<List<dynamic>>;
+                final iconColor = isSelected ? AppTheme.primaryCoffee : AppTheme.darkEspresso;
+
                 return InkWell(
                   onTap: () {
                     Navigator.pop(ctx);
@@ -239,7 +258,9 @@ class _AppShell extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(d.activeIcon, color: isSelected ? AppTheme.primaryCoffee : AppTheme.darkEspresso, size: 26),
+                        isHuge
+                            ? HugeIcon(icon: d.activeIcon as List<List<dynamic>>, color: iconColor, size: 26)
+                            : Icon(d.activeIcon as IconData, color: iconColor, size: 26),
                         const SizedBox(height: 6),
                         Text(
                           d.label,
@@ -303,13 +324,18 @@ class _AppShell extends StatelessWidget {
                       ],
                     ),
                   ),
-                  destinations: _destinations
-                      .map((d) => NavigationRailDestination(
-                            icon: Icon(d.icon),
-                            selectedIcon: Icon(d.activeIcon),
-                            label: Text(d.label),
-                          ))
-                      .toList(),
+                  destinations: _destinations.map((d) {
+                    final isHuge = d.icon is List<List<dynamic>>;
+                    return NavigationRailDestination(
+                      icon: isHuge
+                          ? HugeIcon(icon: d.icon as List<List<dynamic>>, size: 24, color: AppTheme.mutedText)
+                          : Icon(d.icon as IconData, color: AppTheme.mutedText),
+                      selectedIcon: isHuge
+                          ? HugeIcon(icon: d.activeIcon as List<List<dynamic>>, size: 24, color: AppTheme.primaryCoffee)
+                          : Icon(d.activeIcon as IconData, color: AppTheme.primaryCoffee),
+                      label: Text(d.label),
+                    );
+                  }).toList(),
                 ),
               ),
             ),

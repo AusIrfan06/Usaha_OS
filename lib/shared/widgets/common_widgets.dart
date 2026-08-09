@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hugeicons/hugeicons.dart';
 import '../../core/theme/app_theme.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -107,16 +108,16 @@ class OrderTypeBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (label, icon, color) = switch (orderType) {
-      'dine_in' => ('Dine-in', Icons.restaurant, const Color(0xFF6A1B9A)),
-      'takeaway' => ('Takeaway', Icons.shopping_bag_outlined, AppTheme.primaryCoffee),
+      'dine_in' => ('Dine-in', HugeIcons.strokeRoundedRestaurant01, const Color(0xFF6A1B9A)),
+      'takeaway' => ('Takeaway', HugeIcons.strokeRoundedShoppingBag01, AppTheme.primaryCoffee),
       'delivery' => ('Delivery', Icons.delivery_dining, AppTheme.duitNowBlue),
-      _ => ('?', Icons.help_outline, Colors.grey),
+      _ => ('?', HugeIcons.strokeRoundedHelpCircle, Colors.grey),
     };
 
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 13, color: color),
+        icon is IconData ? Icon(icon, size: 14, color: color) : HugeIcon(icon: icon as dynamic, size: 14, color: color),
         const SizedBox(width: 4),
         Text(label,
             style: TextStyle(
@@ -135,7 +136,7 @@ class OrderTypeBadge extends StatelessWidget {
 class StatCard extends StatelessWidget {
   final String label;
   final String value;
-  final IconData icon;
+  final dynamic icon;
   final Color iconColor;
   final Color? iconBg;
 
@@ -158,21 +159,25 @@ class StatCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 36,
-            height: 36,
+            width: 38,
+            height: 38,
             decoration: BoxDecoration(
               color: iconBg ?? iconColor.withOpacity(0.12),
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(icon, color: iconColor, size: 18),
+            child: Center(
+              child: icon is List<List<dynamic>> 
+                  ? HugeIcon(icon: icon as List<List<dynamic>>, color: iconColor, size: 20)
+                  : Icon(icon as IconData, color: iconColor, size: 20),
+            ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 14),
           Text(value,
               style: tt.titleLarge?.copyWith(
-                  fontWeight: FontWeight.w800, fontSize: 22)),
-          const SizedBox(height: 2),
+                  fontWeight: FontWeight.w800, fontSize: 24, letterSpacing: -0.5)),
+          const SizedBox(height: 4),
           Text(label,
-              style: tt.bodySmall?.copyWith(color: AppTheme.mutedText)),
+              style: tt.bodySmall?.copyWith(color: AppTheme.mutedText, fontWeight: FontWeight.w600)),
         ],
       ),
     );
@@ -208,15 +213,17 @@ class SectionHeader extends StatelessWidget {
 // ─────────────────────────────────────────────────────────────────────────────
 
 class EmptyState extends StatelessWidget {
-  final IconData icon;
+  final dynamic icon;
   final String title;
   final String subtitle;
+  final Widget? action;
 
   const EmptyState({
     super.key,
     required this.icon,
     required this.title,
     required this.subtitle,
+    this.action,
   });
 
   @override
@@ -225,24 +232,30 @@ class EmptyState extends StatelessWidget {
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            width: 80,
-            height: 80,
+            padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: AppTheme.surfaceVariant,
+              color: AppTheme.mutedText.withOpacity(0.08),
               shape: BoxShape.circle,
             ),
-            child:
-                Icon(icon, size: 38, color: AppTheme.mutedText),
+            child: icon is IconData
+                ? Icon(icon as IconData, size: 48, color: AppTheme.mutedText.withOpacity(0.7))
+                : HugeIcon(icon: icon, size: 48, color: AppTheme.mutedText.withOpacity(0.7)),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
           Text(title,
-              style: tt.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
-          const SizedBox(height: 6),
+              style: tt.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w700, color: AppTheme.mutedText)),
+          const SizedBox(height: 8),
           Text(subtitle,
-              style: tt.bodyMedium?.copyWith(color: AppTheme.mutedText),
-              textAlign: TextAlign.center),
+              textAlign: TextAlign.center,
+              style: tt.bodySmall?.copyWith(color: AppTheme.mutedText)),
+          if (action != null) ...[
+            const SizedBox(height: 20),
+            action!,
+          ],
         ],
       ),
     );
