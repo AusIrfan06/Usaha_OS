@@ -276,7 +276,7 @@ class DashboardScreen extends ConsumerWidget {
       crossAxisCount: isTablet ? 4 : 2,
       mainAxisSpacing: 12,
       crossAxisSpacing: 12,
-      childAspectRatio: isTablet ? 1.4 : 1.3,
+      childAspectRatio: isTablet ? 1.4 : 1.1,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       children: hubItems.map((item) {
@@ -389,7 +389,7 @@ class DashboardScreen extends ConsumerWidget {
       crossAxisCount: isTablet ? 4 : 2,
       mainAxisSpacing: 12,
       crossAxisSpacing: 12,
-      childAspectRatio: isTablet ? 1.4 : 1.3,
+      childAspectRatio: isTablet ? 1.4 : 1.1,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       children: p3Items.map((item) {
@@ -503,7 +503,7 @@ class DashboardScreen extends ConsumerWidget {
       crossAxisCount: isTablet ? 4 : 2,
       mainAxisSpacing: 12,
       crossAxisSpacing: 12,
-      childAspectRatio: isTablet ? 1.4 : 1.3,
+      childAspectRatio: isTablet ? 1.4 : 1.1,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       children: p4Items.map((item) {
@@ -601,7 +601,7 @@ class DashboardScreen extends ConsumerWidget {
       crossAxisCount: isTablet ? 3 : 2,
       crossAxisSpacing: 16,
       mainAxisSpacing: 16,
-      childAspectRatio: isTablet ? 2.8 : 2.2,
+      childAspectRatio: isTablet ? 2.8 : 1.5,
       children: p5Items.map((item) {
         return InkWell(
           onTap: () => context.push(item.route),
@@ -736,18 +736,18 @@ class DashboardScreen extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 8),
-          Row(
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
             children: [
               _paymentPill(
                 'Tunai: ${CurrencyFormatter.format(summary['cashSales'])}',
                 HugeIcons.strokeRoundedMoney01,
               ),
-              const SizedBox(width: 8),
               _paymentPill(
                 'QR: ${CurrencyFormatter.format(summary['duitNowSales'])}',
-                HugeIcons.strokeRoundedSquare,
+                HugeIcons.strokeRoundedQrCode,
               ),
-              const SizedBox(width: 8),
               _paymentPill(
                 'Kad: ${CurrencyFormatter.format(summary['cardSales'])}',
                 HugeIcons.strokeRoundedCreditCard,
@@ -838,7 +838,29 @@ class DashboardScreen extends ConsumerWidget {
       ),
     ];
 
-    return Row(children: children);
+    if (isTablet) {
+      return Row(children: children);
+    } else {
+      return Column(
+        children: [
+          Row(
+            children: [
+              children[0],
+              const SizedBox(width: 12),
+              children[2],
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              children[4],
+              const SizedBox(width: 12),
+              children[6],
+            ],
+          ),
+        ],
+      );
+    }
   }
 
   // ── Low Stock Banner ───────────────────────────────────────────────────────
@@ -933,7 +955,7 @@ class DashboardScreen extends ConsumerWidget {
         route: '/expenses'
       ),
       (
-        icon: HugeIcons.strokeRoundedBarChart,
+        icon: HugeIcons.strokeRoundedFile01,
         label: 'Laporan Jualan',
         color: const Color(0xFF455A64),
         route: '/reports'
@@ -944,7 +966,7 @@ class DashboardScreen extends ConsumerWidget {
       crossAxisCount: isTablet ? 4 : 2,
       mainAxisSpacing: 12,
       crossAxisSpacing: 12,
-      childAspectRatio: isTablet ? 1.4 : 1.6,
+      childAspectRatio: isTablet ? 1.4 : 1.2,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       children: actions

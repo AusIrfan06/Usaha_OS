@@ -141,8 +141,8 @@ class _AppShell extends StatelessWidget {
       '/loyalty',
     ),
     _Dest(
-      HugeIcons.strokeRoundedUserGroup,
-      HugeIcons.strokeRoundedBadge,
+      HugeIcons.strokeRoundedUserAccount,
+      HugeIcons.strokeRoundedUserAccount,
       'Staf',
       '/staff',
     ),
@@ -177,8 +177,8 @@ class _AppShell extends StatelessWidget {
       '/delivery',
     ),
     _Dest(
-      HugeIcons.strokeRoundedPresentation01,
-      HugeIcons.strokeRoundedPresentation01,
+      HugeIcons.strokeRoundedChart01,
+      HugeIcons.strokeRoundedChart01,
       'Analitik Lanjutan',
       '/analytics',
     ),
@@ -195,8 +195,8 @@ class _AppShell extends StatelessWidget {
       '/inventory',
     ),
     _Dest(
-      HugeIcons.strokeRoundedBarChart,
-      HugeIcons.strokeRoundedBarChart,
+      HugeIcons.strokeRoundedFile01,
+      HugeIcons.strokeRoundedFile01,
       'Laporan',
       '/reports',
     ),
@@ -231,165 +231,84 @@ class _AppShell extends StatelessWidget {
   // ── Phone: NavigationBar + More Menu ─────────────────────────────────────
 
   Widget _bottomNavLayout(BuildContext context) {
-    // Show top 4 primary + More menu
-    final primaryPhoneDestinations = _destinations.take(4).toList();
-    final currentIndex = _index;
-    final isPrimary = currentIndex < 4;
-
     return Scaffold(
       body: child,
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: isPrimary ? currentIndex : 4,
-        onDestinationSelected: (i) {
-          if (i < 4) {
-            _navigate(context, i);
-          } else {
-            _showMoreMenu(context);
-          }
-        },
-        destinations: [
-          ...primaryPhoneDestinations.map((d) {
-            final isHuge = d.icon is List<List<dynamic>>;
-            return NavigationDestination(
-              icon: isHuge
-                  ? HugeIcon(
-                      icon: d.icon as List<List<dynamic>>,
-                      size: 24,
-                      color: AppTheme.mutedText,
-                    )
-                  : HugeIcon(
-                      icon: d.icon as dynamic,
-                      color: AppTheme.mutedText,
-                    ),
-              selectedIcon: isHuge
-                  ? HugeIcon(
-                      icon: d.activeIcon as List<List<dynamic>>,
-                      size: 24,
-                      color: AppTheme.primaryCoffee,
-                    )
-                  : HugeIcon(
-                      icon: d.activeIcon as dynamic,
-                      color: AppTheme.primaryCoffee,
-                    ),
-              label: d.label,
-            );
-          }),
-          const NavigationDestination(
-            icon: HugeIcon(icon: HugeIcons.strokeRoundedMenu01),
-            selectedIcon: HugeIcon(icon: HugeIcons.strokeRoundedMenu01),
-            label: 'Lain-lain',
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showMoreMenu(BuildContext context) {
-    final moreDestinations = _destinations.skip(4).toList();
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (ctx) => Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Container(
-                  width: 32,
-                  height: 32,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    image: const DecorationImage(
-                      image: AssetImage('assets/logo.png'),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                const Text(
-                  'Modul Usaha OS',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-                childAspectRatio: 1.1,
-              ),
-              itemCount: moreDestinations.length,
-              itemBuilder: (ctx, i) {
-                final d = moreDestinations[i];
-                final isSelected = location == d.path;
-                final isHuge = d.activeIcon is List<List<dynamic>>;
-                final iconColor = isSelected
-                    ? AppTheme.primaryCoffee
-                    : AppTheme.darkEspresso;
-
-                return InkWell(
-                  onTap: () {
-                    Navigator.pop(ctx);
-                    context.go(d.path);
-                  },
-                  borderRadius: BorderRadius.circular(12),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: isSelected
-                          ? AppTheme.primaryCoffee.withOpacity(0.15)
-                          : AppTheme.surfaceVariant,
-                      borderRadius: BorderRadius.circular(12),
-                      border: isSelected
-                          ? Border.all(
-                              color: AppTheme.primaryCoffee,
-                              width: 1.5,
-                            )
-                          : null,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        isHuge
-                            ? HugeIcon(
-                                icon: d.activeIcon as List<List<dynamic>>,
-                                color: iconColor,
-                                size: 26,
-                              )
-                            : HugeIcon(
-                                icon: d.activeIcon as dynamic,
-                                color: iconColor,
-                                size: 26,
-                              ),
-                        const SizedBox(height: 6),
-                        Text(
-                          d.label,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: isSelected
-                                ? FontWeight.w800
-                                : FontWeight.w600,
-                            color: isSelected
-                                ? AppTheme.primaryCoffee
-                                : AppTheme.darkEspresso,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
+      bottomNavigationBar: Container(
+        height: 72,
+        decoration: BoxDecoration(
+          color: AppTheme.cardBg,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, -2),
             ),
           ],
+        ),
+        child: SafeArea(
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: _destinations.length,
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            itemBuilder: (context, i) {
+              final d = _destinations[i];
+              final isSelected = _index == i;
+              final isHuge = d.icon is List<List<dynamic>>;
+
+              return InkWell(
+                onTap: () => _navigate(context, i),
+                borderRadius: BorderRadius.circular(12),
+                child: Container(
+                  width: 72,
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: isSelected
+                              ? AppTheme.primaryCoffee.withOpacity(0.15)
+                              : Colors.transparent,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: isHuge
+                            ? HugeIcon(
+                                icon: (isSelected ? d.activeIcon : d.icon)
+                                    as List<List<dynamic>>,
+                                size: 22,
+                                color: isSelected
+                                    ? AppTheme.primaryCoffee
+                                    : AppTheme.mutedText,
+                              )
+                            : HugeIcon(
+                                icon: (isSelected ? d.activeIcon : d.icon)
+                                    as dynamic,
+                                color: isSelected
+                                    ? AppTheme.primaryCoffee
+                                    : AppTheme.mutedText,
+                              ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        d.label,
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight:
+                              isSelected ? FontWeight.w700 : FontWeight.w500,
+                          color: isSelected
+                              ? AppTheme.primaryCoffee
+                              : AppTheme.mutedText,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
         ),
       ),
     );
