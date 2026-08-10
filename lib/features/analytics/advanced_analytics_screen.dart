@@ -51,8 +51,8 @@ class _AdvancedAnalyticsScreenState extends ConsumerState<AdvancedAnalyticsScree
           indicatorColor: AppTheme.primaryCoffee,
           tabs: const [
             Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedPieChart01), text: 'COGS & Margin Item'),
-            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedSquare), text: 'Peta Waktu Puncak (Heatmap)'),
-            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedSquare), text: 'Prestasi Staf'),
+            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedClock01), text: 'Peta Waktu Puncak (Heatmap)'),
+            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedUser), text: 'Prestasi Staf'),
             Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedBank), text: 'Penyata Untung Rugi (P&L)'),
           ],
         ),

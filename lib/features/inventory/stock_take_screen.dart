@@ -56,7 +56,7 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
           unselectedLabelColor: AppColors.textMuted,
           tabs: const [
             Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedEdit01), text: 'Kiraan Stok Semasa'),
-            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedSquare), text: 'Log Audit & Varians'),
+            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedFile02), text: 'Log Audit & Varians'),
           ],
         ),
       ),

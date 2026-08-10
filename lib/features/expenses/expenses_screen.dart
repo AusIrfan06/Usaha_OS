@@ -53,7 +53,7 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
           labelColor: AppColors.primary,
           unselectedLabelColor: AppColors.textMuted,
           tabs: const [
-            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedSquare), text: 'Log Perbelanjaan'),
+            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedFile02), text: 'Log Perbelanjaan'),
             Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedRegister), text: 'Imbangan Laci Tunai (Cash Drawer)'),
           ],
         ),
