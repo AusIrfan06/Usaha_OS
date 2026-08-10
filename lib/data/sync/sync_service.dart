@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -23,6 +24,7 @@ class SyncService {
   final SupabaseClient client;
 
   RealtimeChannel? _channel;
+  Timer? _syncTimer;
   final ValueNotifier<bool> isRealtimeConnected = ValueNotifier<bool>(false);
   final ValueNotifier<bool> isSyncing = ValueNotifier<bool>(false);
   final ValueNotifier<DateTime?> lastSyncedAt = ValueNotifier<DateTime?>(null);
@@ -230,6 +232,26 @@ class SyncService {
     } catch (e) {
       debugPrint('[SyncService] Failed to init realtime: $e');
     }
+  }
+
+  // ── Continuous Background Sync ──────────────────────────────────────────────
+
+  /// Starts a periodic background sync loop.
+  void startContinuousSync() {
+    if (!_isConfigured) return;
+    
+    // Defaulting to 3 minutes as requested
+    _syncTimer?.cancel();
+    _syncTimer = Timer.periodic(const Duration(minutes: 3), (timer) async {
+      debugPrint('[SyncService] Running continuous background sync...');
+      if (!isRealtimeConnected.value) {
+        debugPrint('[SyncService] Realtime disconnected. Attempting to reconnect...');
+        initRealtime();
+      }
+      
+      // Perform a full 2-way sync
+      await pullAllFromSupabase();
+    });
   }
 
   // ── Tombstone Push & Cloud Delete ──────────────────────────────────────────
@@ -1111,6 +1133,7 @@ class SyncService {
   }
 
   void dispose() {
+    _syncTimer?.cancel();
     _channel?.unsubscribe();
     isRealtimeConnected.dispose();
     isSyncing.dispose();

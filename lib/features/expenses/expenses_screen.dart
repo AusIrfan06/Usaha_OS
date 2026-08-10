@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:drift/drift.dart' as drift;
 import 'package:intl/intl.dart';
 import '../../core/providers.dart';
+import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_colors.dart';
 import '../../data/database/app_database.dart';
 
@@ -33,11 +34,11 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundDark,
+      backgroundColor: AppTheme.warmCream,
       appBar: AppBar(
         title: const Row(
           children: [
-            HugeIcon(icon: HugeIcons.strokeRoundedBank, color: AppColors.primary),
+            HugeIcon(icon: HugeIcons.strokeRoundedBank, color: AppTheme.primaryCoffee),
             SizedBox(width: 10),
             Text(
               'Perbelanjaan & Tunai Runcit (Petty Cash)',
@@ -45,13 +46,13 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
             ),
           ],
         ),
-        backgroundColor: AppColors.surfaceDark,
+        backgroundColor: Colors.white,
         elevation: 0,
         bottom: TabBar(
           controller: _tabController,
-          indicatorColor: AppColors.primary,
-          labelColor: AppColors.primary,
-          unselectedLabelColor: AppColors.textMuted,
+          indicatorColor: AppTheme.primaryCoffee,
+          labelColor: AppTheme.primaryCoffee,
+          unselectedLabelColor: AppTheme.mutedText,
           tabs: const [
             Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedFile02), text: 'Log Perbelanjaan'),
             Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedRegister), text: 'Imbangan Laci Tunai (Cash Drawer)'),
@@ -82,16 +83,16 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
         // Summary Header Banner
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          color: AppColors.surfaceDark,
+          color: Colors.white,
           child: Row(
             children: [
               totalExpensesAsync.when(
-                loading: () => const Text('Mengira...', style: TextStyle(color: Colors.white)),
+                loading: () => const Text('Mengira...', style: TextStyle()),
                 error: (e, _) => Text('Ralat: $e', style: const TextStyle(color: Colors.red)),
                 data: (totalToday) => Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Jumlah Perbelanjaan Hari Ini:', style: TextStyle(color: AppColors.textMuted, fontSize: 12)),
+                    const Text('Jumlah Perbelanjaan Hari Ini:', style: TextStyle(color: AppTheme.mutedText, fontSize: 12)),
                     Text(
                       'RM ${totalToday.toStringAsFixed(2)}',
                       style: const TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold, fontSize: 20),
@@ -102,7 +103,7 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
               const Spacer(),
               ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
+                  backgroundColor: AppTheme.primaryCoffee,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 ),
@@ -113,12 +114,12 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
             ],
           ),
         ),
-        const Divider(height: 1, color: AppColors.cardDark),
+        const Divider(height: 1, ),
 
         // List of Expenses
         Expanded(
           child: expensesAsync.when(
-            loading: () => const Center(child: CircularProgressIndicator(color: AppColors.primary)),
+            loading: () => const Center(child: CircularProgressIndicator(color: AppTheme.primaryCoffee)),
             error: (err, _) => Center(child: Text('Ralat: $err', style: const TextStyle(color: Colors.red))),
             data: (expenses) {
               if (expenses.isEmpty) {
@@ -126,9 +127,9 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      HugeIcon(icon: HugeIcons.strokeRoundedInvoice01, size: 64, color: AppColors.textMuted.withOpacity(0.5)),
+                      HugeIcon(icon: HugeIcons.strokeRoundedInvoice01, size: 64, color: AppTheme.mutedText.withOpacity(0.5)),
                       const SizedBox(height: 12),
-                      const Text('Tiada rekod perbelanjaan', style: TextStyle(color: AppColors.textMuted, fontSize: 16)),
+                      const Text('Tiada rekod perbelanjaan', style: TextStyle(color: AppTheme.mutedText, fontSize: 16)),
                       const SizedBox(height: 8),
                       TextButton.icon(
                         onPressed: () => _showAddExpenseDialog(context),
@@ -153,7 +154,7 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
                   if (e.category == 'Maintenance') catColor = Colors.teal;
 
                   return Card(
-                    color: AppColors.cardDark,
+                    color: Colors.white,
                     margin: const EdgeInsets.only(bottom: 10),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     child: ListTile(
@@ -165,7 +166,7 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
                         children: [
                           Text(
                             e.description.isNotEmpty ? e.description : e.category,
-                            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),
+                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                           ),
                           const SizedBox(width: 8),
                           Container(
@@ -187,11 +188,11 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
                           const SizedBox(height: 4),
                           Text(
                             'Penerima: ${e.recipient.isNotEmpty ? e.recipient : '-'} • Kaedah: ${e.paymentMethod.toUpperCase()}${e.receiptNumber != null ? ' (No: ${e.receiptNumber})' : ''}',
-                            style: const TextStyle(color: AppColors.textMuted, fontSize: 12),
+                            style: const TextStyle(color: AppTheme.mutedText, fontSize: 12),
                           ),
                           Text(
                             'Direkod oleh: ${e.recordedBy} (${df.format(e.expenseDate)})',
-                            style: const TextStyle(color: Colors.white38, fontSize: 11),
+                            style: const TextStyle(color: AppTheme.mutedText, fontSize: 11),
                           ),
                         ],
                       ),
@@ -207,7 +208,7 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
                             ),
                           ),
                           IconButton(
-                            icon: HugeIcon(icon: HugeIcons.strokeRoundedDelete01, color: Colors.white30, size: 20),
+                            icon: HugeIcon(icon: HugeIcons.strokeRoundedDelete01, color: AppTheme.mutedText, size: 20),
                             onPressed: () {
                               ref.read(databaseProvider).deleteExpense(e.id);
                             },
@@ -237,8 +238,8 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setState) => AlertDialog(
-          backgroundColor: AppColors.cardDark,
-          title: const Text('Rekod Perbelanjaan / Tunai Runcit', style: TextStyle(color: Colors.white)),
+          backgroundColor: Colors.white,
+          title: const Text('Rekod Perbelanjaan / Tunai Runcit', style: TextStyle()),
           content: SingleChildScrollView(
             child: SizedBox(
               width: 420,
@@ -247,7 +248,7 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
                 children: [
                   TextField(
                     controller: descCtrl,
-                    style: const TextStyle(color: Colors.white),
+                    style: const TextStyle(),
                     decoration: const InputDecoration(
                       labelText: 'Keterangan / Tujuan Perbelanjaan *',
                       border: OutlineInputBorder(),
@@ -257,7 +258,7 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
                   TextField(
                     controller: amountCtrl,
                     keyboardType: TextInputType.number,
-                    style: const TextStyle(color: Colors.white),
+                    style: const TextStyle(),
                     decoration: const InputDecoration(
                       labelText: 'Jumlah (RM) *',
                       prefixText: 'RM ',
@@ -267,8 +268,8 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
                   const SizedBox(height: 10),
                   DropdownButtonFormField<String>(
                     value: category,
-                    dropdownColor: AppColors.surfaceDark,
-                    style: const TextStyle(color: Colors.white),
+                    dropdownColor: Colors.white,
+                    style: const TextStyle(),
                     decoration: const InputDecoration(labelText: 'Kategori Perbelanjaan', border: OutlineInputBorder()),
                     items: const [
                       DropdownMenuItem(value: 'Petty Cash', child: Text('Tunai Runcit (Petty Cash Kecemasan)')),
@@ -283,8 +284,8 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
                   const SizedBox(height: 10),
                   DropdownButtonFormField<String>(
                     value: paymentMethod,
-                    dropdownColor: AppColors.surfaceDark,
-                    style: const TextStyle(color: Colors.white),
+                    dropdownColor: Colors.white,
+                    style: const TextStyle(),
                     decoration: const InputDecoration(labelText: 'Kaedah Bayaran', border: OutlineInputBorder()),
                     items: const [
                       DropdownMenuItem(value: 'cash', child: Text('Tunai dari Laci (Cash Drawer)')),
@@ -296,7 +297,7 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
                   const SizedBox(height: 10),
                   TextField(
                     controller: recipientCtrl,
-                    style: const TextStyle(color: Colors.white),
+                    style: const TextStyle(),
                     decoration: const InputDecoration(
                       labelText: 'Nama Kedai / Penerima',
                       border: OutlineInputBorder(),
@@ -305,7 +306,7 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
                   const SizedBox(height: 10),
                   TextField(
                     controller: receiptCtrl,
-                    style: const TextStyle(color: Colors.white),
+                    style: const TextStyle(),
                     decoration: const InputDecoration(
                       labelText: 'No. Resit / Rujukan Invois',
                       border: OutlineInputBorder(),
@@ -318,10 +319,10 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('Batal', style: TextStyle(color: AppColors.textMuted)),
+              child: const Text('Batal', style: TextStyle(color: AppTheme.mutedText)),
             ),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
+              style: ElevatedButton.styleFrom(backgroundColor: AppTheme.primaryCoffee),
               onPressed: () async {
                 final amount = double.tryParse(amountCtrl.text);
                 if (amount == null || amount <= 0 || descCtrl.text.trim().isEmpty) return;
@@ -347,7 +348,7 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
                   ),
                 );
               },
-              child: const Text('Simpan Perbelanjaan', style: TextStyle(color: Colors.white)),
+              child: const Text('Simpan Perbelanjaan', style: TextStyle()),
             ),
           ],
         ),
@@ -373,19 +374,19 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [AppColors.primary.withOpacity(0.3), AppColors.surfaceDark],
+              colors: [AppTheme.primaryCoffee.withOpacity(0.3), Colors.white],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: AppColors.primary.withOpacity(0.4)),
+            border: Border.all(color: AppTheme.primaryCoffee.withOpacity(0.4)),
           ),
           child: Row(
             children: [
               const CircleAvatar(
                 radius: 30,
-                backgroundColor: AppColors.primary,
-                child: HugeIcon(icon: HugeIcons.strokeRoundedRegister, size: 32, color: Colors.white),
+                backgroundColor: AppTheme.primaryCoffee,
+                child: HugeIcon(icon: HugeIcons.strokeRoundedRegister, size: 32, ),
               ),
               const SizedBox(width: 16),
               Column(
@@ -393,10 +394,10 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
                 children: [
                   const Text(
                     'Jangkaan Baki Tunai Laci (Drawer Balance)',
-                    style: TextStyle(color: AppColors.textMuted, fontSize: 13),
+                    style: TextStyle(color: AppTheme.mutedText, fontSize: 13),
                   ),
                   balanceAsync.when(
-                    loading: () => const Text('Mengira...', style: TextStyle(color: Colors.white)),
+                    loading: () => const Text('Mengira...', style: TextStyle()),
                     error: (err, _) => Text('Ralat: $err', style: const TextStyle(color: Colors.red)),
                     data: (bal) => Text(
                       'RM ${bal.toStringAsFixed(2)}',
@@ -412,7 +413,7 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
               const Spacer(),
               ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
+                  backgroundColor: AppTheme.primaryCoffee,
                   foregroundColor: Colors.white,
                 ),
                 icon: HugeIcon(icon: HugeIcons.strokeRoundedSquare),
@@ -430,19 +431,19 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
             alignment: Alignment.centerLeft,
             child: Text(
               'Log Pergerakan Tunai Laci (Cash In/Out History)',
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
             ),
           ),
         ),
 
         Expanded(
           child: drawerLogsAsync.when(
-            loading: () => const Center(child: CircularProgressIndicator(color: AppColors.primary)),
+            loading: () => const Center(child: CircularProgressIndicator(color: AppTheme.primaryCoffee)),
             error: (err, _) => Center(child: Text('Ralat: $err', style: const TextStyle(color: Colors.red))),
             data: (logs) {
               if (logs.isEmpty) {
                 return const Center(
-                  child: Text('Tiada log pergerakan tunai hari ini', style: TextStyle(color: AppColors.textMuted)),
+                  child: Text('Tiada log pergerakan tunai hari ini', style: TextStyle(color: AppTheme.mutedText)),
                 );
               }
 
@@ -454,7 +455,7 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
                   final isPositive = log.type == 'float_in' || log.type == 'cash_in';
 
                   return Card(
-                    color: AppColors.cardDark,
+                    color: Colors.white,
                     margin: const EdgeInsets.only(bottom: 8),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     child: ListTile(
@@ -464,11 +465,11 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
                       ),
                       title: Text(
                         log.reason.isNotEmpty ? log.reason : log.type.toUpperCase(),
-                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+                        style: const TextStyle(fontWeight: FontWeight.w600),
                       ),
                       subtitle: Text(
                         'Oleh: ${log.recordedBy} • ${df.format(log.createdAt)}',
-                        style: const TextStyle(color: AppColors.textMuted, fontSize: 12),
+                        style: const TextStyle(color: AppTheme.mutedText, fontSize: 12),
                       ),
                       trailing: Text(
                         '${isPositive ? '+' : '-'} RM ${log.amount.toStringAsFixed(2)}',
@@ -498,15 +499,15 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setState) => AlertDialog(
-          backgroundColor: AppColors.cardDark,
-          title: const Text('Pergerakan Tunai Laci (Cash Drawer)', style: TextStyle(color: Colors.white)),
+          backgroundColor: Colors.white,
+          title: const Text('Pergerakan Tunai Laci (Cash Drawer)', style: TextStyle()),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               DropdownButtonFormField<String>(
                 value: type,
-                dropdownColor: AppColors.surfaceDark,
-                style: const TextStyle(color: Colors.white),
+                dropdownColor: Colors.white,
+                style: const TextStyle(),
                 decoration: const InputDecoration(labelText: 'Jenis Tindakan', border: OutlineInputBorder()),
                 items: const [
                   DropdownMenuItem(value: 'float_in', child: Text('Float In (Tambah Apungan Pagi)')),
@@ -520,7 +521,7 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
               TextField(
                 controller: amountCtrl,
                 keyboardType: TextInputType.number,
-                style: const TextStyle(color: Colors.white),
+                style: const TextStyle(),
                 decoration: const InputDecoration(
                   labelText: 'Jumlah (RM)',
                   prefixText: 'RM ',
@@ -530,7 +531,7 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
               const SizedBox(height: 10),
               TextField(
                 controller: reasonCtrl,
-                style: const TextStyle(color: Colors.white),
+                style: const TextStyle(),
                 decoration: const InputDecoration(
                   labelText: 'Sebab / Catatan',
                   border: OutlineInputBorder(),
@@ -541,10 +542,10 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('Batal', style: TextStyle(color: AppColors.textMuted)),
+              child: const Text('Batal', style: TextStyle(color: AppTheme.mutedText)),
             ),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
+              style: ElevatedButton.styleFrom(backgroundColor: AppTheme.primaryCoffee),
               onPressed: () async {
                 final amount = double.tryParse(amountCtrl.text);
                 if (amount == null || amount <= 0) return;
@@ -567,7 +568,7 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
                   ),
                 );
               },
-              child: const Text('Sahkan', style: TextStyle(color: Colors.white)),
+              child: const Text('Sahkan', style: TextStyle()),
             ),
           ],
         ),

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:drift/drift.dart' as drift;
 import 'package:intl/intl.dart';
 import '../../core/providers.dart';
+import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_colors.dart';
 import '../../data/database/app_database.dart';
 
@@ -33,11 +34,11 @@ class _SuppliersPoScreenState extends ConsumerState<SuppliersPoScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundDark,
+      backgroundColor: AppTheme.warmCream,
       appBar: AppBar(
         title: const Row(
           children: [
-            HugeIcon(icon: HugeIcons.strokeRoundedTruckDelivery, color: AppColors.primary),
+            HugeIcon(icon: HugeIcons.strokeRoundedTruckDelivery, color: AppTheme.primaryCoffee),
             SizedBox(width: 10),
             Text(
               'Pembekal & Pesanan Belian (PO)',
@@ -45,13 +46,13 @@ class _SuppliersPoScreenState extends ConsumerState<SuppliersPoScreen>
             ),
           ],
         ),
-        backgroundColor: AppColors.surfaceDark,
+        backgroundColor: Colors.white,
         elevation: 0,
         bottom: TabBar(
           controller: _tabController,
-          indicatorColor: AppColors.primary,
-          labelColor: AppColors.primary,
-          unselectedLabelColor: AppColors.textMuted,
+          indicatorColor: AppTheme.primaryCoffee,
+          labelColor: AppTheme.primaryCoffee,
+          unselectedLabelColor: AppTheme.mutedText,
           tabs: const [
             Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedInvoice01), text: 'Pesanan Belian (PO)'),
             Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedAddressBook), text: 'Direktori Pembekal'),
@@ -82,7 +83,7 @@ class _PurchaseOrdersTab extends ConsumerWidget {
 
     return posAsync.when(
       loading: () => const Center(
-        child: CircularProgressIndicator(color: AppColors.primary),
+        child: CircularProgressIndicator(color: AppTheme.primaryCoffee),
       ),
       error: (err, stack) => Center(
         child: Text('Ralat: $err', style: const TextStyle(color: Colors.red)),
@@ -93,20 +94,20 @@ class _PurchaseOrdersTab extends ConsumerWidget {
             // Top action bar
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              color: AppColors.surfaceDark,
+              color: Colors.white,
               child: Row(
                 children: [
                   Text(
                     'Jumlah PO: ${pos.length}',
                     style: const TextStyle(
-                      color: AppColors.textMuted,
+                      color: AppTheme.mutedText,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   const Spacer(),
                   ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
+                      backgroundColor: AppTheme.primaryCoffee,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                     ),
@@ -117,7 +118,7 @@ class _PurchaseOrdersTab extends ConsumerWidget {
                 ],
               ),
             ),
-            const Divider(height: 1, color: AppColors.cardDark),
+            const Divider(height: 1, ),
 
             // PO List
             Expanded(
@@ -126,11 +127,11 @@ class _PurchaseOrdersTab extends ConsumerWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          HugeIcon(icon: HugeIcons.strokeRoundedInvoice01, size: 64, color: AppColors.textMuted.withOpacity(0.5)),
+                          HugeIcon(icon: HugeIcons.strokeRoundedInvoice01, size: 64, color: AppTheme.mutedText.withOpacity(0.5)),
                           const SizedBox(height: 12),
                           const Text(
                             'Tiada pesanan belian aktif',
-                            style: TextStyle(color: AppColors.textMuted, fontSize: 16),
+                            style: TextStyle(color: AppTheme.mutedText, fontSize: 16),
                           ),
                           const SizedBox(height: 8),
                           TextButton.icon(
@@ -209,7 +210,7 @@ class _PoCard extends ConsumerWidget {
     }
 
     return Card(
-      color: AppColors.cardDark,
+      color: Colors.white,
       margin: const EdgeInsets.only(bottom: 12),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
@@ -228,14 +229,14 @@ class _PoCard extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: AppColors.surfaceDark,
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(6),
-                    border: Border.all(color: AppColors.primary.withOpacity(0.5)),
+                    border: Border.all(color: AppTheme.primaryCoffee.withOpacity(0.5)),
                   ),
                   child: Text(
                     po.poNumber,
                     style: const TextStyle(
-                      color: AppColors.primary,
+                      color: AppTheme.primaryCoffee,
                       fontWeight: FontWeight.bold,
                       fontSize: 13,
                     ),
@@ -275,11 +276,11 @@ class _PoCard extends ConsumerWidget {
             // Date & Notes
             Row(
               children: [
-                HugeIcon(icon: HugeIcons.strokeRoundedBuilding04, size: 14, color: AppColors.textMuted),
+                HugeIcon(icon: HugeIcons.strokeRoundedBuilding04, size: 14, color: AppTheme.mutedText),
                 const SizedBox(width: 6),
                 Text(
                   'Tarikh Pesanan: ${df.format(po.orderDate)}',
-                  style: const TextStyle(color: AppColors.textMuted, fontSize: 12),
+                  style: const TextStyle(color: AppTheme.mutedText, fontSize: 12),
                 ),
                 if (po.expectedDate != null) ...[
                   const SizedBox(width: 16),
@@ -296,11 +297,11 @@ class _PoCard extends ConsumerWidget {
               const SizedBox(height: 6),
               Text(
                 'Nota: ${po.notes}',
-                style: const TextStyle(color: Colors.white70, fontSize: 12, fontStyle: FontStyle.italic),
+                style: const TextStyle(color: AppTheme.mutedText, fontSize: 12, fontStyle: FontStyle.italic),
               ),
             ],
 
-            const Divider(height: 20, color: Colors.white10),
+            Divider(height: 20, color: AppTheme.mutedText.withOpacity(0.2)),
 
             // Items List
             itemsAsync.when(
@@ -316,17 +317,17 @@ class _PoCard extends ConsumerWidget {
                           children: [
                             Text(
                               '• ${item.ingredientName}',
-                              style: const TextStyle(color: Colors.white, fontSize: 13),
+                              style: const TextStyle(fontSize: 13),
                             ),
                             const Spacer(),
                             Text(
                               '${item.quantityOrdered.toStringAsFixed(1)} ${item.unit} @ RM${item.unitCost.toStringAsFixed(2)}',
-                              style: const TextStyle(color: AppColors.textMuted, fontSize: 12),
+                              style: const TextStyle(color: AppTheme.mutedText, fontSize: 12),
                             ),
                             const SizedBox(width: 16),
                             Text(
                               'RM ${item.subtotal.toStringAsFixed(2)}',
-                              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 13),
+                              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
                             ),
                           ],
                         ),
@@ -337,20 +338,20 @@ class _PoCard extends ConsumerWidget {
               },
             ),
 
-            const Divider(height: 20, color: Colors.white10),
+            Divider(height: 20, color: AppTheme.mutedText.withOpacity(0.2)),
 
             // Footer: Total & Action Buttons
             Row(
               children: [
                 const Text(
                   'Jumlah Anggaran:',
-                  style: TextStyle(color: AppColors.textMuted, fontSize: 13),
+                  style: TextStyle(color: AppTheme.mutedText, fontSize: 13),
                 ),
                 const SizedBox(width: 8),
                 Text(
                   'RM ${po.totalAmount.toStringAsFixed(2)}',
                   style: const TextStyle(
-                    color: AppColors.primary,
+                    color: AppTheme.primaryCoffee,
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
                   ),
@@ -404,16 +405,16 @@ class _PoCard extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: AppColors.cardDark,
-        title: const Text('Penerimaan Barang (Goods Receiving)', style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.white,
+        title: const Text('Penerimaan Barang (Goods Receiving)', style: TextStyle()),
         content: Text(
           'Adakah anda telah menerima semua barang untuk ${po.poNumber}?\n\nKuantiti stok bagi semua ramuan dalam PO ini akan DITAMBAHKAN secara automatik ke dalam inventori.',
-          style: const TextStyle(color: Colors.white70),
+          style: const TextStyle(color: AppTheme.mutedText),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Batal', style: TextStyle(color: AppColors.textMuted)),
+            child: const Text('Batal', style: TextStyle(color: AppTheme.mutedText)),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Colors.green.shade700),
@@ -428,7 +429,7 @@ class _PoCard extends ConsumerWidget {
                 ),
               );
             },
-            child: const Text('Sahkan & Tambah Stok', style: TextStyle(color: Colors.white)),
+            child: const Text('Sahkan & Tambah Stok', style: TextStyle()),
           ),
         ],
       ),
@@ -473,7 +474,7 @@ class _CreatePoDialogState extends ConsumerState<_CreatePoDialog> {
     final totalAmount = _items.fold(0.0, (sum, i) => sum + (i.quantity * i.unitCost));
 
     return Dialog(
-      backgroundColor: AppColors.cardDark,
+      backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Container(
         width: 600,
@@ -484,40 +485,40 @@ class _CreatePoDialogState extends ConsumerState<_CreatePoDialog> {
           children: [
             Row(
               children: [
-                HugeIcon(icon: HugeIcons.strokeRoundedAdd01, color: AppColors.primary),
+                HugeIcon(icon: HugeIcons.strokeRoundedAdd01, color: AppTheme.primaryCoffee),
                 const SizedBox(width: 10),
                 const Text(
                   'Cipta Pesanan Belian (PO)',
-                  style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 const Spacer(),
                 IconButton(
-                  icon: HugeIcon(icon: HugeIcons.strokeRoundedCancel01, color: AppColors.textMuted),
+                  icon: HugeIcon(icon: HugeIcons.strokeRoundedCancel01, color: AppTheme.mutedText),
                   onPressed: () => Navigator.pop(context),
                 ),
               ],
             ),
-            const Divider(color: Colors.white10),
+            Divider(color: AppTheme.mutedText.withOpacity(0.2)),
 
             // Supplier Dropdown
-            const Text('Pilih Pembekal:', style: TextStyle(color: AppColors.textMuted, fontSize: 13)),
+            const Text('Pilih Pembekal:', style: TextStyle(color: AppTheme.mutedText, fontSize: 13)),
             const SizedBox(height: 6),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               decoration: BoxDecoration(
-                color: AppColors.surfaceDark,
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.white12),
+                border: Border.all(color: AppTheme.mutedText.withOpacity(0.2)),
               ),
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<Supplier>(
                   value: _selectedSupplier,
                   isExpanded: true,
-                  dropdownColor: AppColors.surfaceDark,
+                  dropdownColor: Colors.white,
                   items: widget.suppliers.map((s) {
                     return DropdownMenuItem(
                       value: s,
-                      child: Text('${s.name} (${s.category})', style: const TextStyle(color: Colors.white)),
+                      child: Text('${s.name} (${s.category})', style: const TextStyle()),
                     );
                   }).toList(),
                   onChanged: (val) {
@@ -531,7 +532,7 @@ class _CreatePoDialogState extends ConsumerState<_CreatePoDialog> {
             // Items List
             Row(
               children: [
-                const Text('Senarai Ramuan:', style: TextStyle(color: AppColors.textMuted, fontSize: 13)),
+                const Text('Senarai Ramuan:', style: TextStyle(color: AppTheme.mutedText, fontSize: 13)),
                 const Spacer(),
                 TextButton.icon(
                   onPressed: widget.ingredients.isEmpty
@@ -560,7 +561,7 @@ class _CreatePoDialogState extends ConsumerState<_CreatePoDialog> {
                     margin: const EdgeInsets.only(bottom: 8),
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: AppColors.surfaceDark,
+                      color: Colors.white,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Row(
@@ -570,12 +571,12 @@ class _CreatePoDialogState extends ConsumerState<_CreatePoDialog> {
                           child: DropdownButtonHideUnderline(
                             child: DropdownButton<Ingredient>(
                               value: item.ingredient,
-                              dropdownColor: AppColors.surfaceDark,
+                              dropdownColor: Colors.white,
                               isExpanded: true,
                               items: widget.ingredients.map((ing) {
                                 return DropdownMenuItem(
                                   value: ing,
-                                  child: Text(ing.name, style: const TextStyle(color: Colors.white, fontSize: 13)),
+                                  child: Text(ing.name, style: const TextStyle(fontSize: 13)),
                                 );
                               }).toList(),
                               onChanged: (val) {
@@ -594,11 +595,11 @@ class _CreatePoDialogState extends ConsumerState<_CreatePoDialog> {
                           flex: 2,
                           child: TextFormField(
                             initialValue: item.quantity.toString(),
-                            style: const TextStyle(color: Colors.white, fontSize: 13),
+                            style: const TextStyle(fontSize: 13),
                             keyboardType: TextInputType.number,
                             decoration: InputDecoration(
                               labelText: 'Kuantiti (${item.ingredient.unit})',
-                              labelStyle: const TextStyle(color: AppColors.textMuted, fontSize: 11),
+                              labelStyle: const TextStyle(color: AppTheme.mutedText, fontSize: 11),
                               isDense: true,
                               border: const OutlineInputBorder(),
                             ),
@@ -614,11 +615,11 @@ class _CreatePoDialogState extends ConsumerState<_CreatePoDialog> {
                           flex: 2,
                           child: TextFormField(
                             initialValue: item.unitCost.toStringAsFixed(2),
-                            style: const TextStyle(color: Colors.white, fontSize: 13),
+                            style: const TextStyle(fontSize: 13),
                             keyboardType: TextInputType.number,
                             decoration: const InputDecoration(
                               labelText: 'Kos/Unit (RM)',
-                              labelStyle: TextStyle(color: AppColors.textMuted, fontSize: 11),
+                              labelStyle: TextStyle(color: AppTheme.mutedText, fontSize: 11),
                               isDense: true,
                               border: OutlineInputBorder(),
                             ),
@@ -632,7 +633,7 @@ class _CreatePoDialogState extends ConsumerState<_CreatePoDialog> {
                         const SizedBox(width: 8),
                         Text(
                           'RM ${(item.quantity * item.unitCost).toStringAsFixed(2)}',
-                          style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 12),
+                          style: const TextStyle(color: AppTheme.primaryCoffee, fontWeight: FontWeight.bold, fontSize: 12),
                         ),
                         IconButton(
                           icon: HugeIcon(icon: HugeIcons.strokeRoundedDelete01, color: Colors.red, size: 18),
@@ -650,10 +651,10 @@ class _CreatePoDialogState extends ConsumerState<_CreatePoDialog> {
             const SizedBox(height: 12),
             TextField(
               controller: _notesCtrl,
-              style: const TextStyle(color: Colors.white, fontSize: 13),
+              style: const TextStyle(fontSize: 13),
               decoration: const InputDecoration(
                 labelText: 'Nota Pesanan / Arahan Khas',
-                labelStyle: TextStyle(color: AppColors.textMuted),
+                labelStyle: TextStyle(color: AppTheme.mutedText),
                 border: OutlineInputBorder(),
                 isDense: true,
               ),
@@ -663,20 +664,20 @@ class _CreatePoDialogState extends ConsumerState<_CreatePoDialog> {
             // Total & Save
             Row(
               children: [
-                const Text('Jumlah Anggaran: ', style: TextStyle(color: AppColors.textMuted)),
+                const Text('Jumlah Anggaran: ', style: TextStyle(color: AppTheme.mutedText)),
                 Text(
                   'RM ${totalAmount.toStringAsFixed(2)}',
-                  style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 18),
+                  style: const TextStyle(color: AppTheme.primaryCoffee, fontWeight: FontWeight.bold, fontSize: 18),
                 ),
                 const Spacer(),
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text('Batal', style: TextStyle(color: AppColors.textMuted)),
+                  child: const Text('Batal', style: TextStyle(color: AppTheme.mutedText)),
                 ),
                 const SizedBox(width: 8),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
+                    backgroundColor: AppTheme.primaryCoffee,
                     foregroundColor: Colors.white,
                   ),
                   onPressed: _items.isEmpty
@@ -753,24 +754,24 @@ class _SuppliersTab extends ConsumerWidget {
     final suppliersAsync = ref.watch(allSuppliersProvider);
 
     return suppliersAsync.when(
-      loading: () => const Center(child: CircularProgressIndicator(color: AppColors.primary)),
+      loading: () => const Center(child: CircularProgressIndicator(color: AppTheme.primaryCoffee)),
       error: (err, _) => Center(child: Text('Ralat: $err', style: const TextStyle(color: Colors.red))),
       data: (suppliers) {
         return Column(
           children: [
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              color: AppColors.surfaceDark,
+              color: Colors.white,
               child: Row(
                 children: [
                   Text(
                     'Jumlah Pembekal: ${suppliers.length}',
-                    style: const TextStyle(color: AppColors.textMuted, fontWeight: FontWeight.w600),
+                    style: const TextStyle(color: AppTheme.mutedText, fontWeight: FontWeight.w600),
                   ),
                   const Spacer(),
                   ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
+                      backgroundColor: AppTheme.primaryCoffee,
                       foregroundColor: Colors.white,
                     ),
                     icon: HugeIcon(icon: HugeIcons.strokeRoundedAdd01, size: 18),
@@ -780,11 +781,11 @@ class _SuppliersTab extends ConsumerWidget {
                 ],
               ),
             ),
-            const Divider(height: 1, color: AppColors.cardDark),
+            const Divider(height: 1, ),
             Expanded(
               child: suppliers.isEmpty
                   ? const Center(
-                      child: Text('Tiada pembekal berdaftar', style: TextStyle(color: AppColors.textMuted)),
+                      child: Text('Tiada pembekal berdaftar', style: TextStyle(color: AppTheme.mutedText)),
                     )
                   : ListView.builder(
                       padding: const EdgeInsets.all(16),
@@ -792,17 +793,17 @@ class _SuppliersTab extends ConsumerWidget {
                       itemBuilder: (context, index) {
                         final s = suppliers[index];
                         return Card(
-                          color: AppColors.cardDark,
+                          color: Colors.white,
                           margin: const EdgeInsets.only(bottom: 12),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                           child: ListTile(
                             leading: CircleAvatar(
-                              backgroundColor: AppColors.primary.withOpacity(0.2),
-                              child: HugeIcon(icon: HugeIcons.strokeRoundedStore01, color: AppColors.primary),
+                              backgroundColor: AppTheme.primaryCoffee.withOpacity(0.2),
+                              child: HugeIcon(icon: HugeIcons.strokeRoundedStore01, color: AppTheme.primaryCoffee),
                             ),
                             title: Text(
                               s.name,
-                              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                              style: const TextStyle(fontWeight: FontWeight.bold),
                             ),
                             subtitle: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -811,34 +812,34 @@ class _SuppliersTab extends ConsumerWidget {
                                 Row(
                                   children: [
                                     if (s.contactPerson != null) ...[
-                                      HugeIcon(icon: HugeIcons.strokeRoundedUser, size: 13, color: AppColors.textMuted),
+                                      HugeIcon(icon: HugeIcons.strokeRoundedUser, size: 13, color: AppTheme.mutedText),
                                       const SizedBox(width: 4),
-                                      Text(s.contactPerson!, style: const TextStyle(color: AppColors.textMuted, fontSize: 12)),
+                                      Text(s.contactPerson!, style: const TextStyle(color: AppTheme.mutedText, fontSize: 12)),
                                       const SizedBox(width: 12),
                                     ],
                                     if (s.phone != null) ...[
-                                      HugeIcon(icon: HugeIcons.strokeRoundedCall, size: 13, color: AppColors.textMuted),
+                                      HugeIcon(icon: HugeIcons.strokeRoundedCall, size: 13, color: AppTheme.mutedText),
                                       const SizedBox(width: 4),
-                                      Text(s.phone!, style: const TextStyle(color: AppColors.textMuted, fontSize: 12)),
+                                      Text(s.phone!, style: const TextStyle(color: AppTheme.mutedText, fontSize: 12)),
                                     ],
                                   ],
                                 ),
                                 if (s.address != null) ...[
                                   const SizedBox(height: 2),
-                                  Text(s.address!, style: const TextStyle(color: Colors.white54, fontSize: 11)),
+                                  Text(s.address!, style: const TextStyle(color: AppTheme.mutedText, fontSize: 11)),
                                 ],
                               ],
                             ),
                             trailing: Container(
                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                               decoration: BoxDecoration(
-                                color: AppColors.surfaceDark,
+                                color: Colors.white,
                                 borderRadius: BorderRadius.circular(6),
-                                border: Border.all(color: Colors.white12),
+                                border: Border.all(color: AppTheme.mutedText.withOpacity(0.2)),
                               ),
                               child: Text(
                                 s.category,
-                                style: const TextStyle(color: AppColors.primary, fontSize: 11, fontWeight: FontWeight.bold),
+                                style: const TextStyle(color: AppTheme.primaryCoffee, fontSize: 11, fontWeight: FontWeight.bold),
                               ),
                             ),
                           ),
@@ -865,8 +866,8 @@ class _SuppliersTab extends ConsumerWidget {
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setState) => AlertDialog(
-          backgroundColor: AppColors.cardDark,
-          title: const Text('Tambah Pembekal Baharu', style: TextStyle(color: Colors.white)),
+          backgroundColor: Colors.white,
+          title: const Text('Tambah Pembekal Baharu', style: TextStyle()),
           content: SingleChildScrollView(
             child: SizedBox(
               width: 450,
@@ -875,38 +876,38 @@ class _SuppliersTab extends ConsumerWidget {
                 children: [
                   TextField(
                     controller: nameCtrl,
-                    style: const TextStyle(color: Colors.white),
+                    style: const TextStyle(),
                     decoration: const InputDecoration(labelText: 'Nama Syarikat / Pembekal *', border: OutlineInputBorder()),
                   ),
                   const SizedBox(height: 10),
                   TextField(
                     controller: personCtrl,
-                    style: const TextStyle(color: Colors.white),
+                    style: const TextStyle(),
                     decoration: const InputDecoration(labelText: 'Pegawai Dihubungi (Contact Person)', border: OutlineInputBorder()),
                   ),
                   const SizedBox(height: 10),
                   TextField(
                     controller: phoneCtrl,
-                    style: const TextStyle(color: Colors.white),
+                    style: const TextStyle(),
                     decoration: const InputDecoration(labelText: 'No. Telefon', border: OutlineInputBorder()),
                   ),
                   const SizedBox(height: 10),
                   TextField(
                     controller: emailCtrl,
-                    style: const TextStyle(color: Colors.white),
+                    style: const TextStyle(),
                     decoration: const InputDecoration(labelText: 'Emel', border: OutlineInputBorder()),
                   ),
                   const SizedBox(height: 10),
                   TextField(
                     controller: addressCtrl,
-                    style: const TextStyle(color: Colors.white),
+                    style: const TextStyle(),
                     decoration: const InputDecoration(labelText: 'Alamat', border: OutlineInputBorder()),
                   ),
                   const SizedBox(height: 10),
                   DropdownButtonFormField<String>(
                     value: category,
-                    dropdownColor: AppColors.surfaceDark,
-                    style: const TextStyle(color: Colors.white),
+                    dropdownColor: Colors.white,
+                    style: const TextStyle(),
                     decoration: const InputDecoration(labelText: 'Kategori Bekalan', border: OutlineInputBorder()),
                     items: const [
                       DropdownMenuItem(value: 'Coffee Beans', child: Text('Biji Kopi (Beans)')),
@@ -924,10 +925,10 @@ class _SuppliersTab extends ConsumerWidget {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('Batal', style: TextStyle(color: AppColors.textMuted)),
+              child: const Text('Batal', style: TextStyle(color: AppTheme.mutedText)),
             ),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
+              style: ElevatedButton.styleFrom(backgroundColor: AppTheme.primaryCoffee),
               onPressed: () async {
                 if (nameCtrl.text.trim().isEmpty) return;
                 await ref.read(databaseProvider).insertSupplier(
@@ -944,7 +945,7 @@ class _SuppliersTab extends ConsumerWidget {
                 if (!ctx.mounted) return;
                 Navigator.pop(ctx);
               },
-              child: const Text('Simpan', style: TextStyle(color: Colors.white)),
+              child: const Text('Simpan', style: TextStyle()),
             ),
           ],
         ),

@@ -20,6 +20,8 @@ import '../../features/outlets/outlets_screen.dart';
 import '../../features/delivery/delivery_screen.dart';
 import '../../features/analytics/advanced_analytics_screen.dart';
 import '../../features/kiosk/kiosk_mode_screen.dart';
+import '../../features/kiosk/kiosk_order_screen.dart';
+import '../../features/kiosk/kiosk_checkout_screen.dart';
 import '../../features/ai_forecast/ai_forecast_screen.dart';
 import '../../features/einvoice/einvoice_screen.dart';
 import '../../core/theme/app_theme.dart';
@@ -96,10 +98,6 @@ final appRouter = GoRouter(
           builder: (_, __) => const SettingsScreen(),
         ),
         GoRoute(
-          path: '/kiosk',
-          builder: (_, __) => const KioskModeScreen(),
-        ),
-        GoRoute(
           path: '/ai-forecast',
           builder: (_, __) => const AiForecastScreen(),
         ),
@@ -119,6 +117,21 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/receipt/:orderId',
       builder: (_, state) => ReceiptScreen(
+        orderId: int.parse(state.pathParameters['orderId']!),
+      ),
+    ),
+    // Kiosk — full-screen routes (no nav bar/rail, locked for customers)
+    GoRoute(
+      path: '/kiosk',
+      builder: (_, __) => const KioskModeScreen(),
+    ),
+    GoRoute(
+      path: '/kiosk/order',
+      builder: (_, __) => const KioskOrderScreen(),
+    ),
+    GoRoute(
+      path: '/kiosk/checkout/:orderId',
+      builder: (_, state) => KioskCheckoutScreen(
         orderId: int.parse(state.pathParameters['orderId']!),
       ),
     ),
@@ -154,7 +167,7 @@ class _AppShell extends StatelessWidget {
     _Dest(HugeIcons.strokeRoundedPackage, HugeIcons.strokeRoundedPackage, 'Stock Take', '/stock-take'),
     _Dest(HugeIcons.strokeRoundedBank, HugeIcons.strokeRoundedBank, 'Perbelanjaan', '/expenses'),
     _Dest(HugeIcons.strokeRoundedStore01, HugeIcons.strokeRoundedStore01, 'Multi-Outlet', '/outlets'),
-    _Dest(HugeIcons.strokeRoundedStore01, HugeIcons.strokeRoundedStore01, 'Delivery Hub', '/delivery'),
+    _Dest(HugeIcons.strokeRoundedScooter01, HugeIcons.strokeRoundedScooter01, 'Delivery Hub', '/delivery'),
     _Dest(HugeIcons.strokeRoundedPresentation01, HugeIcons.strokeRoundedPresentation01, 'Analitik Lanjutan', '/analytics'),
     _Dest(HugeIcons.strokeRoundedInvoice01, HugeIcons.strokeRoundedInvoice01, 'Pesanan', '/orders'),
     _Dest(HugeIcons.strokeRoundedPackage, HugeIcons.strokeRoundedPackage, 'Inventori', '/inventory'),

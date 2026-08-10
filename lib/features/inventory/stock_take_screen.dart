@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:drift/drift.dart' as drift;
 import 'package:intl/intl.dart';
 import '../../core/providers.dart';
+import '../../core/theme/app_theme.dart';
 import '../../core/theme/app_colors.dart';
 import '../../data/database/app_database.dart';
 
@@ -35,11 +36,11 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundDark,
+      backgroundColor: AppTheme.warmCream,
       appBar: AppBar(
         title: const Row(
           children: [
-            HugeIcon(icon: HugeIcons.strokeRoundedPackage, color: AppColors.primary),
+            HugeIcon(icon: HugeIcons.strokeRoundedPackage, color: AppTheme.primaryCoffee),
             SizedBox(width: 10),
             Text(
               'Audit Stok Fizikal & Varians (Stock Take)',
@@ -47,13 +48,13 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
             ),
           ],
         ),
-        backgroundColor: AppColors.surfaceDark,
+        backgroundColor: Colors.white,
         elevation: 0,
         bottom: TabBar(
           controller: _tabController,
-          indicatorColor: AppColors.primary,
-          labelColor: AppColors.primary,
-          unselectedLabelColor: AppColors.textMuted,
+          indicatorColor: AppTheme.primaryCoffee,
+          labelColor: AppTheme.primaryCoffee,
+          unselectedLabelColor: AppTheme.mutedText,
           tabs: const [
             Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedEdit01), text: 'Kiraan Stok Semasa'),
             Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedFile02), text: 'Log Audit & Varians'),
@@ -78,12 +79,12 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
     final ingredientsAsync = ref.watch(ingredientsProvider);
 
     return ingredientsAsync.when(
-      loading: () => const Center(child: CircularProgressIndicator(color: AppColors.primary)),
+      loading: () => const Center(child: CircularProgressIndicator(color: AppTheme.primaryCoffee)),
       error: (err, _) => Center(child: Text('Ralat: $err', style: const TextStyle(color: Colors.red))),
       data: (ingredients) {
         if (ingredients.isEmpty) {
           return const Center(
-            child: Text('Tiada ramuan dalam pangkalan data', style: TextStyle(color: AppColors.textMuted)),
+            child: Text('Tiada ramuan dalam pangkalan data', style: TextStyle(color: AppTheme.mutedText)),
           );
         }
 
@@ -111,7 +112,7 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
             // KPI Summary Banner
             Container(
               padding: const EdgeInsets.all(16),
-              color: AppColors.surfaceDark,
+              color: Colors.white,
               child: Row(
                 children: [
                   _buildKpiCard(
@@ -137,7 +138,7 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
                   const Spacer(),
                   ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
+                      backgroundColor: AppTheme.primaryCoffee,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
                     ),
@@ -148,7 +149,7 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
                 ],
               ),
             ),
-            const Divider(height: 1, color: AppColors.cardDark),
+            const Divider(height: 1, ),
 
             // Ingredients Stock Take Table
             Expanded(
@@ -163,7 +164,7 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
                   final hasVariance = varianceQty.abs() > 0.001;
 
                   return Card(
-                    color: AppColors.cardDark,
+                    color: Colors.white,
                     margin: const EdgeInsets.only(bottom: 12),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -194,7 +195,7 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
                                 const SizedBox(height: 4),
                                 Text(
                                   'Kos/Unit: RM ${ing.costPerUnit.toStringAsFixed(3)} / ${ing.unit}',
-                                  style: const TextStyle(color: AppColors.textMuted, fontSize: 12),
+                                  style: const TextStyle(color: AppTheme.mutedText, fontSize: 12),
                                 ),
                                 const SizedBox(height: 2),
                                 Text(
@@ -224,12 +225,12 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
                                   child: TextFormField(
                                     key: ValueKey('ing_${ing.id}_$physical'),
                                     initialValue: physical.toStringAsFixed(1),
-                                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),
+                                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                                     textAlign: TextAlign.center,
                                     keyboardType: TextInputType.number,
                                     decoration: InputDecoration(
                                       suffixText: ing.unit,
-                                      suffixStyle: const TextStyle(color: AppColors.textMuted, fontSize: 11),
+                                      suffixStyle: const TextStyle(color: AppTheme.mutedText, fontSize: 11),
                                       isDense: true,
                                       border: const OutlineInputBorder(),
                                     ),
@@ -291,11 +292,11 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
                               flex: 3,
                               child: DropdownButtonFormField<String>(
                                 value: _varianceReasons[ing.id] ?? 'Pemeriksaan Rutin',
-                                dropdownColor: AppColors.surfaceDark,
-                                style: const TextStyle(color: Colors.white, fontSize: 12),
+                                dropdownColor: Colors.white,
+                                style: const TextStyle(fontSize: 12),
                                 decoration: const InputDecoration(
                                   labelText: 'Sebab Varians',
-                                  labelStyle: TextStyle(color: AppColors.textMuted, fontSize: 11),
+                                  labelStyle: TextStyle(color: AppTheme.mutedText, fontSize: 11),
                                   isDense: true,
                                   border: OutlineInputBorder(),
                                 ),
@@ -318,7 +319,7 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
                           // Individual commit button
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: hasVariance ? Colors.orange.shade800 : AppColors.surfaceDark,
+                              backgroundColor: hasVariance ? Colors.orange.shade800 : Colors.white,
                               foregroundColor: Colors.white,
                               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                             ),
@@ -347,7 +348,7 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
-        color: AppColors.cardDark,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: color.withOpacity(0.3)),
       ),
@@ -358,7 +359,7 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: const TextStyle(color: AppColors.textMuted, fontSize: 11)),
+              Text(title, style: const TextStyle(color: AppTheme.mutedText, fontSize: 11)),
               Text(
                 value,
                 style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 16),
@@ -401,19 +402,19 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: AppColors.cardDark,
-        title: const Text('Sahkan Sesi Stock Take', style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.white,
+        title: const Text('Sahkan Sesi Stock Take', style: TextStyle()),
         content: const Text(
           'Semua baki stok inventori akan diselaraskan mengikut kiraan fizikal yang dimasukkan.\n\nLog audit lengkap akan disimpan untuk semakan varians.',
-          style: TextStyle(color: Colors.white70),
+          style: TextStyle(color: AppTheme.mutedText),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Batal', style: TextStyle(color: AppColors.textMuted)),
+            child: const Text('Batal', style: TextStyle(color: AppTheme.mutedText)),
           ),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
+            style: ElevatedButton.styleFrom(backgroundColor: AppTheme.primaryCoffee),
             onPressed: () async {
               for (final ing in ingredients) {
                 final physical = _physicalCounts[ing.id] ?? ing.currentStock;
@@ -448,7 +449,7 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
                 );
               }
             },
-            child: const Text('Sahkan & Kemaskini Semua', style: TextStyle(color: Colors.white)),
+            child: const Text('Sahkan & Kemaskini Semua', style: TextStyle()),
           ),
         ],
       ),
@@ -464,12 +465,12 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
     final df = DateFormat('dd MMM yyyy, HH:mm');
 
     return auditsAsync.when(
-      loading: () => const Center(child: CircularProgressIndicator(color: AppColors.primary)),
+      loading: () => const Center(child: CircularProgressIndicator(color: AppTheme.primaryCoffee)),
       error: (err, _) => Center(child: Text('Ralat: $err', style: const TextStyle(color: Colors.red))),
       data: (audits) {
         if (audits.isEmpty) {
           return const Center(
-            child: Text('Tiada rekod audit stok lagi', style: TextStyle(color: AppColors.textMuted)),
+            child: Text('Tiada rekod audit stok lagi', style: TextStyle(color: AppTheme.mutedText)),
           );
         }
 
@@ -481,7 +482,7 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
             final isLoss = audit.varianceQuantity < 0;
 
             return Card(
-              color: AppColors.cardDark,
+              color: Colors.white,
               margin: const EdgeInsets.only(bottom: 8),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               child: ListTile(
@@ -496,25 +497,25 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
                   children: [
                     Text(
                       audit.ingredientName,
-                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(width: 8),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
-                        color: AppColors.surfaceDark,
+                        color: Colors.white,
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
                         audit.reason,
-                        style: const TextStyle(color: AppColors.primary, fontSize: 11),
+                        style: const TextStyle(color: AppTheme.primaryCoffee, fontSize: 11),
                       ),
                     ),
                   ],
                 ),
                 subtitle: Text(
                   'Sistem: ${audit.expectedStock.toStringAsFixed(1)} ➔ Fizikal: ${audit.actualStock.toStringAsFixed(1)} ${audit.unit} • Diaudit oleh: ${audit.auditedBy} (${df.format(audit.auditedAt)})',
-                  style: const TextStyle(color: AppColors.textMuted, fontSize: 12),
+                  style: const TextStyle(color: AppTheme.mutedText, fontSize: 12),
                 ),
                 trailing: Column(
                   mainAxisAlignment: MainAxisAlignment.center,

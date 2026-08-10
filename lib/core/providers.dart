@@ -23,6 +23,7 @@ final syncServiceProvider = Provider<SyncService>((ref) {
     client: ref.watch(supabaseClientProvider),
   );
   service.initRealtime();
+  service.startContinuousSync();
   service.pullAllFromSupabase();
   ref.onDispose(service.dispose);
   return service;
