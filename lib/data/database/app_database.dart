@@ -59,6 +59,7 @@ class Orders extends Table {
   TextColumn get paymentMethod => text().nullable()();
   RealColumn get tenderedAmount => real().nullable()();
   TextColumn get notes => text().withDefault(const Constant(''))();
+  TextColumn get customerPhone => text().nullable()();
 }
 
 class OrderItems extends Table {
@@ -294,6 +295,47 @@ class DeliveryOrders extends Table {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Phase 6: Menu Add-ons, Customization & Combo Sets
+// ─────────────────────────────────────────────────────────────────────────────
+
+class MenuAddons extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get name => text()();
+  RealColumn get price => real().withDefault(const Constant(0.0))();
+  TextColumn get category => text().withDefault(
+    const Constant('topping'),
+  )(); // topping | sauce | extra | size_upgrade | ice_level | sugar_level | milk_type
+  BoolColumn get isAvailable => boolean().withDefault(const Constant(true))();
+  IntColumn get sortOrder => integer().withDefault(const Constant(0))();
+}
+
+class MenuItemAddons extends Table {
+  IntColumn get menuItemId => integer().references(MenuItems, #id)();
+  IntColumn get addonId => integer().references(MenuAddons, #id)();
+
+  @override
+  Set<Column> get primaryKey => {menuItemId, addonId};
+}
+
+class ComboSets extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get name => text()();
+  TextColumn get description => text().withDefault(const Constant(''))();
+  RealColumn get comboPrice => real()();
+  RealColumn get originalPrice => real().withDefault(const Constant(0.0))(); // sum of individual items
+  TextColumn get imageUrl => text().nullable()();
+  BoolColumn get isAvailable => boolean().withDefault(const Constant(true))();
+  IntColumn get categoryId => integer().nullable()();
+}
+
+class ComboSetItems extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get comboId => integer().references(ComboSets, #id)();
+  IntColumn get menuItemId => integer().references(MenuItems, #id)();
+  IntColumn get quantity => integer().withDefault(const Constant(1))();
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Database
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -319,13 +361,17 @@ class DeliveryOrders extends Table {
     Outlets,
     StockTransfers,
     DeliveryOrders,
+    MenuAddons,
+    MenuItemAddons,
+    ComboSets,
+    ComboSetItems,
   ],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 6;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -335,6 +381,7 @@ class AppDatabase extends _$AppDatabase {
       await _seedPhase2Data();
       await _seedPhase3Data();
       await _seedPhase4Data();
+      await _seedPhase6Data();
     },
     onUpgrade: (m, from, to) async {
       if (from < 2) {
@@ -361,6 +408,15 @@ class AppDatabase extends _$AppDatabase {
         await m.createTable(stockTransfers);
         await m.createTable(deliveryOrders);
         await _seedPhase4Data();
+      }
+      if (from < 6) {
+        await m.createTable(menuAddons);
+        await m.createTable(menuItemAddons);
+        await m.createTable(comboSets);
+        await m.createTable(comboSetItems);
+        // Add customerPhone column to orders
+        await m.addColumn(orders, orders.customerPhone);
+        await _seedPhase6Data();
       }
     },
   );
@@ -983,6 +1039,176 @@ class AppDatabase extends _$AppDatabase {
     }
   }
 
+  // ── Phase 6: Seed Add-ons & Combos ─────────────────────────────────────────
+
+  Future<void> _seedPhase6Data() async {
+    final existingAddons = await select(menuAddons).get();
+    if (existingAddons.isNotEmpty) return;
+
+    // ── Add-on definitions ──────────────────────────────────────────────────
+    // Size upgrades (for drinks)
+    final sizeM = await into(menuAddons).insert(
+      MenuAddonsCompanion.insert(
+        name: 'Size M', price: const Value(1.00),
+        category: const Value('size_upgrade'), sortOrder: const Value(0),
+      ),
+    );
+    final sizeL = await into(menuAddons).insert(
+      MenuAddonsCompanion.insert(
+        name: 'Size L', price: const Value(2.00),
+        category: const Value('size_upgrade'), sortOrder: const Value(1),
+      ),
+    );
+
+    // Ice levels
+    final kurangAis = await into(menuAddons).insert(
+      MenuAddonsCompanion.insert(
+        name: 'Kurang Ais', price: const Value(0.0),
+        category: const Value('ice_level'), sortOrder: const Value(0),
+      ),
+    );
+    final tanpaAis = await into(menuAddons).insert(
+      MenuAddonsCompanion.insert(
+        name: 'Tanpa Ais', price: const Value(0.0),
+        category: const Value('ice_level'), sortOrder: const Value(1),
+      ),
+    );
+
+    // Sugar levels
+    final kurangManis = await into(menuAddons).insert(
+      MenuAddonsCompanion.insert(
+        name: 'Kurang Manis', price: const Value(0.0),
+        category: const Value('sugar_level'), sortOrder: const Value(0),
+      ),
+    );
+    final kosong = await into(menuAddons).insert(
+      MenuAddonsCompanion.insert(
+        name: 'Kosong (Tanpa Gula)', price: const Value(0.0),
+        category: const Value('sugar_level'), sortOrder: const Value(1),
+      ),
+    );
+
+    // Extras (toppings/add-ons)
+    final extraShot = await into(menuAddons).insert(
+      MenuAddonsCompanion.insert(
+        name: 'Extra Shot Espresso', price: const Value(2.00),
+        category: const Value('extra'), sortOrder: const Value(0),
+      ),
+    );
+    final whippedCream = await into(menuAddons).insert(
+      MenuAddonsCompanion.insert(
+        name: 'Whipped Cream', price: const Value(1.50),
+        category: const Value('extra'), sortOrder: const Value(1),
+      ),
+    );
+    final telurTambahan = await into(menuAddons).insert(
+      MenuAddonsCompanion.insert(
+        name: 'Telur Tambahan', price: const Value(1.50),
+        category: const Value('extra'), sortOrder: const Value(2),
+      ),
+    );
+    final sambalTambahan = await into(menuAddons).insert(
+      MenuAddonsCompanion.insert(
+        name: 'Sambal Tambahan', price: const Value(1.00),
+        category: const Value('extra'), sortOrder: const Value(3),
+      ),
+    );
+    final ayamTambahan = await into(menuAddons).insert(
+      MenuAddonsCompanion.insert(
+        name: 'Ayam Goreng Tambahan', price: const Value(3.00),
+        category: const Value('extra'), sortOrder: const Value(4),
+      ),
+    );
+
+    // Milk type
+    final oatMilk = await into(menuAddons).insert(
+      MenuAddonsCompanion.insert(
+        name: 'Oat Milk', price: const Value(2.00),
+        category: const Value('milk_type'), sortOrder: const Value(0),
+      ),
+    );
+    final soyMilk = await into(menuAddons).insert(
+      MenuAddonsCompanion.insert(
+        name: 'Soy Milk', price: const Value(1.50),
+        category: const Value('milk_type'), sortOrder: const Value(1),
+      ),
+    );
+
+    // ── Link add-ons to menu items ──────────────────────────────────────────
+    // Get all existing menu items
+    final allItems = await select(menuItems).get();
+    for (final item in allItems) {
+      final station = item.preparationStation;
+      final addonsForItem = <int>[];
+
+      if (station == 'bar') {
+        // Drinks: size, ice, sugar, milk, extra shot, whipped cream
+        addonsForItem.addAll([sizeM, sizeL, kurangAis, tanpaAis, kurangManis, kosong, extraShot, whippedCream, oatMilk, soyMilk]);
+      } else if (station == 'kitchen') {
+        // Food: telur, sambal, ayam
+        addonsForItem.addAll([telurTambahan, sambalTambahan, ayamTambahan]);
+      } else if (station == 'pastry') {
+        // Pastries: whipped cream
+        addonsForItem.addAll([whippedCream]);
+      }
+
+      for (final addonId in addonsForItem) {
+        await into(menuItemAddons).insert(
+          MenuItemAddonsCompanion.insert(
+            menuItemId: item.id,
+            addonId: addonId,
+          ),
+        );
+      }
+    }
+
+    // ── Combo Sets ──────────────────────────────────────────────────────────
+    final combo1 = await into(comboSets).insert(
+      ComboSetsCompanion.insert(
+        name: 'Set Sarapan Pagi',
+        description: const Value('Nasi Lemak + Kopi O — jimat RM1.50!'),
+        comboPrice: 9.00,
+        originalPrice: const Value(10.50),
+      ),
+    );
+
+    // Find Nasi Lemak & Kopi O IDs
+    final nasiLemak = allItems.where((i) => i.name == 'Nasi Lemak').firstOrNull;
+    final kopiO = allItems.where((i) => i.name == 'Kopi O').firstOrNull;
+    if (nasiLemak != null) {
+      await into(comboSetItems).insert(
+        ComboSetItemsCompanion.insert(comboId: combo1, menuItemId: nasiLemak.id),
+      );
+    }
+    if (kopiO != null) {
+      await into(comboSetItems).insert(
+        ComboSetItemsCompanion.insert(comboId: combo1, menuItemId: kopiO.id),
+      );
+    }
+
+    final combo2 = await into(comboSets).insert(
+      ComboSetsCompanion.insert(
+        name: 'Set Petang',
+        description: const Value('Roti Bakar + Teh Tarik — jimat RM1.00!'),
+        comboPrice: 6.50,
+        originalPrice: const Value(7.50),
+      ),
+    );
+
+    final rotibakar = allItems.where((i) => i.name == 'Roti Bakar').firstOrNull;
+    final tehTarik = allItems.where((i) => i.name == 'Teh Tarik').firstOrNull;
+    if (rotibakar != null) {
+      await into(comboSetItems).insert(
+        ComboSetItemsCompanion.insert(comboId: combo2, menuItemId: rotibakar.id),
+      );
+    }
+    if (tehTarik != null) {
+      await into(comboSetItems).insert(
+        ComboSetItemsCompanion.insert(comboId: combo2, menuItemId: tehTarik.id),
+      );
+    }
+  }
+
   // ─────────────────────────────────────────────────────────────────────────
   // Queries & Mutations
   // ─────────────────────────────────────────────────────────────────────────
@@ -994,7 +1220,7 @@ class AppDatabase extends _$AppDatabase {
   Stream<List<Category>> watchCategories() => watchAllCategories();
 
   Stream<List<MenuItem>> watchMenuItems({int? categoryId}) {
-    final query = select(menuItems)..where((m) => m.isAvailable.equals(true));
+    final query = select(menuItems);
     if (categoryId != null) {
       query.where((m) => m.categoryId.equals(categoryId));
     }
@@ -1009,6 +1235,117 @@ class AppDatabase extends _$AppDatabase {
 
   Stream<List<MenuItem>> watchAllMenuItems() =>
       (select(menuItems)..where((m) => m.isAvailable.equals(true))).watch();
+
+  /// Watch ALL menu items including unavailable ones (for management screen)
+  Stream<List<MenuItem>> watchAllMenuItemsIncludingUnavailable() =>
+      select(menuItems).watch();
+
+  /// Toggle a menu item's availability (sold-out / available)
+  Future<void> toggleMenuItemAvailability(int itemId, bool available) =>
+      (update(menuItems)..where((m) => m.id.equals(itemId))).write(
+        MenuItemsCompanion(isAvailable: Value(available)),
+      );
+
+  // ── Add-ons ─────────────────────────────────────────────────────────────
+
+  /// Watch all add-ons
+  Stream<List<MenuAddon>> watchAllAddons() =>
+      (select(menuAddons)..orderBy([(a) => OrderingTerm.asc(a.sortOrder)])).watch();
+
+  /// Get add-ons for a specific menu item
+  Future<List<MenuAddon>> getAddonsForItem(int menuItemId) async {
+    final query = select(menuAddons).join([
+      innerJoin(menuItemAddons, menuItemAddons.addonId.equalsExp(menuAddons.id)),
+    ])..where(menuItemAddons.menuItemId.equals(menuItemId) & menuAddons.isAvailable.equals(true));
+
+    final rows = await query.get();
+    return rows.map((row) => row.readTable(menuAddons)).toList();
+  }
+
+  /// Watch add-ons for a specific menu item
+  Stream<List<MenuAddon>> watchAddonsForItem(int menuItemId) {
+    final query = select(menuAddons).join([
+      innerJoin(menuItemAddons, menuItemAddons.addonId.equalsExp(menuAddons.id)),
+    ])..where(menuItemAddons.menuItemId.equals(menuItemId) & menuAddons.isAvailable.equals(true))
+      ..orderBy([OrderingTerm.asc(menuAddons.sortOrder)]);
+
+    return query.watch().map(
+      (rows) => rows.map((row) => row.readTable(menuAddons)).toList(),
+    );
+  }
+
+  /// Insert a new add-on
+  Future<int> insertAddon(MenuAddonsCompanion addon) =>
+      into(menuAddons).insert(addon);
+
+  /// Link an add-on to a menu item
+  Future<void> linkAddonToItem(int menuItemId, int addonId) =>
+      into(menuItemAddons).insert(
+        MenuItemAddonsCompanion.insert(menuItemId: menuItemId, addonId: addonId),
+      );
+
+  /// Unlink an add-on from a menu item
+  Future<void> unlinkAddonFromItem(int menuItemId, int addonId) =>
+      (delete(menuItemAddons)
+        ..where((m) => m.menuItemId.equals(menuItemId) & m.addonId.equals(addonId)))
+          .go();
+
+  /// Delete an add-on
+  Future<void> deleteAddon(int addonId) async {
+    await (delete(menuItemAddons)..where((m) => m.addonId.equals(addonId))).go();
+    await (delete(menuAddons)..where((a) => a.id.equals(addonId))).go();
+  }
+
+  // ── Combo Sets ──────────────────────────────────────────────────────────
+
+  /// Watch all combo sets
+  Stream<List<ComboSet>> watchAllComboSets() =>
+      (select(comboSets)..where((c) => c.isAvailable.equals(true))).watch();
+
+  /// Watch all combos including unavailable (for management)
+  Stream<List<ComboSet>> watchAllComboSetsIncludingUnavailable() =>
+      select(comboSets).watch();
+
+  /// Get items in a combo set
+  Future<List<ComboSetItem>> getComboItems(int comboId) =>
+      (select(comboSetItems)..where((c) => c.comboId.equals(comboId))).get();
+
+  /// Watch items in a combo set
+  Stream<List<ComboSetItem>> watchComboItems(int comboId) =>
+      (select(comboSetItems)..where((c) => c.comboId.equals(comboId))).watch();
+
+  /// Get combo items with full MenuItem details
+  Future<List<Map<String, dynamic>>> getComboItemsWithDetails(int comboId) async {
+    final items = await getComboItems(comboId);
+    final result = <Map<String, dynamic>>[];
+    for (final ci in items) {
+      final mi = await (select(menuItems)..where((m) => m.id.equals(ci.menuItemId))).getSingleOrNull();
+      if (mi != null) {
+        result.add({'menuItem': mi, 'quantity': ci.quantity});
+      }
+    }
+    return result;
+  }
+
+  /// Insert a new combo set
+  Future<int> insertComboSet(ComboSetsCompanion combo) =>
+      into(comboSets).insert(combo);
+
+  /// Add an item to a combo set
+  Future<int> addComboItem(ComboSetItemsCompanion item) =>
+      into(comboSetItems).insert(item);
+
+  /// Toggle combo availability
+  Future<void> toggleComboAvailability(int comboId, bool available) =>
+      (update(comboSets)..where((c) => c.id.equals(comboId))).write(
+        ComboSetsCompanion(isAvailable: Value(available)),
+      );
+
+  /// Delete a combo set and its items
+  Future<void> deleteComboSet(int comboId) async {
+    await (delete(comboSetItems)..where((c) => c.comboId.equals(comboId))).go();
+    await (delete(comboSets)..where((c) => c.id.equals(comboId))).go();
+  }
 
   Stream<List<Ingredient>> watchAllIngredients() => select(ingredients).watch();
 

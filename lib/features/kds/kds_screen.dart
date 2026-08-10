@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../core/providers.dart';
 import '../../core/theme/app_theme.dart';
 import '../../data/database/app_database.dart';
@@ -756,6 +757,24 @@ class _KdsTicketCard extends StatelessWidget {
         onPressed: () async {
           await db.updateOrderStatus(order.id, 'completed');
           onStatusChanged();
+
+          if (order.customerPhone != null && order.customerPhone!.isNotEmpty) {
+            String phone = order.customerPhone!.trim();
+            if (phone.startsWith('0')) {
+              phone = '60${phone.substring(1)}';
+            } else if (phone.startsWith('+')) {
+              phone = phone.substring(1);
+            }
+            final message = 'Hi, pesanan anda (Order: ${order.orderNumber}) sudah siap! Terima kasih kerana menempah dengan kami. Sila ambil pesanan anda di kaunter.';
+            final url = Uri.parse('https://wa.me/$phone?text=${Uri.encodeComponent(message)}');
+            try {
+              if (await canLaunchUrl(url)) {
+                await launchUrl(url, mode: LaunchMode.externalApplication);
+              }
+            } catch (e) {
+              debugPrint('Could not launch WhatsApp: $e');
+            }
+          }
         },
       );
     }

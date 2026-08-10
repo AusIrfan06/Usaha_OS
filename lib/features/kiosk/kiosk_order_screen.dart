@@ -10,6 +10,8 @@ import '../../core/constants/feature_flags.dart';
 import '../../core/utils/currency_formatter.dart';
 import '../../data/database/app_database.dart';
 import '../../data/models/cart_item.dart';
+import '../../shared/widgets/addon_sheet.dart';
+import '../pos/cart_notifier.dart';
 
 /// Kiosk Order Screen — McDonald's / Self-Service style.
 /// Left side: category tabs + menu grid.
@@ -374,7 +376,7 @@ class _KioskMenuCard extends ConsumerWidget {
     final cartNotifier = ref.read(cartProvider.notifier);
 
     return GestureDetector(
-      onTap: () => cartNotifier.addItem(item),
+      onTap: item.isAvailable ? () => showAddonSheet(context, ref, item) : null,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         decoration: BoxDecoration(
@@ -459,7 +461,7 @@ class _KioskMenuCard extends ConsumerWidget {
                         _KioskQtyControl(
                           qty: qty,
                           onAdd: () => cartNotifier.addItem(item),
-                          onRemove: () => cartNotifier.decrementItem(item.id),
+                          onRemove: () => cartNotifier.decrementItemById(item.id),
                         )
                       else
                         Container(
@@ -502,6 +504,32 @@ class _KioskMenuCard extends ConsumerWidget {
                         color: Colors.white,
                         fontWeight: FontWeight.w800,
                         fontSize: 14,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            if (!item.isAvailable)
+              Positioned.fill(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.7),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Center(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: Colors.black87,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Text(
+                        'HABIS',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w800,
+                          fontSize: 16,
+                        ),
                       ),
                     ),
                   ),
@@ -596,6 +624,14 @@ class _KioskCartPanel extends ConsumerStatefulWidget {
 }
 
 class _KioskCartPanelState extends ConsumerState<_KioskCartPanel> {
+  final TextEditingController _phoneController = TextEditingController();
+
+  @override
+  void dispose() {
+    _phoneController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final cart = ref.watch(cartProvider);
@@ -657,6 +693,31 @@ class _KioskCartPanelState extends ConsumerState<_KioskCartPanel> {
 
           // ── Order Type ──
           _KioskOrderTypeSelector(),
+
+          // ── Phone Input ──
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: TextField(
+              controller: _phoneController,
+              keyboardType: TextInputType.phone,
+              decoration: InputDecoration(
+                hintText: 'Nombor Telefon (WhatsApp)',
+                hintStyle: const TextStyle(fontSize: 13, color: AppTheme.mutedText),
+                prefixIcon: const HugeIcon(
+                  icon: HugeIcons.strokeRoundedSmartPhone01,
+                  size: 16,
+                  color: AppTheme.primaryCoffee,
+                ),
+                filled: true,
+                fillColor: AppTheme.surfaceVariant,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+                contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
+              ),
+            ),
+          ),
 
           // ── Cart Items ──
           Expanded(
@@ -796,7 +857,7 @@ class _KioskCartPanelState extends ConsumerState<_KioskCartPanel> {
   Future<void> _checkout(
     BuildContext context,
     WidgetRef ref,
-    double total,
+    double totalAmount,
   ) async {
     final db = ref.read(databaseProvider);
     final cart = ref.read(cartProvider);
@@ -818,8 +879,9 @@ class _KioskCartPanelState extends ConsumerState<_KioskCartPanel> {
         orderType: Value(orderType),
         subtotal: Value(subtotal),
         taxAmount: Value(tax),
-        totalAmount: Value(total),
-        notes: const Value('Kiosk Self-Order'),
+        totalAmount: Value(totalAmount),
+        notes: const Value('Kiosk Order'),
+        customerPhone: Value(_phoneController.text.trim().isEmpty ? null : _phoneController.text.trim()),
       ),
     );
 
@@ -830,8 +892,9 @@ class _KioskCartPanelState extends ConsumerState<_KioskCartPanel> {
           menuItemId: cartItem.menuItem.id,
           itemName: cartItem.menuItem.name,
           quantity: cartItem.quantity,
-          unitPrice: cartItem.menuItem.basePrice,
+          unitPrice: cartItem.unitPrice,
           subtotal: cartItem.subtotal,
+          modifiers: Value(CartNotifier.buildModifiersJson(cartItem)),
         ),
       );
     }
@@ -957,7 +1020,7 @@ class _KioskCartItemRow extends ConsumerWidget {
           Row(
             children: [
               GestureDetector(
-                onTap: () => notifier.decrementItem(item.menuItem.id),
+                onTap: () => notifier.decrementItem(item.cartKey),
                 child: Container(
                   width: 32,
                   height: 32,

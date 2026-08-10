@@ -13,6 +13,7 @@ import '../../features/expenses/expenses_screen.dart';
 import '../../features/payment/payment_screen.dart';
 import '../../features/payment/receipt_screen.dart';
 import '../../features/orders/orders_screen.dart';
+import '../../features/menu/menu_management_screen.dart';
 import '../../features/inventory/inventory_screen.dart';
 import '../../features/reports/reports_screen.dart';
 import '../../features/settings/settings_screen.dart';
@@ -55,6 +56,7 @@ final appRouter = GoRouter(
           builder: (_, __) => const AdvancedAnalyticsScreen(),
         ),
         GoRoute(path: '/orders', builder: (_, __) => const OrdersScreen()),
+        GoRoute(path: '/menu', builder: (_, __) => const MenuManagementScreen()),
         GoRoute(
           path: '/inventory',
           builder: (_, __) => const InventoryScreen(),
@@ -187,6 +189,12 @@ class _AppShell extends StatelessWidget {
       HugeIcons.strokeRoundedInvoice01,
       'Pesanan',
       '/orders',
+    ),
+    _Dest(
+      HugeIcons.strokeRoundedMenuSquare,
+      HugeIcons.strokeRoundedMenuSquare,
+      'Urus Menu',
+      '/menu',
     ),
     _Dest(
       HugeIcons.strokeRoundedPackage,

@@ -12,6 +12,8 @@ import '../../core/utils/currency_formatter.dart';
 import '../../data/database/app_database.dart';
 import '../../data/models/cart_item.dart';
 import '../../shared/widgets/common_widgets.dart';
+import '../../shared/widgets/addon_sheet.dart';
+import 'cart_notifier.dart';
 
 class PosScreen extends ConsumerWidget {
   const PosScreen({super.key});
@@ -179,7 +181,7 @@ class _MenuArea extends ConsumerWidget {
                   subtitle: 'Select another category',
                 );
               }
-              return _MenuGrid(items: items, isTablet: isTablet);
+      return _MenuGrid(items: items, isTablet: isTablet);
             },
           ),
         ),
@@ -260,8 +262,6 @@ class _MenuGrid extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final cartNotifier = ref.read(cartProvider.notifier);
-
     return GridView.builder(
       padding: EdgeInsets.all(isTablet ? 16 : 12),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -275,7 +275,7 @@ class _MenuGrid extends ConsumerWidget {
         final item = items[i];
         return _MenuItemCard(
           item: item,
-          onAdd: () => cartNotifier.addItem(item),
+          onAdd: () => showAddonSheet(context, ref, item),
         );
       },
     );
@@ -324,10 +324,12 @@ class _MenuItemCard extends ConsumerWidget {
             ),
           ],
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Stack(
           children: [
-            // Station color strip
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Station color strip
             Container(
               height: 4,
               decoration: BoxDecoration(
@@ -371,97 +373,128 @@ class _MenuItemCard extends ConsumerWidget {
                         ],
                       ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          CurrencyFormatter.format(item.basePrice),
-                          style: tt.titleSmall?.copyWith(
-                            color: AppTheme.primaryCoffee,
-                            fontWeight: FontWeight.w800,
-                            fontSize: 13,
-                          ),
-                        ),
-                        if (qty > 0)
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              GestureDetector(
-                                onTap: () =>
-                                    cartNotifier.decrementItem(item.id),
-                                child: Container(
-                                  width: 24,
-                                  height: 24,
-                                  decoration: BoxDecoration(
-                                    color: AppTheme.primaryCoffee.withOpacity(
-                                      0.12,
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              CurrencyFormatter.format(item.basePrice),
+                              style: tt.titleSmall?.copyWith(
+                                color: AppTheme.primaryCoffee,
+                                fontWeight: FontWeight.w800,
+                                fontSize: 13,
+                              ),
+                            ),
+                            if (qty > 0)
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () =>
+                                        cartNotifier.decrementItemById(item.id),
+                                    child: Container(
+                                      width: 24,
+                                      height: 24,
+                                      decoration: BoxDecoration(
+                                        color: AppTheme.primaryCoffee.withOpacity(
+                                          0.12,
+                                        ),
+                                        borderRadius: BorderRadius.circular(6),
+                                      ),
+                                      child: HugeIcon(
+                                        icon: HugeIcons.strokeRoundedRemove01,
+                                        size: 14,
+                                        color: AppTheme.primaryCoffee,
+                                      ),
                                     ),
-                                    borderRadius: BorderRadius.circular(6),
                                   ),
-                                  child: HugeIcon(
-                                    icon: HugeIcons.strokeRoundedRemove01,
-                                    size: 14,
-                                    color: AppTheme.primaryCoffee,
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 6,
+                                    ),
+                                    child: Text(
+                                      '$qty',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w800,
+                                        fontSize: 13,
+                                        color: AppTheme.primaryCoffee,
+                                      ),
+                                    ),
                                   ),
+                                  GestureDetector(
+                                    onTap: onAdd,
+                                    child: Container(
+                                      width: 24,
+                                      height: 24,
+                                      decoration: BoxDecoration(
+                                        color: AppTheme.primaryCoffee,
+                                        borderRadius: BorderRadius.circular(6),
+                                      ),
+                                      child: HugeIcon(
+                                        icon: HugeIcons.strokeRoundedAdd01,
+                                        size: 14,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            else
+                              Container(
+                                width: 28,
+                                height: 28,
+                                decoration: BoxDecoration(
+                                  color: AppTheme.primaryCoffee,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: HugeIcon(
+                                  icon: HugeIcons.strokeRoundedAdd01,
+                                  size: 16,
+                                  color: Colors.white,
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 6,
-                                ),
-                                child: Text(
-                                  '$qty',
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 13,
-                                    color: AppTheme.primaryCoffee,
-                                  ),
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: onAdd,
-                                child: Container(
-                                  width: 24,
-                                  height: 24,
-                                  decoration: BoxDecoration(
-                                    color: AppTheme.primaryCoffee,
-                                    borderRadius: BorderRadius.circular(6),
-                                  ),
-                                  child: HugeIcon(
-                                    icon: HugeIcons.strokeRoundedAdd01,
-                                    size: 14,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )
-                        else
-                          Container(
-                            width: 28,
-                            height: 28,
-                            decoration: BoxDecoration(
-                              color: AppTheme.primaryCoffee,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: HugeIcon(
-                              icon: HugeIcons.strokeRoundedAdd01,
-                              size: 16,
-                              color: Colors.white,
-                            ),
-                          ),
+                          ],
+                        ),
                       ],
                     ),
-                  ],
+                  ),
+                ),
+              ],
+            ),
+            if (!item.isAvailable)
+              Positioned.fill(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.7),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Center(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: Colors.black87,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: const Text(
+                        'HABIS',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w800,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ),
-            ),
           ],
         ),
       ),
     );
   }
 }
+
+
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Cart Panel (used in tablet right pane + phone bottom sheet)
@@ -475,6 +508,14 @@ class _CartPanel extends ConsumerStatefulWidget {
 }
 
 class _CartPanelState extends ConsumerState<_CartPanel> {
+  final TextEditingController _phoneController = TextEditingController();
+
+  @override
+  void dispose() {
+    _phoneController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final cart = ref.watch(cartProvider);
@@ -696,6 +737,7 @@ class _CartPanelState extends ConsumerState<_CartPanel> {
         taxAmount: Value(tax),
         totalAmount: Value(total),
         notes: const Value(''),
+        customerPhone: Value(_phoneController.text.trim().isEmpty ? null : _phoneController.text.trim()),
       ),
     );
 
@@ -706,8 +748,9 @@ class _CartPanelState extends ConsumerState<_CartPanel> {
           menuItemId: cartItem.menuItem.id,
           itemName: cartItem.menuItem.name,
           quantity: cartItem.quantity,
-          unitPrice: cartItem.menuItem.basePrice,
+          unitPrice: cartItem.unitPrice,
           subtotal: cartItem.subtotal,
+          modifiers: Value(CartNotifier.buildModifiersJson(cartItem)),
         ),
       );
     }
@@ -788,7 +831,7 @@ class _CartItemRow extends ConsumerWidget {
           Row(
             children: [
               GestureDetector(
-                onTap: () => notifier.decrementItem(item.menuItem.id),
+                onTap: () => notifier.decrementItem(item.cartKey),
                 child: Container(
                   width: 28,
                   height: 28,
@@ -811,7 +854,7 @@ class _CartItemRow extends ConsumerWidget {
                 ),
               ),
               GestureDetector(
-                onTap: () => notifier.addItem(item.menuItem),
+                onTap: () => notifier.addItem(item.menuItem, addons: item.selectedAddons),
                 child: Container(
                   width: 28,
                   height: 28,
@@ -831,11 +874,23 @@ class _CartItemRow extends ConsumerWidget {
           const SizedBox(width: 12),
           // Name
           Expanded(
-            child: Text(
-              item.menuItem.name,
-              style: tt.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  item.menuItem.name,
+                  style: tt.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                if (item.addonSummary.isNotEmpty)
+                  Text(
+                    item.addonSummary,
+                    style: tt.bodySmall?.copyWith(fontSize: 10, color: AppTheme.mutedText),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+              ],
             ),
           ),
           // Price

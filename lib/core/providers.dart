@@ -45,7 +45,37 @@ final menuItemsProvider = StreamProvider<List<MenuItem>>((ref) {
   return ref.watch(databaseProvider).watchMenuItems(categoryId: categoryId);
 });
 
+/// All menu items including unavailable (for management/toggle screen)
+final allMenuItemsWithAvailabilityProvider = StreamProvider<List<MenuItem>>((ref) {
+  return ref.watch(databaseProvider).watchAllMenuItemsIncludingUnavailable();
+});
+
+// ── Add-ons ───────────────────────────────────────────────────────────────────
+
+/// All add-ons
+final allAddonsProvider = StreamProvider<List<MenuAddon>>((ref) {
+  return ref.watch(databaseProvider).watchAllAddons();
+});
+
+/// Add-ons for a specific menu item
+final addonsForItemProvider = FutureProvider.family<List<MenuAddon>, int>((ref, menuItemId) {
+  return ref.watch(databaseProvider).getAddonsForItem(menuItemId);
+});
+
+// ── Combo Sets ────────────────────────────────────────────────────────────────
+
+/// All available combo sets
+final allComboSetsProvider = StreamProvider<List<ComboSet>>((ref) {
+  return ref.watch(databaseProvider).watchAllComboSets();
+});
+
+/// Combo items with details
+final comboItemsProvider = FutureProvider.family<List<Map<String, dynamic>>, int>((ref, comboId) {
+  return ref.watch(databaseProvider).getComboItemsWithDetails(comboId);
+});
+
 // ── Cart & Customer Attachment ────────────────────────────────────────────────
+
 
 final cartProvider = StateNotifierProvider<CartNotifier, List<CartItem>>((ref) {
   return CartNotifier();
