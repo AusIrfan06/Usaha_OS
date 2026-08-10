@@ -250,9 +250,25 @@ class _AppShell extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Modul Usaha OS',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+            Row(
+              children: [
+                Container(
+                  width: 32,
+                  height: 32,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    image: const DecorationImage(
+                      image: AssetImage('assets/logo.png'),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                const Text(
+                  'Modul Usaha OS',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+                ),
+              ],
             ),
             const SizedBox(height: 16),
             GridView.builder(
@@ -337,9 +353,11 @@ class _AppShell extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: AppTheme.primaryCoffee,
                             borderRadius: BorderRadius.circular(12),
+                            image: const DecorationImage(
+                              image: AssetImage('assets/logo.png'),
+                              fit: BoxFit.cover,
+                            ),
                           ),
-                          child: HugeIcon(icon: HugeIcons.strokeRoundedCoffee01,
-                              color: Colors.white, size: 22),
                         ),
                         if (extended) ...[
                           const SizedBox(height: 8),
