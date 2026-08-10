@@ -15,9 +15,7 @@ void main() async {
     anonKey: SupabaseConfig.anonKey,
   );
 
-  runApp(
-    const ProviderScope(child: UsahaOsApp()),
-  );
+  runApp(const ProviderScope(child: UsahaOsApp()));
 }
 
 class UsahaOsApp extends ConsumerWidget {

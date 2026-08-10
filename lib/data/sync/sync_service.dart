@@ -226,7 +226,9 @@ class SyncService {
           } else if (status == RealtimeSubscribeStatus.closed ||
               status == RealtimeSubscribeStatus.timedOut) {
             isRealtimeConnected.value = false;
-            debugPrint('[SyncService] ⚠️ Realtime status: $status (error: $error)');
+            debugPrint(
+              '[SyncService] ⚠️ Realtime status: $status (error: $error)',
+            );
           }
         });
     } catch (e) {
@@ -239,16 +241,18 @@ class SyncService {
   /// Starts a periodic background sync loop.
   void startContinuousSync() {
     if (!_isConfigured) return;
-    
+
     // Defaulting to 3 minutes as requested
     _syncTimer?.cancel();
     _syncTimer = Timer.periodic(const Duration(minutes: 3), (timer) async {
       debugPrint('[SyncService] Running continuous background sync...');
       if (!isRealtimeConnected.value) {
-        debugPrint('[SyncService] Realtime disconnected. Attempting to reconnect...');
+        debugPrint(
+          '[SyncService] Realtime disconnected. Attempting to reconnect...',
+        );
         initRealtime();
       }
-      
+
       // Perform a full 2-way sync
       await pullAllFromSupabase();
     });
@@ -277,7 +281,10 @@ class SyncService {
               await client.from('ingredients').delete().eq('name', t.recordKey);
               break;
             case 'orders':
-              await client.from('orders').delete().eq('order_number', t.recordKey);
+              await client
+                  .from('orders')
+                  .delete()
+                  .eq('order_number', t.recordKey);
               break;
             case 'tasks':
               await client.from('tasks').delete().eq('title', t.recordKey);
@@ -286,7 +293,10 @@ class SyncService {
               await client.from('customers').delete().eq('phone', t.recordKey);
               break;
             case 'staff_members':
-              await client.from('staff_members').delete().eq('pin_code', t.recordKey);
+              await client
+                  .from('staff_members')
+                  .delete()
+                  .eq('pin_code', t.recordKey);
               break;
             case 'suppliers':
               await client.from('suppliers').delete().eq('name', t.recordKey);
@@ -300,12 +310,16 @@ class SyncService {
           }
           syncedIds.add(t.id);
         } catch (e) {
-          debugPrint('[SyncService] Failed to push tombstone for ${t.targetTable}:${t.recordKey} - $e');
+          debugPrint(
+            '[SyncService] Failed to push tombstone for ${t.targetTable}:${t.recordKey} - $e',
+          );
         }
       }
       if (syncedIds.isNotEmpty) {
         await db.markTombstonesSynced(syncedIds);
-        debugPrint('[SyncService] 🪦 Synced ${syncedIds.length} tombstones to Supabase');
+        debugPrint(
+          '[SyncService] 🪦 Synced ${syncedIds.length} tombstones to Supabase',
+        );
       }
     } catch (e) {
       debugPrint('[SyncService] pushTombstones error: $e');
@@ -313,13 +327,21 @@ class SyncService {
   }
 
   /// Immediately attempts to delete an entity on Supabase cloud.
-  Future<void> deleteFromCloud(String tableName, String column, dynamic value) async {
+  Future<void> deleteFromCloud(
+    String tableName,
+    String column,
+    dynamic value,
+  ) async {
     if (!_isConfigured) return;
     try {
       await client.from(tableName).delete().eq(column, value);
-      debugPrint('[SyncService] 🗑️ Deleted from Supabase: $tableName where $column = $value');
+      debugPrint(
+        '[SyncService] 🗑️ Deleted from Supabase: $tableName where $column = $value',
+      );
     } catch (e) {
-      debugPrint('[SyncService] ⚠️ Cloud delete failed (will retry via tombstone): $e');
+      debugPrint(
+        '[SyncService] ⚠️ Cloud delete failed (will retry via tombstone): $e',
+      );
     }
   }
 
@@ -350,8 +372,10 @@ class SyncService {
       final remoteOrderId = rec['id'];
       List<OrderItemsCompanion> items = [];
       if (remoteOrderId != null) {
-        final itemsRes =
-            await client.from('order_items').select().eq('order_id', remoteOrderId);
+        final itemsRes = await client
+            .from('order_items')
+            .select()
+            .eq('order_id', remoteOrderId);
         items = (itemsRes as List).map((i) {
           return OrderItemsCompanion(
             menuItemId: Value(i['menu_item_id'] as int? ?? 0),
@@ -424,8 +448,9 @@ class SyncService {
             .eq('id', catId)
             .maybeSingle();
         if (catRes != null) {
-          final localCat =
-              await db.getCategoryByName(catRes['name'] as String? ?? '');
+          final localCat = await db.getCategoryByName(
+            catRes['name'] as String? ?? '',
+          );
           if (localCat != null) categoryId = localCat.id;
         }
       }
@@ -436,7 +461,11 @@ class SyncService {
           name: Value(name),
           description: Value(rec['description'] as String? ?? ''),
           basePrice: Value((rec['base_price'] as num?)?.toDouble() ?? 0.0),
-          preparationStation: Value(rec['station'] as String? ?? rec['preparation_station'] as String? ?? 'kitchen'),
+          preparationStation: Value(
+            rec['station'] as String? ??
+                rec['preparation_station'] as String? ??
+                'kitchen',
+          ),
           isAvailable: Value(rec['is_available'] as bool? ?? true),
         ),
       );
@@ -470,7 +499,9 @@ class SyncService {
       await db.upsertCategory(
         CategoriesCompanion(
           name: Value(name),
-          iconCode: Value(rec['icon_code'] as String? ?? rec['icon'] as String? ?? 'coffee'),
+          iconCode: Value(
+            rec['icon_code'] as String? ?? rec['icon'] as String? ?? 'coffee',
+          ),
           sortOrder: Value(rec['sort_order'] as int? ?? 0),
         ),
       );
@@ -505,8 +536,12 @@ class SyncService {
         IngredientsCompanion(
           name: Value(name),
           unit: Value(rec['unit'] as String? ?? 'unit'),
-          currentStock: Value((rec['current_stock'] as num?)?.toDouble() ?? 0.0),
-          reorderPoint: Value((rec['reorder_point'] as num?)?.toDouble() ?? 0.0),
+          currentStock: Value(
+            (rec['current_stock'] as num?)?.toDouble() ?? 0.0,
+          ),
+          reorderPoint: Value(
+            (rec['reorder_point'] as num?)?.toDouble() ?? 0.0,
+          ),
           costPerUnit: Value((rec['cost_per_unit'] as num?)?.toDouble() ?? 0.0),
         ),
       );
@@ -548,7 +583,9 @@ class SyncService {
           status: Value(rec['status'] as String? ?? 'todo'),
           completedBy: Value(rec['completed_by'] as String?),
           completedAt: Value(
-            rec['completed_at'] != null ? DateTime.tryParse(rec['completed_at'].toString()) : null,
+            rec['completed_at'] != null
+                ? DateTime.tryParse(rec['completed_at'].toString())
+                : null,
           ),
         ),
       );
@@ -737,7 +774,9 @@ class SyncService {
         await db.upsertCategory(
           CategoriesCompanion(
             name: Value(name),
-            iconCode: Value(r['icon_code'] as String? ?? r['icon'] as String? ?? 'coffee'),
+            iconCode: Value(
+              r['icon_code'] as String? ?? r['icon'] as String? ?? 'coffee',
+            ),
             sortOrder: Value(r['sort_order'] as int? ?? 0),
           ),
         );
@@ -754,7 +793,9 @@ class SyncService {
   Future<void> syncMenuItems() async {
     if (!_isConfigured) return;
     try {
-      final List<dynamic> remote = await client.from('menu_items').select('*, categories(name)');
+      final List<dynamic> remote = await client
+          .from('menu_items')
+          .select('*, categories(name)');
       final tombstones = await db.getActiveTombstoneKeys('menu_items');
 
       final activeNames = <String>[];
@@ -781,7 +822,11 @@ class SyncService {
             name: Value(name),
             description: Value(r['description'] as String? ?? ''),
             basePrice: Value((r['base_price'] as num?)?.toDouble() ?? 0.0),
-            preparationStation: Value(r['station'] as String? ?? r['preparation_station'] as String? ?? 'kitchen'),
+            preparationStation: Value(
+              r['station'] as String? ??
+                  r['preparation_station'] as String? ??
+                  'kitchen',
+            ),
             isAvailable: Value(r['is_available'] as bool? ?? true),
           ),
         );
@@ -815,8 +860,12 @@ class SyncService {
           IngredientsCompanion(
             name: Value(name),
             unit: Value(r['unit'] as String? ?? 'unit'),
-            currentStock: Value((r['current_stock'] as num?)?.toDouble() ?? 0.0),
-            reorderPoint: Value((r['reorder_point'] as num?)?.toDouble() ?? 0.0),
+            currentStock: Value(
+              (r['current_stock'] as num?)?.toDouble() ?? 0.0,
+            ),
+            reorderPoint: Value(
+              (r['reorder_point'] as num?)?.toDouble() ?? 0.0,
+            ),
             costPerUnit: Value((r['cost_per_unit'] as num?)?.toDouble() ?? 0.0),
           ),
         );
@@ -872,10 +921,13 @@ class SyncService {
             tableNumber: Value(r['table_number'] as int?),
             status: Value(r['status'] as String? ?? 'pending'),
             createdAt: Value(
-              DateTime.tryParse(r['created_at']?.toString() ?? '') ?? DateTime.now(),
+              DateTime.tryParse(r['created_at']?.toString() ?? '') ??
+                  DateTime.now(),
             ),
             completedAt: Value(
-              r['completed_at'] != null ? DateTime.tryParse(r['completed_at'].toString()) : null,
+              r['completed_at'] != null
+                  ? DateTime.tryParse(r['completed_at'].toString())
+                  : null,
             ),
             subtotal: Value((r['subtotal'] as num?)?.toDouble() ?? 0.0),
             taxAmount: Value((r['tax_amount'] as num?)?.toDouble() ?? 0.0),
@@ -919,7 +971,9 @@ class SyncService {
             status: Value(r['status'] as String? ?? 'todo'),
             completedBy: Value(r['completed_by'] as String?),
             completedAt: Value(
-              r['completed_at'] != null ? DateTime.tryParse(r['completed_at'].toString()) : null,
+              r['completed_at'] != null
+                  ? DateTime.tryParse(r['completed_at'].toString())
+                  : null,
             ),
           ),
         );
@@ -1085,20 +1139,24 @@ class SyncService {
       final order = await db.getOrder(localOrderId);
       if (order == null) return;
 
-      final result = await client.from('orders').insert({
-        'order_number': order.orderNumber,
-        'order_type': order.orderType,
-        'table_number': order.tableNumber,
-        'status': order.status,
-        'created_at': order.createdAt.toIso8601String(),
-        'completed_at': order.completedAt?.toIso8601String(),
-        'subtotal': order.subtotal,
-        'tax_amount': order.taxAmount,
-        'total_amount': order.totalAmount,
-        'payment_method': order.paymentMethod,
-        'tendered_amount': order.tenderedAmount,
-        'notes': order.notes,
-      }).select('id').single();
+      final result = await client
+          .from('orders')
+          .insert({
+            'order_number': order.orderNumber,
+            'order_type': order.orderType,
+            'table_number': order.tableNumber,
+            'status': order.status,
+            'created_at': order.createdAt.toIso8601String(),
+            'completed_at': order.completedAt?.toIso8601String(),
+            'subtotal': order.subtotal,
+            'tax_amount': order.taxAmount,
+            'total_amount': order.totalAmount,
+            'payment_method': order.paymentMethod,
+            'tendered_amount': order.tenderedAmount,
+            'notes': order.notes,
+          })
+          .select('id')
+          .single();
 
       final remoteOrderId = result['id'] as int;
 
@@ -1120,13 +1178,19 @@ class SyncService {
   }
 
   /// Push ingredient stock update to Supabase
-  Future<void> syncIngredientStock(String ingredientName, double newStock) async {
+  Future<void> syncIngredientStock(
+    String ingredientName,
+    double newStock,
+  ) async {
     if (!_isConfigured) return;
     try {
-      await client.from('ingredients').update({
-        'current_stock': newStock,
-        'updated_at': DateTime.now().toIso8601String(),
-      }).eq('name', ingredientName);
+      await client
+          .from('ingredients')
+          .update({
+            'current_stock': newStock,
+            'updated_at': DateTime.now().toIso8601String(),
+          })
+          .eq('name', ingredientName);
     } catch (e) {
       debugPrint('[SyncService] Ingredient sync failed: $e');
     }

@@ -27,13 +27,20 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
       appBar: AppBar(
         title: const Text(
           'Integrasi Platform Penghantaran (Delivery)',
-          style: TextStyle(fontWeight: FontWeight.w800, color: AppTheme.darkEspresso),
+          style: TextStyle(
+            fontWeight: FontWeight.w800,
+            color: AppTheme.darkEspresso,
+          ),
         ),
         backgroundColor: AppTheme.warmCream,
         surfaceTintColor: Colors.transparent,
         actions: [
           IconButton(
-            icon: HugeIcon(icon: HugeIcons.strokeRoundedTruckDelivery, color: Colors.orange, size: 28),
+            icon: HugeIcon(
+              icon: HugeIcons.strokeRoundedTruckDelivery,
+              color: Colors.orange,
+              size: 28,
+            ),
             tooltip: 'Simulasi Webhook Pesanan Masuk',
             onPressed: () => _showWebhookSimulatorDialog(context),
           ),
@@ -45,12 +52,14 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
         error: (e, _) => Center(child: Text('Ralat: $e')),
         data: (deliveryList) {
           final ordersMap = {
-            for (var o in ordersAsync.value ?? <Order>[]) o.id: o
+            for (var o in ordersAsync.value ?? <Order>[]) o.id: o,
           };
 
           final filteredList = _selectedPlatform == 'all'
               ? deliveryList
-              : deliveryList.where((d) => d.channel.toLowerCase() == _selectedPlatform).toList();
+              : deliveryList
+                    .where((d) => d.channel.toLowerCase() == _selectedPlatform)
+                    .toList();
 
           // Calculate Channel Stats
           double totalGross = 0;
@@ -69,7 +78,12 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
             padding: EdgeInsets.all(isTablet ? 24 : 16),
             children: [
               // Summary Banner
-              _buildChannelFinancialBanner(totalGross, totalCommission, totalNet, isTablet),
+              _buildChannelFinancialBanner(
+                totalGross,
+                totalCommission,
+                totalNet,
+                isTablet,
+              ),
               const SizedBox(height: 20),
 
               // Filter Chips
@@ -77,13 +91,33 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    _buildPlatformChip('all', 'Semua Saluran', HugeIcons.strokeRoundedDashboardSquare01, Colors.grey.shade800),
+                    _buildPlatformChip(
+                      'all',
+                      'Semua Saluran',
+                      HugeIcons.strokeRoundedDashboardSquare01,
+                      Colors.grey.shade800,
+                    ),
                     const SizedBox(width: 8),
-                    _buildPlatformChip('grabfood', 'GrabFood (30%)', HugeIcons.strokeRoundedStore01, const Color(0xFF00B14F)),
+                    _buildPlatformChip(
+                      'grabfood',
+                      'GrabFood (30%)',
+                      HugeIcons.strokeRoundedStore01,
+                      const Color(0xFF00B14F),
+                    ),
                     const SizedBox(width: 8),
-                    _buildPlatformChip('foodpanda', 'Foodpanda (28%)', HugeIcons.strokeRoundedStore01, const Color(0xFFD70F64)),
+                    _buildPlatformChip(
+                      'foodpanda',
+                      'Foodpanda (28%)',
+                      HugeIcons.strokeRoundedStore01,
+                      const Color(0xFFD70F64),
+                    ),
                     const SizedBox(width: 8),
-                    _buildPlatformChip('shopeefood', 'ShopeeFood (25%)', HugeIcons.strokeRoundedStore01, const Color(0xFFEE4D2D)),
+                    _buildPlatformChip(
+                      'shopeefood',
+                      'ShopeeFood (25%)',
+                      HugeIcons.strokeRoundedStore01,
+                      const Color(0xFFEE4D2D),
+                    ),
                   ],
                 ),
               ),
@@ -95,17 +129,31 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
                   alignment: Alignment.center,
                   child: Column(
                     children: [
-                      HugeIcon(icon: HugeIcons.strokeRoundedShoppingCart01, size: 64, color: AppTheme.mutedText.withOpacity(0.5)),
+                      HugeIcon(
+                        icon: HugeIcons.strokeRoundedShoppingCart01,
+                        size: 64,
+                        color: AppTheme.mutedText.withOpacity(0.5),
+                      ),
                       const SizedBox(height: 12),
                       const Text(
                         'Tiada pesanan penghantaran aktif',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.mutedText),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.mutedText,
+                        ),
                       ),
                       const SizedBox(height: 8),
                       ElevatedButton.icon(
-                        icon: HugeIcon(icon: HugeIcons.strokeRoundedComputerVideoCall, size: 18),
+                        icon: HugeIcon(
+                          icon: HugeIcons.strokeRoundedComputerVideoCall,
+                          size: 18,
+                        ),
                         label: const Text('Uji Simulasi Pesanan Masuk'),
-                        style: ElevatedButton.styleFrom(backgroundColor: AppTheme.primaryCoffee, foregroundColor: Colors.white),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppTheme.primaryCoffee,
+                          foregroundColor: Colors.white,
+                        ),
                         onPressed: () => _showWebhookSimulatorDialog(context),
                       ),
                     ],
@@ -130,7 +178,12 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
     );
   }
 
-  Widget _buildChannelFinancialBanner(double gross, double commission, double net, bool isTablet) {
+  Widget _buildChannelFinancialBanner(
+    double gross,
+    double commission,
+    double net,
+    bool isTablet,
+  ) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -152,7 +205,12 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
             children: [
               const Text(
                 'RINGKASAN HASIL PLATFORM PENGHANTARAN',
-                style: TextStyle(color: Colors.white70, fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 1.0),
+                style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1.0,
+                ),
               ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -160,7 +218,10 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
                   color: Colors.white12,
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Text('Live Integration', style: TextStyle(color: Colors.white, fontSize: 10)),
+                child: const Text(
+                  'Live Integration',
+                  style: TextStyle(color: Colors.white, fontSize: 10),
+                ),
               ),
             ],
           ),
@@ -168,13 +229,25 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
           Row(
             children: [
               Expanded(
-                child: _buildBannerMetric('Jualan Kasar (Gross)', CurrencyFormatter.format(gross), Colors.white),
+                child: _buildBannerMetric(
+                  'Jualan Kasar (Gross)',
+                  CurrencyFormatter.format(gross),
+                  Colors.white,
+                ),
               ),
               Expanded(
-                child: _buildBannerMetric('Komisen Saluran', '- ${CurrencyFormatter.format(commission)}', Colors.orangeAccent),
+                child: _buildBannerMetric(
+                  'Komisen Saluran',
+                  '- ${CurrencyFormatter.format(commission)}',
+                  Colors.orangeAccent,
+                ),
               ),
               Expanded(
-                child: _buildBannerMetric('Hasil Bersih (Payout)', CurrencyFormatter.format(net), AppTheme.successGreen),
+                child: _buildBannerMetric(
+                  'Hasil Bersih (Payout)',
+                  CurrencyFormatter.format(net),
+                  AppTheme.successGreen,
+                ),
               ),
             ],
           ),
@@ -187,20 +260,36 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(color: Colors.white60, fontSize: 11)),
+        Text(
+          label,
+          style: const TextStyle(color: Colors.white60, fontSize: 11),
+        ),
         const SizedBox(height: 4),
         Text(
           value,
-          style: TextStyle(color: valueColor, fontSize: 16, fontWeight: FontWeight.w900),
+          style: TextStyle(
+            color: valueColor,
+            fontSize: 16,
+            fontWeight: FontWeight.w900,
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildPlatformChip(String platform, String label, dynamic icon, Color color) {
+  Widget _buildPlatformChip(
+    String platform,
+    String label,
+    dynamic icon,
+    Color color,
+  ) {
     final isSelected = _selectedPlatform == platform;
     return ChoiceChip(
-      avatar: HugeIcon(icon: icon, size: 16, color: isSelected ? Colors.white : color),
+      avatar: HugeIcon(
+        icon: icon,
+        size: 16,
+        color: isSelected ? Colors.white : color,
+      ),
       label: Text(label),
       selected: isSelected,
       selectedColor: color,
@@ -220,7 +309,11 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
     );
   }
 
-  Widget _buildDeliveryOrderCard(BuildContext context, DeliveryOrder del, Order? order) {
+  Widget _buildDeliveryOrderCard(
+    BuildContext context,
+    DeliveryOrder del,
+    Order? order,
+  ) {
     Color brandColor = const Color(0xFF00B14F); // Grab
     String brandName = 'GrabFood';
     dynamic brandIcon = HugeIcons.strokeRoundedStore01;
@@ -263,7 +356,10 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: brandColor,
                     borderRadius: BorderRadius.circular(8),
@@ -275,7 +371,11 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
                       const SizedBox(width: 6),
                       Text(
                         brandName,
-                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 12),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w900,
+                          fontSize: 12,
+                        ),
                       ),
                     ],
                   ),
@@ -283,11 +383,17 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
                 const SizedBox(width: 10),
                 Text(
                   del.platformOrderId,
-                  style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 14,
+                  ),
                 ),
                 const Spacer(),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: pickupColor.withOpacity(0.12),
                     borderRadius: BorderRadius.circular(8),
@@ -295,7 +401,11 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
                   ),
                   child: Text(
                     pickupLabel,
-                    style: TextStyle(color: pickupColor, fontSize: 11, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      color: pickupColor,
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ],
@@ -312,21 +422,34 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
                     children: [
                       Text(
                         order?.notes ?? 'Pesanan ${del.channel}',
-                        style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                        ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         'No. POS: ${order?.orderNumber ?? '-'} • Status KDS: ${order?.status ?? '-'}',
-                        style: const TextStyle(color: AppTheme.mutedText, fontSize: 12),
+                        style: const TextStyle(
+                          color: AppTheme.mutedText,
+                          fontSize: 12,
+                        ),
                       ),
                       const SizedBox(height: 6),
                       Row(
                         children: [
-                          HugeIcon(icon: HugeIcons.strokeRoundedUser, size: 16, color: AppTheme.primaryCoffee),
+                          HugeIcon(
+                            icon: HugeIcons.strokeRoundedUser,
+                            size: 16,
+                            color: AppTheme.primaryCoffee,
+                          ),
                           const SizedBox(width: 4),
                           Text(
                             'Rider: ${del.riderName ?? "Belum Ditugaskan"} (${del.riderPhone ?? "-"})',
-                            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ],
                       ),
@@ -344,12 +467,22 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text('Jumlah Kasar: ${CurrencyFormatter.format(total)}', style: const TextStyle(fontSize: 11)),
-                      Text('Komisen (${(del.commissionRate * 100).toStringAsFixed(0)}%): -${CurrencyFormatter.format(del.commissionAmount)}', style: const TextStyle(fontSize: 10, color: Colors.red)),
+                      Text(
+                        'Jumlah Kasar: ${CurrencyFormatter.format(total)}',
+                        style: const TextStyle(fontSize: 11),
+                      ),
+                      Text(
+                        'Komisen (${(del.commissionRate * 100).toStringAsFixed(0)}%): -${CurrencyFormatter.format(del.commissionAmount)}',
+                        style: const TextStyle(fontSize: 10, color: Colors.red),
+                      ),
                       const Divider(height: 6),
                       Text(
                         'Bersih: ${CurrencyFormatter.format(del.netPayout)}',
-                        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w900, color: AppTheme.successGreen),
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w900,
+                          color: AppTheme.successGreen,
+                        ),
                       ),
                     ],
                   ),
@@ -365,15 +498,20 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
                 if (del.pickupStatus != 'delivered') ...[
                   OutlinedButton(
                     style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
                       visualDensity: VisualDensity.compact,
                     ),
                     onPressed: () {
-                      ref.read(databaseProvider).updateDeliveryRiderStatus(
-                        del.id,
-                        'picked_up',
-                        riderName: del.riderName ?? 'Rider Assigned',
-                      );
+                      ref
+                          .read(databaseProvider)
+                          .updateDeliveryRiderStatus(
+                            del.id,
+                            'picked_up',
+                            riderName: del.riderName ?? 'Rider Assigned',
+                          );
                     },
                     child: const Text('Tanda Rider Ambil (Picked Up)'),
                   ),
@@ -382,16 +520,28 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppTheme.successGreen,
                       foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
                       visualDensity: VisualDensity.compact,
                     ),
                     onPressed: () {
-                      ref.read(databaseProvider).updateDeliveryRiderStatus(del.id, 'delivered');
+                      ref
+                          .read(databaseProvider)
+                          .updateDeliveryRiderStatus(del.id, 'delivered');
                     },
                     child: const Text('Tanda Selesai Dihantar'),
                   ),
                 ] else ...[
-                  const Text('✅ Selesai Dihantar ke Pelanggan', style: TextStyle(color: AppTheme.successGreen, fontWeight: FontWeight.bold, fontSize: 12)),
+                  const Text(
+                    '✅ Selesai Dihantar ke Pelanggan',
+                    style: TextStyle(
+                      color: AppTheme.successGreen,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
+                  ),
                 ],
               ],
             ),
@@ -426,24 +576,49 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
                 borderRadius: BorderRadius.circular(10),
                 side: const BorderSide(color: Color(0xFF00B14F)),
               ),
-              leading: HugeIcon(icon: HugeIcons.strokeRoundedStore01, color: Color(0xFF00B14F)),
-              title: const Text('GrabFood • 2x Spanish Latte & 1x Croissant', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-              subtitle: const Text('Komisen 30% • Nilai: RM 36.00', style: TextStyle(fontSize: 11)),
+              leading: HugeIcon(
+                icon: HugeIcons.strokeRoundedStore01,
+                color: Color(0xFF00B14F),
+              ),
+              title: const Text(
+                'GrabFood • 2x Spanish Latte & 1x Croissant',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+              ),
+              subtitle: const Text(
+                'Komisen 30% • Nilai: RM 36.00',
+                style: TextStyle(fontSize: 11),
+              ),
               onTap: () async {
                 Navigator.pop(ctx);
-                await ref.read(databaseProvider).simulateIncomingDeliveryOrder(
-                  channel: 'grabfood',
-                  customerName: 'Afiqah (Bangsar)',
-                  itemsList: [
-                    {'menuItemId': 1, 'name': 'Spanish Latte', 'price': 13.00, 'quantity': 2, 'modifiers': 'Oat Milk'},
-                    {'menuItemId': 3, 'name': 'Butter Croissant', 'price': 10.00, 'quantity': 1, 'modifiers': 'Warm'},
-                  ],
-                  notes: 'Pesanan GrabFood #GF-8841: Afiqah (Kurang Manis)',
-                );
+                await ref
+                    .read(databaseProvider)
+                    .simulateIncomingDeliveryOrder(
+                      channel: 'grabfood',
+                      customerName: 'Afiqah (Bangsar)',
+                      itemsList: [
+                        {
+                          'menuItemId': 1,
+                          'name': 'Spanish Latte',
+                          'price': 13.00,
+                          'quantity': 2,
+                          'modifiers': 'Oat Milk',
+                        },
+                        {
+                          'menuItemId': 3,
+                          'name': 'Butter Croissant',
+                          'price': 10.00,
+                          'quantity': 1,
+                          'modifiers': 'Warm',
+                        },
+                      ],
+                      notes: 'Pesanan GrabFood #GF-8841: Afiqah (Kurang Manis)',
+                    );
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('⚡ Webhook GrabFood diterima! Pesanan dihantar ke KDS & stok ditolak.'),
+                      content: Text(
+                        '⚡ Webhook GrabFood diterima! Pesanan dihantar ke KDS & stok ditolak.',
+                      ),
                       backgroundColor: Color(0xFF00B14F),
                     ),
                   );
@@ -456,24 +631,49 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
                 borderRadius: BorderRadius.circular(10),
                 side: const BorderSide(color: Color(0xFFD70F64)),
               ),
-              leading: HugeIcon(icon: HugeIcons.strokeRoundedStore01, color: Color(0xFFD70F64)),
-              title: const Text('Foodpanda • 1x Iced Americano & 1x Pain au Choc', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-              subtitle: const Text('Komisen 28% • Nilai: RM 22.00', style: TextStyle(fontSize: 11)),
+              leading: HugeIcon(
+                icon: HugeIcons.strokeRoundedStore01,
+                color: Color(0xFFD70F64),
+              ),
+              title: const Text(
+                'Foodpanda • 1x Iced Americano & 1x Pain au Choc',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+              ),
+              subtitle: const Text(
+                'Komisen 28% • Nilai: RM 22.00',
+                style: TextStyle(fontSize: 11),
+              ),
               onTap: () async {
                 Navigator.pop(ctx);
-                await ref.read(databaseProvider).simulateIncomingDeliveryOrder(
-                  channel: 'foodpanda',
-                  customerName: 'Chong Wei (Mid Valley)',
-                  itemsList: [
-                    {'menuItemId': 2, 'name': 'Iced Americano', 'price': 11.00, 'quantity': 1, 'modifiers': 'Extra Shot'},
-                    {'menuItemId': 4, 'name': 'Pain au Chocolat', 'price': 11.00, 'quantity': 1, 'modifiers': ''},
-                  ],
-                  notes: 'Pesanan Foodpanda #FP-5120: Chong Wei',
-                );
+                await ref
+                    .read(databaseProvider)
+                    .simulateIncomingDeliveryOrder(
+                      channel: 'foodpanda',
+                      customerName: 'Chong Wei (Mid Valley)',
+                      itemsList: [
+                        {
+                          'menuItemId': 2,
+                          'name': 'Iced Americano',
+                          'price': 11.00,
+                          'quantity': 1,
+                          'modifiers': 'Extra Shot',
+                        },
+                        {
+                          'menuItemId': 4,
+                          'name': 'Pain au Chocolat',
+                          'price': 11.00,
+                          'quantity': 1,
+                          'modifiers': '',
+                        },
+                      ],
+                      notes: 'Pesanan Foodpanda #FP-5120: Chong Wei',
+                    );
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('⚡ Webhook Foodpanda diterima! Pesanan dihantar ke KDS & stok ditolak.'),
+                      content: Text(
+                        '⚡ Webhook Foodpanda diterima! Pesanan dihantar ke KDS & stok ditolak.',
+                      ),
                       backgroundColor: Color(0xFFD70F64),
                     ),
                   );
@@ -486,24 +686,49 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
                 borderRadius: BorderRadius.circular(10),
                 side: const BorderSide(color: Color(0xFFEE4D2D)),
               ),
-              leading: HugeIcon(icon: HugeIcons.strokeRoundedStore01, color: Color(0xFFEE4D2D)),
-              title: const Text('ShopeeFood • 3x Teh Tarik Kaw & 2x Nasi Lemak', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-              subtitle: const Text('Komisen 25% • Nilai: RM 45.00', style: TextStyle(fontSize: 11)),
+              leading: HugeIcon(
+                icon: HugeIcons.strokeRoundedStore01,
+                color: Color(0xFFEE4D2D),
+              ),
+              title: const Text(
+                'ShopeeFood • 3x Teh Tarik Kaw & 2x Nasi Lemak',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+              ),
+              subtitle: const Text(
+                'Komisen 25% • Nilai: RM 45.00',
+                style: TextStyle(fontSize: 11),
+              ),
               onTap: () async {
                 Navigator.pop(ctx);
-                await ref.read(databaseProvider).simulateIncomingDeliveryOrder(
-                  channel: 'shopeefood',
-                  customerName: 'Siti Sarah (Subang)',
-                  itemsList: [
-                    {'menuItemId': 1, 'name': 'Teh Tarik Kaw', 'price': 7.00, 'quantity': 3, 'modifiers': 'Kurang Manis'},
-                    {'menuItemId': 2, 'name': 'Nasi Lemak Ayam Berempah', 'price': 12.00, 'quantity': 2, 'modifiers': 'Sambal Lebih'},
-                  ],
-                  notes: 'Pesanan ShopeeFood #SF-9912: Siti Sarah',
-                );
+                await ref
+                    .read(databaseProvider)
+                    .simulateIncomingDeliveryOrder(
+                      channel: 'shopeefood',
+                      customerName: 'Siti Sarah (Subang)',
+                      itemsList: [
+                        {
+                          'menuItemId': 1,
+                          'name': 'Teh Tarik Kaw',
+                          'price': 7.00,
+                          'quantity': 3,
+                          'modifiers': 'Kurang Manis',
+                        },
+                        {
+                          'menuItemId': 2,
+                          'name': 'Nasi Lemak Ayam Berempah',
+                          'price': 12.00,
+                          'quantity': 2,
+                          'modifiers': 'Sambal Lebih',
+                        },
+                      ],
+                      notes: 'Pesanan ShopeeFood #SF-9912: Siti Sarah',
+                    );
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('⚡ Webhook ShopeeFood diterima! Pesanan dihantar ke KDS & stok ditolak.'),
+                      content: Text(
+                        '⚡ Webhook ShopeeFood diterima! Pesanan dihantar ke KDS & stok ditolak.',
+                      ),
                       backgroundColor: Color(0xFFEE4D2D),
                     ),
                   );
@@ -513,7 +738,10 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Tutup')),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Tutup'),
+          ),
         ],
       ),
     );

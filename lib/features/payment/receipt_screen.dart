@@ -35,8 +35,7 @@ class _ReceiptScreenState extends ConsumerState<ReceiptScreen> {
     _items = await db.getOrderItems(widget.orderId);
 
     final prefs = await SharedPreferences.getInstance();
-    _outletName =
-        prefs.getString('outlet_name') ?? 'My Cafe';
+    _outletName = prefs.getString('outlet_name') ?? 'My Cafe';
 
     if (mounted) setState(() => _loaded = true);
   }
@@ -44,8 +43,7 @@ class _ReceiptScreenState extends ConsumerState<ReceiptScreen> {
   @override
   Widget build(BuildContext context) {
     if (!_loaded) {
-      return const Scaffold(
-          body: Center(child: CircularProgressIndicator()));
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     return Scaffold(
@@ -63,8 +61,7 @@ class _ReceiptScreenState extends ConsumerState<ReceiptScreen> {
             tooltip: 'Share',
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                    content: Text('Share coming in Phase 2')),
+                const SnackBar(content: Text('Share coming in Phase 2')),
               );
             },
           ),
@@ -76,7 +73,8 @@ class _ReceiptScreenState extends ConsumerState<ReceiptScreen> {
               onPressed: () {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                      content: Text('Printer integration coming in Phase 2')),
+                    content: Text('Printer integration coming in Phase 2'),
+                  ),
                 );
               },
             ),
@@ -102,8 +100,10 @@ class _ReceiptScreenState extends ConsumerState<ReceiptScreen> {
                   Expanded(
                     child: OutlinedButton.icon(
                       onPressed: () => context.go('/orders'),
-                      icon: HugeIcon(icon: HugeIcons.strokeRoundedInvoice01,
-                          size: 18),
+                      icon: HugeIcon(
+                        icon: HugeIcons.strokeRoundedInvoice01,
+                        size: 18,
+                      ),
                       label: const Text('All Orders'),
                     ),
                   ),
@@ -111,7 +111,10 @@ class _ReceiptScreenState extends ConsumerState<ReceiptScreen> {
                   Expanded(
                     child: FilledButton.icon(
                       onPressed: () => context.go('/pos'),
-                      icon: HugeIcon(icon: HugeIcons.strokeRoundedAdd01, size: 18),
+                      icon: HugeIcon(
+                        icon: HugeIcons.strokeRoundedAdd01,
+                        size: 18,
+                      ),
                       label: const Text('New Order'),
                     ),
                   ),
@@ -142,9 +145,10 @@ class _ReceiptScreenState extends ConsumerState<ReceiptScreen> {
         borderRadius: BorderRadius.circular(4),
         boxShadow: const [
           BoxShadow(
-              color: Color(0x18000000),
-              blurRadius: 20,
-              offset: Offset(0, 6))
+            color: Color(0x18000000),
+            blurRadius: 20,
+            offset: Offset(0, 6),
+          ),
         ],
       ),
       child: Column(
@@ -152,99 +156,117 @@ class _ReceiptScreenState extends ConsumerState<ReceiptScreen> {
           // Top tear edge
           _TearEdge(top: true),
           Padding(
-            padding: const EdgeInsets.symmetric(
-                horizontal: 24, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
             child: Column(
               children: [
                 const SizedBox(height: 8),
                 // Header
-                HugeIcon(icon: HugeIcons.strokeRoundedCoffee01,
-                    color: AppTheme.primaryCoffee, size: 32),
+                HugeIcon(
+                  icon: HugeIcons.strokeRoundedCoffee01,
+                  color: AppTheme.primaryCoffee,
+                  size: 32,
+                ),
                 const SizedBox(height: 8),
-                Text('USAHA OS',
-                    style: tt.titleLarge?.copyWith(
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: 3,
-                        color: AppTheme.darkEspresso)),
-                Text(_outletName,
-                    style: tt.bodyMedium?.copyWith(
-                        color: AppTheme.darkEspresso)),
+                Text(
+                  'USAHA OS',
+                  style: tt.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 3,
+                    color: AppTheme.darkEspresso,
+                  ),
+                ),
+                Text(
+                  _outletName,
+                  style: tt.bodyMedium?.copyWith(color: AppTheme.darkEspresso),
+                ),
                 const SizedBox(height: 4),
-                const Text('Thank you for visiting! ❤️',
-                    style: TextStyle(
-                        fontSize: 12, color: AppTheme.mutedText)),
+                const Text(
+                  'Thank you for visiting! ❤️',
+                  style: TextStyle(fontSize: 12, color: AppTheme.mutedText),
+                ),
 
                 _dottedDivider(),
 
                 // Order info
                 _receiptRow('Order', _order!.orderNumber),
                 _receiptRow('Date', '$dateStr $timeStr'),
-                _receiptRow(
-                    'Type',
-                    switch (_order!.orderType) {
-                      'dine_in' => 'Dine-in',
-                      'delivery' => 'Delivery',
-                      _ => 'Takeaway',
-                    }),
+                _receiptRow('Type', switch (_order!.orderType) {
+                  'dine_in' => 'Dine-in',
+                  'delivery' => 'Delivery',
+                  _ => 'Takeaway',
+                }),
 
                 _dottedDivider(),
 
                 // Items
-                ..._items.map((item) => Padding(
-                      padding:
-                          const EdgeInsets.symmetric(vertical: 3),
-                      child: Row(
-                        crossAxisAlignment:
-                            CrossAxisAlignment.start,
-                        children: [
-                          Text('${item.quantity}×',
-                              style: const TextStyle(
-                                  color: AppTheme.primaryCoffee,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 13)),
-                          const SizedBox(width: 6),
-                          Expanded(
-                            child: Text(item.itemName,
-                                style: const TextStyle(
-                                    fontSize: 13,
-                                    color: AppTheme.darkEspresso)),
+                ..._items.map(
+                  (item) => Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 3),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${item.quantity}×',
+                          style: const TextStyle(
+                            color: AppTheme.primaryCoffee,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 13,
                           ),
-                          Text(
-                              CurrencyFormatter.format(
-                                  item.subtotal),
-                              style: const TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppTheme.darkEspresso)),
-                        ],
-                      ),
-                    )),
+                        ),
+                        const SizedBox(width: 6),
+                        Expanded(
+                          child: Text(
+                            item.itemName,
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: AppTheme.darkEspresso,
+                            ),
+                          ),
+                        ),
+                        Text(
+                          CurrencyFormatter.format(item.subtotal),
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: AppTheme.darkEspresso,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
 
                 _dottedDivider(),
 
                 // Totals
-                _receiptRow('Subtotal',
-                    CurrencyFormatter.format(_order!.subtotal)),
                 _receiptRow(
-                    _order!.taxAmount > 0 ? 'SST (6%)' : 'SST (0%)',
-                    CurrencyFormatter.format(_order!.taxAmount),
-                    small: true),
+                  'Subtotal',
+                  CurrencyFormatter.format(_order!.subtotal),
+                ),
+                _receiptRow(
+                  _order!.taxAmount > 0 ? 'SST (6%)' : 'SST (0%)',
+                  CurrencyFormatter.format(_order!.taxAmount),
+                  small: true,
+                ),
 
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    Text('TOTAL',
-                        style: tt.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w900,
-                            fontSize: 16)),
+                    Text(
+                      'TOTAL',
+                      style: tt.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w900,
+                        fontSize: 16,
+                      ),
+                    ),
                     const Spacer(),
                     Text(
-                      CurrencyFormatter.format(
-                          _order!.totalAmount),
+                      CurrencyFormatter.format(_order!.totalAmount),
                       style: tt.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w900,
-                          fontSize: 20,
-                          color: AppTheme.primaryCoffee),
+                        fontWeight: FontWeight.w900,
+                        fontSize: 20,
+                        color: AppTheme.primaryCoffee,
+                      ),
                     ),
                   ],
                 ),
@@ -254,25 +276,26 @@ class _ReceiptScreenState extends ConsumerState<ReceiptScreen> {
 
                 // Payment
                 _receiptRow('Payment', payLabel),
-                if (_order!.paymentMethod ==
-                    'cash') ...[
+                if (_order!.paymentMethod == 'cash') ...[
                   _receiptRow(
-                      'Cash',
-                      CurrencyFormatter.format(
-                          _order!.tenderedAmount ?? 0)),
+                    'Cash',
+                    CurrencyFormatter.format(_order!.tenderedAmount ?? 0),
+                  ),
                   _receiptRow(
-                      'Change',
-                      CurrencyFormatter.format(
-                          (_order!.tenderedAmount ?? 0) -
-                              _order!.totalAmount)),
+                    'Change',
+                    CurrencyFormatter.format(
+                      (_order!.tenderedAmount ?? 0) - _order!.totalAmount,
+                    ),
+                  ),
                 ],
 
                 _dottedDivider(),
 
                 const SizedBox(height: 4),
-                Text('Usaha OS v1.0 • Powered by Flutter',
-                    style: TextStyle(
-                        fontSize: 10, color: AppTheme.mutedText)),
+                Text(
+                  'Usaha OS v1.0 • Powered by Flutter',
+                  style: TextStyle(fontSize: 10, color: AppTheme.mutedText),
+                ),
                 const SizedBox(height: 16),
               ],
             ),
@@ -284,19 +307,18 @@ class _ReceiptScreenState extends ConsumerState<ReceiptScreen> {
     );
   }
 
-  Widget _receiptRow(String label, String value,
-      {bool small = false}) {
+  Widget _receiptRow(String label, String value, {bool small = false}) {
     final style = TextStyle(
-        fontSize: small ? 11 : 13,
-        color: small ? AppTheme.mutedText : AppTheme.darkEspresso);
+      fontSize: small ? 11 : 13,
+      color: small ? AppTheme.mutedText : AppTheme.darkEspresso,
+    );
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Row(
         children: [
           Text(label, style: style),
           const Spacer(),
-          Text(value,
-              style: style.copyWith(fontWeight: FontWeight.w600)),
+          Text(value, style: style.copyWith(fontWeight: FontWeight.w600)),
         ],
       ),
     );

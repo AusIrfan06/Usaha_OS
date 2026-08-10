@@ -44,10 +44,7 @@ class _PosTabletLayout extends ConsumerWidget {
           // Divider
           Container(width: 1, color: const Color(0xFFEDE3D8)),
           // Cart panel (flex 2)
-          const SizedBox(
-            width: 360,
-            child: _CartPanel(),
-          ),
+          const SizedBox(width: 360, child: _CartPanel()),
         ],
       ),
     );
@@ -127,10 +124,13 @@ class _PosAppBar extends ConsumerWidget implements PreferredSizeWidget {
             children: [
               const SyncDot(isOnline: true),
               const SizedBox(width: 6),
-              Text('Usaha OS',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppTheme.mutedText,
-                      fontWeight: FontWeight.w600)),
+              Text(
+                'Usaha OS',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: AppTheme.mutedText,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ],
           ),
         ),
@@ -170,8 +170,7 @@ class _MenuArea extends ConsumerWidget {
         Expanded(
           child: menuItemsAsync.when(
             loading: () => const Center(child: CircularProgressIndicator()),
-            error: (_, __) =>
-                const Center(child: Text('Error loading menu')),
+            error: (_, __) => const Center(child: Text('Error loading menu')),
             data: (items) {
               if (items.isEmpty) {
                 return const EmptyState(
@@ -227,24 +226,26 @@ class _CategoryTabs extends StatelessWidget {
               ),
             ),
           ),
-          ...categories.map((cat) => Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: FilterChip(
-                  label: Text(cat.name),
-                  selected: selectedId == cat.id,
-                  onSelected: (_) =>
-                      onSelect(selectedId == cat.id ? null : cat.id),
-                  selectedColor: AppTheme.primaryCoffee.withOpacity(0.15),
-                  checkmarkColor: AppTheme.primaryCoffee,
-                  labelStyle: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 13,
-                    color: selectedId == cat.id
-                        ? AppTheme.primaryCoffee
-                        : AppTheme.mutedText,
-                  ),
+          ...categories.map(
+            (cat) => Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: FilterChip(
+                label: Text(cat.name),
+                selected: selectedId == cat.id,
+                onSelected: (_) =>
+                    onSelect(selectedId == cat.id ? null : cat.id),
+                selectedColor: AppTheme.primaryCoffee.withOpacity(0.15),
+                checkmarkColor: AppTheme.primaryCoffee,
+                labelStyle: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13,
+                  color: selectedId == cat.id
+                      ? AppTheme.primaryCoffee
+                      : AppTheme.mutedText,
                 ),
-              )),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -332,7 +333,8 @@ class _MenuItemCard extends ConsumerWidget {
               decoration: BoxDecoration(
                 color: _stationColor,
                 borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(14)),
+                  top: Radius.circular(14),
+                ),
               ),
             ),
             Expanded(
@@ -345,20 +347,26 @@ class _MenuItemCard extends ConsumerWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(item.name,
-                              style: tt.titleSmall?.copyWith(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w700),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis),
+                          Text(
+                            item.name,
+                            style: tt.titleSmall?.copyWith(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w700,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                           if (item.description.isNotEmpty) ...[
                             const SizedBox(height: 2),
-                            Text(item.description,
-                                style: tt.bodySmall?.copyWith(
-                                    fontSize: 11,
-                                    color: AppTheme.mutedText),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis),
+                            Text(
+                              item.description,
+                              style: tt.bodySmall?.copyWith(
+                                fontSize: 11,
+                                color: AppTheme.mutedText,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ],
                         ],
                       ),
@@ -369,9 +377,10 @@ class _MenuItemCard extends ConsumerWidget {
                         Text(
                           CurrencyFormatter.format(item.basePrice),
                           style: tt.titleSmall?.copyWith(
-                              color: AppTheme.primaryCoffee,
-                              fontWeight: FontWeight.w800,
-                              fontSize: 13),
+                            color: AppTheme.primaryCoffee,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 13,
+                          ),
                         ),
                         if (qty > 0)
                           Row(
@@ -384,24 +393,30 @@ class _MenuItemCard extends ConsumerWidget {
                                   width: 24,
                                   height: 24,
                                   decoration: BoxDecoration(
-                                    color: AppTheme.primaryCoffee
-                                        .withOpacity(0.12),
-                                    borderRadius:
-                                        BorderRadius.circular(6),
+                                    color: AppTheme.primaryCoffee.withOpacity(
+                                      0.12,
+                                    ),
+                                    borderRadius: BorderRadius.circular(6),
                                   ),
-                                  child: HugeIcon(icon: HugeIcons.strokeRoundedRemove01,
-                                      size: 14,
-                                      color: AppTheme.primaryCoffee),
+                                  child: HugeIcon(
+                                    icon: HugeIcons.strokeRoundedRemove01,
+                                    size: 14,
+                                    color: AppTheme.primaryCoffee,
+                                  ),
                                 ),
                               ),
                               Padding(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 6),
-                                child: Text('$qty',
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.w800,
-                                        fontSize: 13,
-                                        color: AppTheme.primaryCoffee)),
+                                  horizontal: 6,
+                                ),
+                                child: Text(
+                                  '$qty',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 13,
+                                    color: AppTheme.primaryCoffee,
+                                  ),
+                                ),
                               ),
                               GestureDetector(
                                 onTap: onAdd,
@@ -410,11 +425,13 @@ class _MenuItemCard extends ConsumerWidget {
                                   height: 24,
                                   decoration: BoxDecoration(
                                     color: AppTheme.primaryCoffee,
-                                    borderRadius:
-                                        BorderRadius.circular(6),
+                                    borderRadius: BorderRadius.circular(6),
                                   ),
-                                  child: HugeIcon(icon: HugeIcons.strokeRoundedAdd01,
-                                      size: 14, color: Colors.white),
+                                  child: HugeIcon(
+                                    icon: HugeIcons.strokeRoundedAdd01,
+                                    size: 14,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
                             ],
@@ -427,8 +444,11 @@ class _MenuItemCard extends ConsumerWidget {
                               color: AppTheme.primaryCoffee,
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child: HugeIcon(icon: HugeIcons.strokeRoundedAdd01,
-                                size: 16, color: Colors.white),
+                            child: HugeIcon(
+                              icon: HugeIcons.strokeRoundedAdd01,
+                              size: 16,
+                              color: Colors.white,
+                            ),
                           ),
                       ],
                     ),
@@ -463,9 +483,7 @@ class _CartPanelState extends ConsumerState<_CartPanel> {
     final tt = Theme.of(context).textTheme;
 
     final subtotal = cartNotifier.subtotal;
-    final tax = FeatureFlags.sstEnabled
-        ? subtotal * FeatureFlags.sstRate
-        : 0.0;
+    final tax = FeatureFlags.sstEnabled ? subtotal * FeatureFlags.sstRate : 0.0;
     final total = subtotal + tax;
 
     return Column(
@@ -474,29 +492,34 @@ class _CartPanelState extends ConsumerState<_CartPanel> {
         Container(
           padding: const EdgeInsets.all(16),
           decoration: const BoxDecoration(
-            border: Border(
-                bottom: BorderSide(color: Color(0xFFEDE3D8))),
+            border: Border(bottom: BorderSide(color: Color(0xFFEDE3D8))),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
-                  Text('Order',
-                      style: tt.titleLarge
-                          ?.copyWith(fontWeight: FontWeight.w800)),
+                  Text(
+                    'Order',
+                    style: tt.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+                  ),
                   const Spacer(),
                   if (cart.isNotEmpty)
                     TextButton.icon(
-                      onPressed: () =>
-                          ref.read(cartProvider.notifier).clear(),
-                      icon: HugeIcon(icon: HugeIcons.strokeRoundedDelete01,
-                          size: 16, color: AppTheme.dangerRed),
-                      label: const Text('Clear',
-                          style: TextStyle(
-                              color: AppTheme.dangerRed,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 13)),
+                      onPressed: () => ref.read(cartProvider.notifier).clear(),
+                      icon: HugeIcon(
+                        icon: HugeIcons.strokeRoundedDelete01,
+                        size: 16,
+                        color: AppTheme.dangerRed,
+                      ),
+                      label: const Text(
+                        'Clear',
+                        style: TextStyle(
+                          color: AppTheme.dangerRed,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 13,
+                        ),
+                      ),
                     ),
                 ],
               ),
@@ -508,18 +531,16 @@ class _CartPanelState extends ConsumerState<_CartPanel> {
                     label: 'Takeaway',
                     icon: HugeIcons.strokeRoundedShoppingBag01,
                     selected: orderType == AppConstants.takeaway,
-                    onTap: () => ref
-                        .read(orderTypeProvider.notifier)
-                        .state = AppConstants.takeaway,
+                    onTap: () => ref.read(orderTypeProvider.notifier).state =
+                        AppConstants.takeaway,
                   ),
                   const SizedBox(width: 8),
                   _TypeChip(
                     label: 'Dine-in',
                     icon: HugeIcons.strokeRoundedRestaurant01,
                     selected: orderType == AppConstants.dineIn,
-                    onTap: () => ref
-                        .read(orderTypeProvider.notifier)
-                        .state = AppConstants.dineIn,
+                    onTap: () => ref.read(orderTypeProvider.notifier).state =
+                        AppConstants.dineIn,
                   ),
                 ],
               ),
@@ -538,10 +559,8 @@ class _CartPanelState extends ConsumerState<_CartPanel> {
               : ListView.separated(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   itemCount: cart.length,
-                  separatorBuilder: (_, __) =>
-                      const Divider(height: 1),
-                  itemBuilder: (context, i) =>
-                      _CartItemRow(item: cart[i]),
+                  separatorBuilder: (_, __) => const Divider(height: 1),
+                  itemBuilder: (context, i) => _CartItemRow(item: cart[i]),
                 ),
         ),
 
@@ -550,61 +569,73 @@ class _CartPanelState extends ConsumerState<_CartPanel> {
           padding: const EdgeInsets.all(16),
           decoration: const BoxDecoration(
             color: AppTheme.cardBg,
-            border: Border(
-                top: BorderSide(color: Color(0xFFEDE3D8))),
+            border: Border(top: BorderSide(color: Color(0xFFEDE3D8))),
           ),
           child: Column(
             children: [
               _TotalRow(
-                  label: 'Subtotal',
-                  amount: CurrencyFormatter.format(subtotal)),
+                label: 'Subtotal',
+                amount: CurrencyFormatter.format(subtotal),
+              ),
               if (FeatureFlags.sstEnabled) ...[
                 const SizedBox(height: 4),
                 _TotalRow(
-                    label: 'SST (6%)',
-                    amount: CurrencyFormatter.format(tax)),
+                  label: 'SST (6%)',
+                  amount: CurrencyFormatter.format(tax),
+                ),
               ] else ...[
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    const Text('SST',
-                        style: TextStyle(
-                            fontSize: 12, color: AppTheme.mutedText)),
+                    const Text(
+                      'SST',
+                      style: TextStyle(fontSize: 12, color: AppTheme.mutedText),
+                    ),
                     const SizedBox(width: 6),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 6, vertical: 2),
+                        horizontal: 6,
+                        vertical: 2,
+                      ),
                       decoration: BoxDecoration(
                         color: AppTheme.mutedText.withOpacity(0.12),
                         borderRadius: BorderRadius.circular(4),
                       ),
-                      child: const Text('OFF',
-                          style: TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w700,
-                              color: AppTheme.mutedText)),
+                      child: const Text(
+                        'OFF',
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
+                          color: AppTheme.mutedText,
+                        ),
+                      ),
                     ),
                     const Spacer(),
-                    const Text('RM 0.00',
-                        style: TextStyle(
-                            fontSize: 14, color: AppTheme.mutedText)),
+                    const Text(
+                      'RM 0.00',
+                      style: TextStyle(fontSize: 14, color: AppTheme.mutedText),
+                    ),
                   ],
                 ),
               ],
               const Divider(height: 20),
               Row(
                 children: [
-                  Text('Total',
-                      style: tt.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w800,
-                          fontSize: 18)),
+                  Text(
+                    'Total',
+                    style: tt.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 18,
+                    ),
+                  ),
                   const Spacer(),
                   Text(
                     CurrencyFormatter.format(total),
                     style: tt.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w800,
-                        fontSize: 18,
-                        color: AppTheme.primaryCoffee),
+                      fontWeight: FontWeight.w800,
+                      fontSize: 18,
+                      color: AppTheme.primaryCoffee,
+                    ),
                   ),
                 ],
               ),
@@ -616,12 +647,16 @@ class _CartPanelState extends ConsumerState<_CartPanel> {
                   onPressed: cart.isEmpty
                       ? null
                       : () => _charge(context, ref, total),
-                  icon: HugeIcon(icon: HugeIcons.strokeRoundedRegister,
-                      size: 20),
+                  icon: HugeIcon(
+                    icon: HugeIcons.strokeRoundedRegister,
+                    size: 20,
+                  ),
                   label: Text(
                     'Charge ${CurrencyFormatter.format(total)}',
                     style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.w700),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
               ),
@@ -633,7 +668,10 @@ class _CartPanelState extends ConsumerState<_CartPanel> {
   }
 
   Future<void> _charge(
-      BuildContext context, WidgetRef ref, double total) async {
+    BuildContext context,
+    WidgetRef ref,
+    double total,
+  ) async {
     final db = ref.read(databaseProvider);
     final cart = ref.read(cartProvider);
     final cartNotifier = ref.read(cartProvider.notifier);
@@ -643,9 +681,7 @@ class _CartPanelState extends ConsumerState<_CartPanel> {
     if (cart.isEmpty) return;
 
     final subtotal = cartNotifier.subtotal;
-    final tax = FeatureFlags.sstEnabled
-        ? subtotal * FeatureFlags.sstRate
-        : 0.0;
+    final tax = FeatureFlags.sstEnabled ? subtotal * FeatureFlags.sstRate : 0.0;
     final now = DateTime.now();
     final rnd = Random().nextInt(9000) + 1000;
     final orderNumber =
@@ -701,34 +737,33 @@ class _TypeChip extends StatelessWidget {
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 180),
-        padding:
-            const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
         decoration: BoxDecoration(
           color: selected
               ? AppTheme.primaryCoffee.withOpacity(0.15)
               : AppTheme.surfaceVariant,
           borderRadius: BorderRadius.circular(10),
           border: selected
-              ? Border.all(
-                  color: AppTheme.primaryCoffee, width: 1.5)
+              ? Border.all(color: AppTheme.primaryCoffee, width: 1.5)
               : null,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            HugeIcon(icon: icon,
-                size: 14,
-                color: selected
-                    ? AppTheme.primaryCoffee
-                    : AppTheme.mutedText),
+            HugeIcon(
+              icon: icon,
+              size: 14,
+              color: selected ? AppTheme.primaryCoffee : AppTheme.mutedText,
+            ),
             const SizedBox(width: 6),
-            Text(label,
-                style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: selected
-                        ? AppTheme.primaryCoffee
-                        : AppTheme.mutedText)),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: selected ? AppTheme.primaryCoffee : AppTheme.mutedText,
+              ),
+            ),
           ],
         ),
       ),
@@ -761,16 +796,19 @@ class _CartItemRow extends ConsumerWidget {
                     color: AppTheme.surfaceVariant,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: HugeIcon(icon: HugeIcons.strokeRoundedRemove01,
-                      size: 14, color: AppTheme.primaryCoffee),
+                  child: HugeIcon(
+                    icon: HugeIcons.strokeRoundedRemove01,
+                    size: 14,
+                    color: AppTheme.primaryCoffee,
+                  ),
                 ),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10),
-                child: Text('${item.quantity}',
-                    style: tt.titleSmall
-                        ?.copyWith(fontWeight: FontWeight.w800)),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Text(
+                  '${item.quantity}',
+                  style: tt.titleSmall?.copyWith(fontWeight: FontWeight.w800),
+                ),
               ),
               GestureDetector(
                 onTap: () => notifier.addItem(item.menuItem),
@@ -781,8 +819,11 @@ class _CartItemRow extends ConsumerWidget {
                     color: AppTheme.primaryCoffee,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: HugeIcon(icon: HugeIcons.strokeRoundedAdd01,
-                      size: 14, color: Colors.white),
+                  child: HugeIcon(
+                    icon: HugeIcons.strokeRoundedAdd01,
+                    size: 14,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ],
@@ -790,17 +831,21 @@ class _CartItemRow extends ConsumerWidget {
           const SizedBox(width: 12),
           // Name
           Expanded(
-            child: Text(item.menuItem.name,
-                style: tt.bodyMedium
-                    ?.copyWith(fontWeight: FontWeight.w600),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis),
+            child: Text(
+              item.menuItem.name,
+              style: tt.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
           // Price
-          Text(CurrencyFormatter.format(item.subtotal),
-              style: tt.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: AppTheme.darkEspresso)),
+          Text(
+            CurrencyFormatter.format(item.subtotal),
+            style: tt.titleSmall?.copyWith(
+              fontWeight: FontWeight.w700,
+              color: AppTheme.darkEspresso,
+            ),
+          ),
         ],
       ),
     );
@@ -817,15 +862,19 @@ class _TotalRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(label,
-            style: const TextStyle(
-                fontSize: 14, color: AppTheme.mutedText)),
+        Text(
+          label,
+          style: const TextStyle(fontSize: 14, color: AppTheme.mutedText),
+        ),
         const Spacer(),
-        Text(amount,
-            style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: AppTheme.darkEspresso)),
+        Text(
+          amount,
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: AppTheme.darkEspresso,
+          ),
+        ),
       ],
     );
   }

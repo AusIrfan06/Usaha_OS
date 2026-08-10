@@ -46,8 +46,11 @@ class _StaffScreenState extends ConsumerState<StaffScreen>
                 color: AppTheme.primaryCoffee.withOpacity(0.15),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: HugeIcon(icon: HugeIcons.strokeRoundedBadge,
-                  color: AppTheme.primaryCoffee, size: 22),
+              child: HugeIcon(
+                icon: HugeIcons.strokeRoundedBadge,
+                color: AppTheme.primaryCoffee,
+                size: 22,
+              ),
             ),
             const SizedBox(width: 12),
             const Column(
@@ -68,8 +71,14 @@ class _StaffScreenState extends ConsumerState<StaffScreen>
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
-            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedClock01, size: 18), text: 'Kehadiran Hari Ini (Live Shift)'),
-            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedUserGroup, size: 18), text: 'Senarai Staf (Directory)'),
+            Tab(
+              icon: HugeIcon(icon: HugeIcons.strokeRoundedClock01, size: 18),
+              text: 'Kehadiran Hari Ini (Live Shift)',
+            ),
+            Tab(
+              icon: HugeIcon(icon: HugeIcons.strokeRoundedUserGroup, size: 18),
+              text: 'Senarai Staf (Directory)',
+            ),
           ],
         ),
         actions: [
@@ -94,7 +103,10 @@ class _StaffScreenState extends ConsumerState<StaffScreen>
         controller: _tabController,
         children: [
           _TodayAttendanceView(db: db),
-          _StaffDirectoryView(db: db, onEdit: (s) => _showEditStaffDialog(context, db, s)),
+          _StaffDirectoryView(
+            db: db,
+            onEdit: (s) => _showEditStaffDialog(context, db, s),
+          ),
         ],
       ),
     );
@@ -107,13 +119,25 @@ class _StaffScreenState extends ConsumerState<StaffScreen>
       builder: (ctx) => StatefulBuilder(
         builder: (context, setModalState) {
           return AlertDialog(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
             title: const Column(
               children: [
-                HugeIcon(icon: HugeIcons.strokeRoundedUser, size: 36, color: AppTheme.primaryCoffee),
+                HugeIcon(
+                  icon: HugeIcons.strokeRoundedUser,
+                  size: 36,
+                  color: AppTheme.primaryCoffee,
+                ),
                 SizedBox(height: 8),
-                Text('Clock-In / Clock-Out PIN', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18)),
-                Text('Masukkan 4-digit PIN staf anda', style: TextStyle(fontSize: 12, color: AppTheme.mutedText)),
+                Text(
+                  'Clock-In / Clock-Out PIN',
+                  style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
+                ),
+                Text(
+                  'Masukkan 4-digit PIN staf anda',
+                  style: TextStyle(fontSize: 12, color: AppTheme.mutedText),
+                ),
               ],
             ),
             content: Column(
@@ -125,7 +149,11 @@ class _StaffScreenState extends ConsumerState<StaffScreen>
                   obscureText: true,
                   maxLength: 4,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w800, letterSpacing: 16),
+                  style: const TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 16,
+                  ),
                   decoration: const InputDecoration(
                     hintText: '••••',
                     counterText: '',
@@ -186,7 +214,9 @@ class _StaffScreenState extends ConsumerState<StaffScreen>
         Navigator.pop(ctx);
         ScaffoldMessenger.of(ctx).showSnackBar(
           SnackBar(
-            content: Text('👋 Selamat pulang, ${staff.name}! Anda telah Clock-Out.'),
+            content: Text(
+              '👋 Selamat pulang, ${staff.name}! Anda telah Clock-Out.',
+            ),
             backgroundColor: const Color(0xFF1565C0),
           ),
         );
@@ -198,7 +228,9 @@ class _StaffScreenState extends ConsumerState<StaffScreen>
         Navigator.pop(ctx);
         ScaffoldMessenger.of(ctx).showSnackBar(
           SnackBar(
-            content: Text('✅ Selamat bertugas, ${staff.name}! Clock-In berjaya.'),
+            content: Text(
+              '✅ Selamat bertugas, ${staff.name}! Clock-In berjaya.',
+            ),
             backgroundColor: AppTheme.successGreen,
           ),
         );
@@ -220,7 +252,10 @@ class _StaffScreenState extends ConsumerState<StaffScreen>
           return AlertDialog(
             title: const Row(
               children: [
-                HugeIcon(icon: HugeIcons.strokeRoundedAdd01, color: AppTheme.primaryCoffee),
+                HugeIcon(
+                  icon: HugeIcons.strokeRoundedAdd01,
+                  color: AppTheme.primaryCoffee,
+                ),
                 SizedBox(width: 8),
                 Text('Tambah Staf Baru'),
               ],
@@ -231,18 +266,38 @@ class _StaffScreenState extends ConsumerState<StaffScreen>
                 children: [
                   TextField(
                     controller: nameCtrl,
-                    decoration: const InputDecoration(labelText: 'Nama Penuh Staf *', hintText: 'Cth: Nur Aina'),
+                    decoration: const InputDecoration(
+                      labelText: 'Nama Penuh Staf *',
+                      hintText: 'Cth: Nur Aina',
+                    ),
                   ),
                   const SizedBox(height: 12),
                   DropdownButtonFormField<String>(
                     value: role,
-                    decoration: const InputDecoration(labelText: 'Jawatan / Peranan *'),
+                    decoration: const InputDecoration(
+                      labelText: 'Jawatan / Peranan *',
+                    ),
                     items: const [
-                      DropdownMenuItem(value: 'Shift Manager', child: Text('Shift Manager (Pengurus Syif)')),
-                      DropdownMenuItem(value: 'Barista', child: Text('Barista (Pembuat Minuman)')),
-                      DropdownMenuItem(value: 'Cashier', child: Text('Cashier (Juruwang)')),
-                      DropdownMenuItem(value: 'Kitchen Staff', child: Text('Kitchen Staff (Tukang Masak)')),
-                      DropdownMenuItem(value: 'Owner', child: Text('Owner (Pemilik)')),
+                      DropdownMenuItem(
+                        value: 'Shift Manager',
+                        child: Text('Shift Manager (Pengurus Syif)'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'Barista',
+                        child: Text('Barista (Pembuat Minuman)'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'Cashier',
+                        child: Text('Cashier (Juruwang)'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'Kitchen Staff',
+                        child: Text('Kitchen Staff (Tukang Masak)'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'Owner',
+                        child: Text('Owner (Pemilik)'),
+                      ),
                     ],
                     onChanged: (val) {
                       if (val != null) setDlgState(() => role = val);
@@ -253,35 +308,55 @@ class _StaffScreenState extends ConsumerState<StaffScreen>
                     controller: pinCtrl,
                     keyboardType: TextInputType.number,
                     maxLength: 4,
-                    decoration: const InputDecoration(labelText: '4-Digit PIN Log Masuk *', hintText: 'Cth: 5566'),
+                    decoration: const InputDecoration(
+                      labelText: '4-Digit PIN Log Masuk *',
+                      hintText: 'Cth: 5566',
+                    ),
                   ),
                   const SizedBox(height: 12),
                   TextField(
                     controller: phoneCtrl,
                     keyboardType: TextInputType.phone,
-                    decoration: const InputDecoration(labelText: 'Nombor Telefon', hintText: 'Cth: 018-9988776'),
+                    decoration: const InputDecoration(
+                      labelText: 'Nombor Telefon',
+                      hintText: 'Cth: 018-9988776',
+                    ),
                   ),
                   const SizedBox(height: 12),
                   TextField(
                     controller: rateCtrl,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(labelText: 'Kadar Gaji Sejam (RM/jam)', prefixText: 'RM '),
+                    decoration: const InputDecoration(
+                      labelText: 'Kadar Gaji Sejam (RM/jam)',
+                      prefixText: 'RM ',
+                    ),
                   ),
                 ],
               ),
             ),
             actions: [
-              TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Batal')),
+              TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: const Text('Batal'),
+              ),
               FilledButton(
                 onPressed: () async {
-                  if (nameCtrl.text.trim().isEmpty || pinCtrl.text.trim().length != 4) return;
+                  if (nameCtrl.text.trim().isEmpty ||
+                      pinCtrl.text.trim().length != 4)
+                    return;
                   await db.insertStaff(
                     StaffMembersCompanion.insert(
                       name: nameCtrl.text.trim(),
                       role: drift.Value(role),
                       pinCode: drift.Value(pinCtrl.text.trim()),
-                      phone: drift.Value(phoneCtrl.text.trim().isEmpty ? null : phoneCtrl.text.trim()),
-                      hourlyRate: drift.Value(double.tryParse(rateCtrl.text) ?? 10.0),
+                      phone: drift.Value(
+                        phoneCtrl.text.trim().isEmpty
+                            ? null
+                            : phoneCtrl.text.trim(),
+                      ),
+                      hourlyRate: drift.Value(
+                        double.tryParse(rateCtrl.text) ?? 10.0,
+                      ),
                       isActive: const drift.Value(true),
                     ),
                   );
@@ -296,11 +371,17 @@ class _StaffScreenState extends ConsumerState<StaffScreen>
     );
   }
 
-  void _showEditStaffDialog(BuildContext context, AppDatabase db, StaffMember staff) {
+  void _showEditStaffDialog(
+    BuildContext context,
+    AppDatabase db,
+    StaffMember staff,
+  ) {
     final nameCtrl = TextEditingController(text: staff.name);
     final pinCtrl = TextEditingController(text: staff.pinCode);
     final phoneCtrl = TextEditingController(text: staff.phone ?? '');
-    final rateCtrl = TextEditingController(text: staff.hourlyRate.toStringAsFixed(2));
+    final rateCtrl = TextEditingController(
+      text: staff.hourlyRate.toStringAsFixed(2),
+    );
     String role = staff.role;
     bool isActive = staff.isActive;
 
@@ -311,7 +392,10 @@ class _StaffScreenState extends ConsumerState<StaffScreen>
           return AlertDialog(
             title: Row(
               children: [
-                HugeIcon(icon: HugeIcons.strokeRoundedBadge, color: AppTheme.primaryCoffee),
+                HugeIcon(
+                  icon: HugeIcons.strokeRoundedBadge,
+                  color: AppTheme.primaryCoffee,
+                ),
                 const SizedBox(width: 8),
                 Text('Kemas Kini: ${staff.name}'),
               ],
@@ -322,17 +406,33 @@ class _StaffScreenState extends ConsumerState<StaffScreen>
                 children: [
                   TextField(
                     controller: nameCtrl,
-                    decoration: const InputDecoration(labelText: 'Nama Penuh Staf'),
+                    decoration: const InputDecoration(
+                      labelText: 'Nama Penuh Staf',
+                    ),
                   ),
                   const SizedBox(height: 12),
                   DropdownButtonFormField<String>(
                     value: role,
-                    decoration: const InputDecoration(labelText: 'Jawatan / Peranan'),
+                    decoration: const InputDecoration(
+                      labelText: 'Jawatan / Peranan',
+                    ),
                     items: const [
-                      DropdownMenuItem(value: 'Shift Manager', child: Text('Shift Manager')),
-                      DropdownMenuItem(value: 'Barista', child: Text('Barista')),
-                      DropdownMenuItem(value: 'Cashier', child: Text('Cashier')),
-                      DropdownMenuItem(value: 'Kitchen Staff', child: Text('Kitchen Staff')),
+                      DropdownMenuItem(
+                        value: 'Shift Manager',
+                        child: Text('Shift Manager'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'Barista',
+                        child: Text('Barista'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'Cashier',
+                        child: Text('Cashier'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'Kitchen Staff',
+                        child: Text('Kitchen Staff'),
+                      ),
                       DropdownMenuItem(value: 'Owner', child: Text('Owner')),
                     ],
                     onChanged: (val) {
@@ -350,13 +450,18 @@ class _StaffScreenState extends ConsumerState<StaffScreen>
                   TextField(
                     controller: phoneCtrl,
                     keyboardType: TextInputType.phone,
-                    decoration: const InputDecoration(labelText: 'Nombor Telefon'),
+                    decoration: const InputDecoration(
+                      labelText: 'Nombor Telefon',
+                    ),
                   ),
                   const SizedBox(height: 12),
                   TextField(
                     controller: rateCtrl,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(labelText: 'Gaji Sejam', prefixText: 'RM '),
+                    decoration: const InputDecoration(
+                      labelText: 'Gaji Sejam',
+                      prefixText: 'RM ',
+                    ),
                   ),
                   const SizedBox(height: 12),
                   SwitchListTile(
@@ -380,12 +485,20 @@ class _StaffScreenState extends ConsumerState<StaffScreen>
               FilledButton(
                 onPressed: () async {
                   await db.updateStaff(
-                    staff.toCompanion(true).copyWith(
+                    staff
+                        .toCompanion(true)
+                        .copyWith(
                           name: drift.Value(nameCtrl.text.trim()),
                           role: drift.Value(role),
                           pinCode: drift.Value(pinCtrl.text.trim()),
-                          phone: drift.Value(phoneCtrl.text.trim().isEmpty ? null : phoneCtrl.text.trim()),
-                          hourlyRate: drift.Value(double.tryParse(rateCtrl.text) ?? staff.hourlyRate),
+                          phone: drift.Value(
+                            phoneCtrl.text.trim().isEmpty
+                                ? null
+                                : phoneCtrl.text.trim(),
+                          ),
+                          hourlyRate: drift.Value(
+                            double.tryParse(rateCtrl.text) ?? staff.hourlyRate,
+                          ),
                           isActive: drift.Value(isActive),
                         ),
                   );
@@ -421,11 +534,18 @@ class _TodayAttendanceView extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                HugeIcon(icon: HugeIcons.strokeRoundedUserAdd01, size: 56, color: AppTheme.mutedText),
+                HugeIcon(
+                  icon: HugeIcons.strokeRoundedUserAdd01,
+                  size: 56,
+                  color: AppTheme.mutedText,
+                ),
                 SizedBox(height: 12),
                 Text(
                   'Belum ada staf yang clock-in hari ini.',
-                  style: TextStyle(fontWeight: FontWeight.w600, color: AppTheme.mutedText),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: AppTheme.mutedText,
+                  ),
                 ),
                 SizedBox(height: 6),
                 Text(
@@ -437,7 +557,9 @@ class _TodayAttendanceView extends StatelessWidget {
           );
         }
 
-        final activeOnDuty = attendances.where((a) => a.clockOutTime == null).length;
+        final activeOnDuty = attendances
+            .where((a) => a.clockOutTime == null)
+            .length;
 
         return SingleChildScrollView(
           padding: const EdgeInsets.all(20),
@@ -450,22 +572,37 @@ class _TodayAttendanceView extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: AppTheme.primaryCoffee.withOpacity(0.08),
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: AppTheme.primaryCoffee.withOpacity(0.2)),
+                  border: Border.all(
+                    color: AppTheme.primaryCoffee.withOpacity(0.2),
+                  ),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
                       children: [
-                        HugeIcon(icon: HugeIcons.strokeRoundedWork, color: AppTheme.primaryCoffee),
+                        HugeIcon(
+                          icon: HugeIcons.strokeRoundedWork,
+                          color: AppTheme.primaryCoffee,
+                        ),
                         const SizedBox(width: 10),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text('Staf Sedang Bertugas (On-Duty)', style: TextStyle(fontSize: 12, color: AppTheme.mutedText)),
+                            const Text(
+                              'Staf Sedang Bertugas (On-Duty)',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: AppTheme.mutedText,
+                              ),
+                            ),
                             Text(
                               '$activeOnDuty Orang Aktif',
-                              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: AppTheme.darkEspresso),
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w800,
+                                color: AppTheme.darkEspresso,
+                              ),
                             ),
                           ],
                         ),
@@ -473,7 +610,11 @@ class _TodayAttendanceView extends StatelessWidget {
                     ),
                     Text(
                       'Tarikh: ${DateFormat('dd MMM yyyy').format(DateTime.now())}',
-                      style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12, color: AppTheme.darkEspresso),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 12,
+                        color: AppTheme.darkEspresso,
+                      ),
                     ),
                   ],
                 ),
@@ -490,7 +631,9 @@ class _TodayAttendanceView extends StatelessWidget {
                 itemBuilder: (context, i) {
                   final att = attendances[i];
                   final isOnDuty = att.clockOutTime == null;
-                  final clockInStr = DateFormat('hh:mm a').format(att.clockInTime);
+                  final clockInStr = DateFormat(
+                    'hh:mm a',
+                  ).format(att.clockInTime);
                   final clockOutStr = att.clockOutTime != null
                       ? DateFormat('hh:mm a').format(att.clockOutTime!)
                       : 'Sedang Bertugas';
@@ -501,25 +644,42 @@ class _TodayAttendanceView extends StatelessWidget {
 
                   return Card(
                     child: ListTile(
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
                       leading: CircleAvatar(
-                        backgroundColor: isOnDuty ? AppTheme.successGreen : AppTheme.surfaceVariant,
-                        child: HugeIcon(icon: 
-                          isOnDuty ? HugeIcons.strokeRoundedUser : HugeIcons.strokeRoundedUser,
-                          color: isOnDuty ? Colors.white : AppTheme.darkEspresso,
+                        backgroundColor: isOnDuty
+                            ? AppTheme.successGreen
+                            : AppTheme.surfaceVariant,
+                        child: HugeIcon(
+                          icon: isOnDuty
+                              ? HugeIcons.strokeRoundedUser
+                              : HugeIcons.strokeRoundedUser,
+                          color: isOnDuty
+                              ? Colors.white
+                              : AppTheme.darkEspresso,
                         ),
                       ),
                       title: Row(
                         children: [
                           Text(
                             att.staffName,
-                            style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 15,
+                            ),
                           ),
                           const SizedBox(width: 8),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 2,
+                            ),
                             decoration: BoxDecoration(
-                              color: isOnDuty ? const Color(0xFFE8F5E9) : const Color(0xFFEDE3D8),
+                              color: isOnDuty
+                                  ? const Color(0xFFE8F5E9)
+                                  : const Color(0xFFEDE3D8),
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: Text(
@@ -527,7 +687,9 @@ class _TodayAttendanceView extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w800,
-                                color: isOnDuty ? AppTheme.successGreen : AppTheme.mutedText,
+                                color: isOnDuty
+                                    ? AppTheme.successGreen
+                                    : AppTheme.mutedText,
                               ),
                             ),
                           ),
@@ -545,14 +707,20 @@ class _TodayAttendanceView extends StatelessWidget {
                               style: OutlinedButton.styleFrom(
                                 foregroundColor: Colors.red,
                                 side: const BorderSide(color: Colors.red),
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 4,
+                                ),
                               ),
                               onPressed: () async {
                                 await db.clockOutStaff(att.id);
                               },
                               child: const Text('Clock Out'),
                             )
-                          : HugeIcon(icon: HugeIcons.strokeRoundedCheckmarkBadge01, color: AppTheme.successGreen),
+                          : HugeIcon(
+                              icon: HugeIcons.strokeRoundedCheckmarkBadge01,
+                              color: AppTheme.successGreen,
+                            ),
                     ),
                   );
                 },
@@ -595,15 +763,27 @@ class _StaffDirectoryView extends StatelessWidget {
               child: ListTile(
                 leading: CircleAvatar(
                   backgroundColor: AppTheme.primaryCoffee.withOpacity(0.15),
-                  child: HugeIcon(icon: HugeIcons.strokeRoundedUser, color: AppTheme.primaryCoffee),
+                  child: HugeIcon(
+                    icon: HugeIcons.strokeRoundedUser,
+                    color: AppTheme.primaryCoffee,
+                  ),
                 ),
-                title: Text(s.name, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15)),
+                title: Text(
+                  s.name,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 15,
+                  ),
+                ),
                 subtitle: Text(
                   'Peranan: ${s.role}  •  Gaji: RM ${s.hourlyRate.toStringAsFixed(2)}/jam  •  PIN: ••••',
                   style: const TextStyle(fontSize: 12),
                 ),
                 trailing: IconButton(
-                  icon: HugeIcon(icon: HugeIcons.strokeRoundedEdit01, color: AppTheme.mutedText),
+                  icon: HugeIcon(
+                    icon: HugeIcons.strokeRoundedEdit01,
+                    color: AppTheme.mutedText,
+                  ),
                   onPressed: () => onEdit(s),
                 ),
               ),

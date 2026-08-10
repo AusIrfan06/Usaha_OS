@@ -47,8 +47,7 @@ final menuItemsProvider = StreamProvider<List<MenuItem>>((ref) {
 
 // ── Cart & Customer Attachment ────────────────────────────────────────────────
 
-final cartProvider =
-    StateNotifierProvider<CartNotifier, List<CartItem>>((ref) {
+final cartProvider = StateNotifierProvider<CartNotifier, List<CartItem>>((ref) {
   return CartNotifier();
 });
 
@@ -115,8 +114,8 @@ final allPurchaseOrdersProvider = StreamProvider<List<PurchaseOrder>>((ref) {
 
 final purchaseOrderItemsProvider =
     StreamProvider.family<List<PurchaseOrderItem>, int>((ref, poId) {
-  return ref.watch(databaseProvider).watchPurchaseOrderItems(poId);
-});
+      return ref.watch(databaseProvider).watchPurchaseOrderItems(poId);
+    });
 
 // ── Phase 3: Stock Audits (Stock Take) ────────────────────────────────────────
 
@@ -163,11 +162,7 @@ class SstSettings {
     this.sstNumber = 'W10-2308-32000000',
   });
 
-  SstSettings copyWith({
-    bool? isEnabled,
-    double? rate,
-    String? sstNumber,
-  }) {
+  SstSettings copyWith({bool? isEnabled, double? rate, String? sstNumber}) {
     return SstSettings(
       isEnabled: isEnabled ?? this.isEnabled,
       rate: rate ?? this.rate,
@@ -181,13 +176,14 @@ class SstSettingsNotifier extends StateNotifier<SstSettings> {
 
   void toggleSst(bool enabled) => state = state.copyWith(isEnabled: enabled);
   void updateRate(double rate) => state = state.copyWith(rate: rate);
-  void updateSstNumber(String number) => state = state.copyWith(sstNumber: number);
+  void updateSstNumber(String number) =>
+      state = state.copyWith(sstNumber: number);
 }
 
 final sstSettingsProvider =
     StateNotifierProvider<SstSettingsNotifier, SstSettings>((ref) {
-  return SstSettingsNotifier();
-});
+      return SstSettingsNotifier();
+    });
 
 // ── Reports ───────────────────────────────────────────────────────────────────
 
@@ -197,14 +193,12 @@ final todaySummaryProvider = FutureProvider<Map<String, dynamic>>((ref) {
   return ref.watch(databaseProvider).getTodaySummary();
 });
 
-final hourlySalesProvider =
-    FutureProvider<Map<int, double>>((ref) {
+final hourlySalesProvider = FutureProvider<Map<int, double>>((ref) {
   ref.watch(todayOrdersProvider);
   return ref.watch(databaseProvider).getTodayHourlySales();
 });
 
-final topItemsProvider =
-    FutureProvider<List<Map<String, dynamic>>>((ref) {
+final topItemsProvider = FutureProvider<List<Map<String, dynamic>>>((ref) {
   ref.watch(todayOrdersProvider);
   return ref.watch(databaseProvider).getTopItemsToday();
 });
@@ -229,18 +223,24 @@ final allDeliveryOrdersProvider = StreamProvider<List<DeliveryOrder>>((ref) {
 
 // ── Phase 4: Advanced Business Analytics ─────────────────────────────────────
 
-final itemCogsAnalysisProvider = FutureProvider<List<Map<String, dynamic>>>((ref) {
+final itemCogsAnalysisProvider = FutureProvider<List<Map<String, dynamic>>>((
+  ref,
+) {
   ref.watch(menuItemsProvider);
   ref.watch(ingredientsProvider);
   return ref.watch(databaseProvider).getItemCogsAnalysis();
 });
 
-final hourlyRushHeatmapProvider = FutureProvider<List<Map<String, dynamic>>>((ref) {
+final hourlyRushHeatmapProvider = FutureProvider<List<Map<String, dynamic>>>((
+  ref,
+) {
   ref.watch(todayOrdersProvider);
   return ref.watch(databaseProvider).getHourlyRushHeatmap();
 });
 
-final staffLeaderboardProvider = FutureProvider<List<Map<String, dynamic>>>((ref) {
+final staffLeaderboardProvider = FutureProvider<List<Map<String, dynamic>>>((
+  ref,
+) {
   ref.watch(todayOrdersProvider);
   ref.watch(allStaffProvider);
   return ref.watch(databaseProvider).getStaffLeaderboard();
@@ -251,4 +251,3 @@ final pnlSummaryProvider = FutureProvider<Map<String, dynamic>>((ref) {
   ref.watch(todayExpensesProvider);
   return ref.watch(databaseProvider).getProfitAndLossSummary();
 });
-

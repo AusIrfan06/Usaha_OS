@@ -42,8 +42,7 @@ class _KioskCheckoutScreenState extends ConsumerState<KioskCheckoutScreen> {
           children: [
             // ── Top Bar ──
             Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
               decoration: const BoxDecoration(
                 color: Colors.white,
                 boxShadow: [
@@ -96,7 +95,9 @@ class _KioskCheckoutScreenState extends ConsumerState<KioskCheckoutScreen> {
                   constraints: const BoxConstraints(maxWidth: 600),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 32, vertical: 24),
+                      horizontal: 32,
+                      vertical: 24,
+                    ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -123,8 +124,7 @@ class _KioskCheckoutScreenState extends ConsumerState<KioskCheckoutScreen> {
                         _buildPaymentOption(
                           icon: HugeIcons.strokeRoundedQrCode,
                           label: 'QR Pay',
-                          subtitle:
-                              'DuitNow, Touch n Go, Boost, GrabPay',
+                          subtitle: 'DuitNow, Touch n Go, Boost, GrabPay',
                           color: AppTheme.duitNowBlue,
                           method: 'qr',
                         ),
@@ -146,15 +146,12 @@ class _KioskCheckoutScreenState extends ConsumerState<KioskCheckoutScreen> {
                             width: double.infinity,
                             height: 58,
                             child: FilledButton(
-                              onPressed: _isProcessing
-                                  ? null
-                                  : _processPayment,
+                              onPressed: _isProcessing ? null : _processPayment,
                               style: FilledButton.styleFrom(
                                 backgroundColor: AppTheme.primaryCoffee,
                                 foregroundColor: Colors.white,
                                 shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.circular(16),
+                                  borderRadius: BorderRadius.circular(16),
                                 ),
                               ),
                               child: _isProcessing
@@ -316,10 +313,7 @@ class _KioskCheckoutScreenState extends ConsumerState<KioskCheckoutScreen> {
               Container(
                 width: 28,
                 height: 28,
-                decoration: BoxDecoration(
-                  color: color,
-                  shape: BoxShape.circle,
-                ),
+                decoration: BoxDecoration(color: color, shape: BoxShape.circle),
                 child: const Center(
                   child: Icon(Icons.check, color: Colors.white, size: 18),
                 ),
@@ -370,22 +364,19 @@ class _KioskCheckoutScreenState extends ConsumerState<KioskCheckoutScreen> {
                 return Transform.scale(
                   scale: value,
                   child: Container(
-                    padding: EdgeInsets.all(
-                        screenHeight > 800 ? 48.0 : 36.0),
+                    padding: EdgeInsets.all(screenHeight > 800 ? 48.0 : 36.0),
                     decoration: BoxDecoration(
                       color: AppTheme.successGreen.withOpacity(0.1),
                       shape: BoxShape.circle,
                     ),
                     child: Container(
-                      padding: EdgeInsets.all(
-                          screenHeight > 800 ? 36.0 : 28.0),
+                      padding: EdgeInsets.all(screenHeight > 800 ? 36.0 : 28.0),
                       decoration: BoxDecoration(
                         color: AppTheme.successGreen.withOpacity(0.15),
                         shape: BoxShape.circle,
                       ),
                       child: HugeIcon(
-                        icon:
-                            HugeIcons.strokeRoundedCheckmarkBadge01,
+                        icon: HugeIcons.strokeRoundedCheckmarkBadge01,
                         color: AppTheme.successGreen,
                         size: screenHeight > 800 ? 80.0 : 60.0,
                       ),
@@ -421,8 +412,7 @@ class _KioskCheckoutScreenState extends ConsumerState<KioskCheckoutScreen> {
 
             // Order number badge
             Container(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 32, vertical: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(20),

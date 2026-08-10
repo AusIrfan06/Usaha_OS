@@ -94,11 +94,14 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text('Payment'),
-                Text(_order!.orderNumber,
-                    style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        color: AppTheme.mutedText)),
+                Text(
+                  _order!.orderNumber,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                    color: AppTheme.mutedText,
+                  ),
+                ),
               ],
             ),
             leading: IconButton(
@@ -106,9 +109,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
               onPressed: () => context.pop(),
             ),
           ),
-          body: isTablet
-              ? _tabletLayout()
-              : _phoneLayout(),
+          body: isTablet ? _tabletLayout() : _phoneLayout(),
         );
       },
     );
@@ -159,68 +160,81 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
           ),
           const SizedBox(height: 16),
           // Items list
-          ..._items.map((item) => Padding(
-                padding: const EdgeInsets.only(bottom: 6),
-                child: Row(
-                  children: [
-                    Text('${item.quantity}×',
-                        style: const TextStyle(
-                            color: AppTheme.primaryCoffee,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 14)),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(item.itemName,
-                          style: tt.bodyMedium),
+          ..._items.map(
+            (item) => Padding(
+              padding: const EdgeInsets.only(bottom: 6),
+              child: Row(
+                children: [
+                  Text(
+                    '${item.quantity}×',
+                    style: const TextStyle(
+                      color: AppTheme.primaryCoffee,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 14,
                     ),
-                    Text(CurrencyFormatter.format(item.subtotal),
-                        style: tt.bodyMedium
-                            ?.copyWith(fontWeight: FontWeight.w600)),
-                  ],
-                ),
-              )),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(child: Text(item.itemName, style: tt.bodyMedium)),
+                  Text(
+                    CurrencyFormatter.format(item.subtotal),
+                    style: tt.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+                  ),
+                ],
+              ),
+            ),
+          ),
           const Divider(height: 20),
           Row(
             children: [
-              Text('Subtotal',
-                  style:
-                      tt.bodyMedium?.copyWith(color: AppTheme.mutedText)),
+              Text(
+                'Subtotal',
+                style: tt.bodyMedium?.copyWith(color: AppTheme.mutedText),
+              ),
               const Spacer(),
-              Text(CurrencyFormatter.format(_order!.subtotal),
-                  style: tt.bodyMedium),
+              Text(
+                CurrencyFormatter.format(_order!.subtotal),
+                style: tt.bodyMedium,
+              ),
             ],
           ),
           const SizedBox(height: 4),
           Row(
             children: [
-              Text('SST',
-                  style:
-                      tt.bodyMedium?.copyWith(color: AppTheme.mutedText)),
+              Text(
+                'SST',
+                style: tt.bodyMedium?.copyWith(color: AppTheme.mutedText),
+              ),
               const SizedBox(width: 6),
-              const Text('OFF',
-                  style: TextStyle(
-                      fontSize: 10,
-                      color: AppTheme.mutedText,
-                      fontWeight: FontWeight.w700)),
+              const Text(
+                'OFF',
+                style: TextStyle(
+                  fontSize: 10,
+                  color: AppTheme.mutedText,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
               const Spacer(),
-              Text('RM 0.00',
-                  style:
-                      tt.bodyMedium?.copyWith(color: AppTheme.mutedText)),
+              Text(
+                'RM 0.00',
+                style: tt.bodyMedium?.copyWith(color: AppTheme.mutedText),
+              ),
             ],
           ),
           const Divider(height: 20),
           Row(
             children: [
-              Text('Total',
-                  style: tt.titleLarge
-                      ?.copyWith(fontWeight: FontWeight.w800)),
+              Text(
+                'Total',
+                style: tt.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+              ),
               const Spacer(),
               Text(
                 CurrencyFormatter.format(_order!.totalAmount),
                 style: tt.titleLarge?.copyWith(
-                    color: AppTheme.primaryCoffee,
-                    fontWeight: FontWeight.w800,
-                    fontSize: 28),
+                  color: AppTheme.primaryCoffee,
+                  fontWeight: FontWeight.w800,
+                  fontSize: 28,
+                ),
               ),
             ],
           ),
@@ -255,11 +269,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
   Widget _tabContent() {
     return TabBarView(
       controller: _tabController,
-      children: [
-        _cashTab(),
-        _duitNowTab(),
-        _cardTab(),
-      ],
+      children: [_cashTab(), _duitNowTab(), _cardTab()],
     );
   }
 
@@ -283,14 +293,18 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
             ),
             child: Column(
               children: [
-                const Text('Amount Due',
-                    style: TextStyle(
-                        fontSize: 14, color: AppTheme.mutedText)),
+                const Text(
+                  'Amount Due',
+                  style: TextStyle(fontSize: 14, color: AppTheme.mutedText),
+                ),
                 const SizedBox(height: 4),
-                Text(CurrencyFormatter.format(due),
-                    style: tt.headlineLarge?.copyWith(
-                        color: AppTheme.primaryCoffee,
-                        fontWeight: FontWeight.w800)),
+                Text(
+                  CurrencyFormatter.format(due),
+                  style: tt.headlineLarge?.copyWith(
+                    color: AppTheme.primaryCoffee,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
               ],
             ),
           ),
@@ -307,33 +321,37 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Cash Tendered',
-                    style: TextStyle(
-                        fontSize: 12, color: AppTheme.mutedText)),
+                const Text(
+                  'Cash Tendered',
+                  style: TextStyle(fontSize: 12, color: AppTheme.mutedText),
+                ),
                 const SizedBox(height: 4),
                 Text(
-                  _tendered.isEmpty
-                      ? '0.00'
-                      : 'RM $_tendered',
-                  style: tt.headlineMedium
-                      ?.copyWith(fontWeight: FontWeight.w700),
+                  _tendered.isEmpty ? '0.00' : 'RM $_tendered',
+                  style: tt.headlineMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
                 if (_tenderedAmount >= due) ...[
                   const Divider(height: 20),
                   Row(
                     children: [
-                      const Text('Change',
-                          style: TextStyle(
-                              fontSize: 14,
-                              color: AppTheme.successGreen,
-                              fontWeight: FontWeight.w600)),
+                      const Text(
+                        'Change',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: AppTheme.successGreen,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                       const Spacer(),
                       Text(
                         CurrencyFormatter.format(_change),
                         style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w800,
-                            color: AppTheme.successGreen),
+                          fontSize: 20,
+                          fontWeight: FontWeight.w800,
+                          color: AppTheme.successGreen,
+                        ),
                       ),
                     ],
                   ),
@@ -349,15 +367,16 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
             children: [due, 10, 20, 50, 100, 200]
                 .where((v) => v >= due || v == due)
                 .take(4)
-                .map((amt) => OutlinedButton(
-                      onPressed: () =>
-                          setState(() => _tendered = amt.toStringAsFixed(2)),
-                      child: Text(
-                          amt == due
-                              ? 'Exact'
-                              : 'RM ${amt.toInt()}',
-                          style: const TextStyle(fontSize: 13)),
-                    ))
+                .map(
+                  (amt) => OutlinedButton(
+                    onPressed: () =>
+                        setState(() => _tendered = amt.toStringAsFixed(2)),
+                    child: Text(
+                      amt == due ? 'Exact' : 'RM ${amt.toInt()}',
+                      style: const TextStyle(fontSize: 13),
+                    ),
+                  ),
+                )
                 .toList(),
           ),
           const SizedBox(height: 16),
@@ -370,23 +389,24 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
             height: 52,
             child: FilledButton.icon(
               onPressed: (_tenderedAmount >= due && !_processing)
-                  ? () => _confirmPayment(
-                      AppConstants.cash, _tenderedAmount)
+                  ? () => _confirmPayment(AppConstants.cash, _tenderedAmount)
                   : null,
               icon: _processing
                   ? const SizedBox(
                       width: 18,
                       height: 18,
                       child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: Colors.white))
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    )
                   : HugeIcon(icon: HugeIcons.strokeRoundedCheckmarkBadge01),
               label: Text(
-                _processing
-                    ? 'Processing…'
-                    : 'Confirm Cash Payment',
+                _processing ? 'Processing…' : 'Confirm Cash Payment',
                 style: const TextStyle(
-                    fontSize: 16, fontWeight: FontWeight.w700),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
           ),
@@ -396,12 +416,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
   }
 
   Widget _numpad() {
-    final keys = [
-      '1', '2', '3',
-      '4', '5', '6',
-      '7', '8', '9',
-      '.', '0', '⌫',
-    ];
+    final keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '0', '⌫'];
 
     return GridView.count(
       crossAxisCount: 3,
@@ -448,13 +463,19 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
         ),
         child: Center(
           child: isBackspace
-              ? HugeIcon(icon: HugeIcons.strokeRoundedDelete02,
-                  color: AppTheme.dangerRed, size: 20)
-              : Text(key,
+              ? HugeIcon(
+                  icon: HugeIcons.strokeRoundedDelete02,
+                  color: AppTheme.dangerRed,
+                  size: 20,
+                )
+              : Text(
+                  key,
                   style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w600,
-                      color: AppTheme.darkEspresso)),
+                    fontSize: 22,
+                    fontWeight: FontWeight.w600,
+                    color: AppTheme.darkEspresso,
+                  ),
+                ),
         ),
       ),
     );
@@ -476,8 +497,9 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
               color: Colors.white,
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                  color: AppTheme.duitNowBlue.withOpacity(0.3),
-                  width: 2),
+                color: AppTheme.duitNowBlue.withOpacity(0.3),
+                width: 2,
+              ),
               boxShadow: [
                 BoxShadow(
                   color: AppTheme.duitNowBlue.withOpacity(0.08),
@@ -495,20 +517,25 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
                     color: AppTheme.duitNowBlue,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: HugeIcon(icon: HugeIcons.strokeRoundedCheckmarkBadge01,
-                      color: Colors.white, size: 28),
+                  child: HugeIcon(
+                    icon: HugeIcons.strokeRoundedCheckmarkBadge01,
+                    color: Colors.white,
+                    size: 28,
+                  ),
                 ),
                 const SizedBox(height: 12),
-                Text('DuitNow QR',
-                    style: tt.titleMedium?.copyWith(
-                        color: AppTheme.duitNowBlue,
-                        fontWeight: FontWeight.w800)),
+                Text(
+                  'DuitNow QR',
+                  style: tt.titleMedium?.copyWith(
+                    color: AppTheme.duitNowBlue,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
                 const SizedBox(height: 4),
                 const Text(
                   'Configure your DuitNow merchant QR in Settings to display here',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 12, color: AppTheme.mutedText),
+                  style: TextStyle(fontSize: 12, color: AppTheme.mutedText),
                 ),
                 const SizedBox(height: 16),
                 // QR code placeholder grid
@@ -519,15 +546,19 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
                     color: const Color(0xFFF5F5F5),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: HugeIcon(icon: HugeIcons.strokeRoundedQrCode01,
-                      size: 120, color: Color(0xFF003399)),
+                  child: HugeIcon(
+                    icon: HugeIcons.strokeRoundedQrCode01,
+                    size: 120,
+                    color: Color(0xFF003399),
+                  ),
                 ),
                 const SizedBox(height: 16),
                 Text(
                   CurrencyFormatter.format(_order!.totalAmount),
                   style: tt.headlineMedium?.copyWith(
-                      color: AppTheme.duitNowBlue,
-                      fontWeight: FontWeight.w800),
+                    color: AppTheme.duitNowBlue,
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
               ],
             ),
@@ -543,18 +574,25 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
               onPressed: _processing
                   ? null
                   : () => _confirmPayment(
-                      AppConstants.duitNowQr, _order!.totalAmount),
+                      AppConstants.duitNowQr,
+                      _order!.totalAmount,
+                    ),
               icon: _processing
                   ? const SizedBox(
                       width: 18,
                       height: 18,
                       child: CircularProgressIndicator(
-                          strokeWidth: 2, color: Colors.white))
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    )
                   : HugeIcon(icon: HugeIcons.strokeRoundedCheckmarkBadge01),
               label: Text(
                 _processing ? 'Processing…' : 'Mark as Paid',
                 style: const TextStyle(
-                    fontSize: 16, fontWeight: FontWeight.w700),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
           ),
@@ -581,27 +619,33 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
             ),
             child: Column(
               children: [
-                HugeIcon(icon: HugeIcons.strokeRoundedCreditCard,
-                    size: 48, color: AppTheme.mutedText),
+                HugeIcon(
+                  icon: HugeIcons.strokeRoundedCreditCard,
+                  size: 48,
+                  color: AppTheme.mutedText,
+                ),
                 const SizedBox(height: 12),
-                const Text('Card / Terminal',
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: AppTheme.darkEspresso)),
+                const Text(
+                  'Card / Terminal',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: AppTheme.darkEspresso,
+                  ),
+                ),
                 const SizedBox(height: 6),
                 const Text(
                   'Process payment on your card terminal, then tap Mark as Paid.',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 13, color: AppTheme.mutedText),
+                  style: TextStyle(fontSize: 13, color: AppTheme.mutedText),
                 ),
                 const SizedBox(height: 20),
                 Text(
                   CurrencyFormatter.format(_order!.totalAmount),
                   style: tt.headlineLarge?.copyWith(
-                      fontWeight: FontWeight.w800,
-                      color: AppTheme.darkEspresso),
+                    fontWeight: FontWeight.w800,
+                    color: AppTheme.darkEspresso,
+                  ),
                 ),
               ],
             ),
@@ -613,19 +657,24 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
             child: FilledButton.icon(
               onPressed: _processing
                   ? null
-                  : () => _confirmPayment(
-                      AppConstants.card, _order!.totalAmount),
+                  : () =>
+                        _confirmPayment(AppConstants.card, _order!.totalAmount),
               icon: _processing
                   ? const SizedBox(
                       width: 18,
                       height: 18,
                       child: CircularProgressIndicator(
-                          strokeWidth: 2, color: Colors.white))
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    )
                   : HugeIcon(icon: HugeIcons.strokeRoundedCheckmarkBadge01),
               label: Text(
                 _processing ? 'Processing…' : 'Mark as Paid',
                 style: const TextStyle(
-                    fontSize: 16, fontWeight: FontWeight.w700),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
           ),

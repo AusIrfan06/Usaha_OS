@@ -40,7 +40,9 @@ class _KdsScreenState extends ConsumerState<KdsScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? const Color(0xFF140E07) : const Color(0xFFF7F2EB),
+      backgroundColor: isDark
+          ? const Color(0xFF140E07)
+          : const Color(0xFFF7F2EB),
       appBar: AppBar(
         title: Row(
           children: [
@@ -50,8 +52,11 @@ class _KdsScreenState extends ConsumerState<KdsScreen> {
                 color: AppTheme.primaryCoffee.withOpacity(0.15),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: HugeIcon(icon: HugeIcons.strokeRoundedCoffee01,
-                  color: AppTheme.primaryCoffee, size: 22),
+              child: HugeIcon(
+                icon: HugeIcons.strokeRoundedCoffee01,
+                color: AppTheme.primaryCoffee,
+                size: 22,
+              ),
             ),
             const SizedBox(width: 12),
             const Column(
@@ -75,13 +80,29 @@ class _KdsScreenState extends ConsumerState<KdsScreen> {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                _buildStationFilter('all', 'Semua (All)', HugeIcons.strokeRoundedDashboardSquare01),
+                _buildStationFilter(
+                  'all',
+                  'Semua (All)',
+                  HugeIcons.strokeRoundedDashboardSquare01,
+                ),
                 const SizedBox(width: 6),
-                _buildStationFilter('bar', 'Barista / Minuman', HugeIcons.strokeRoundedRestaurant01),
+                _buildStationFilter(
+                  'bar',
+                  'Barista / Minuman',
+                  HugeIcons.strokeRoundedRestaurant01,
+                ),
                 const SizedBox(width: 6),
-                _buildStationFilter('kitchen', 'Dapur / Makanan', HugeIcons.strokeRoundedSquare),
+                _buildStationFilter(
+                  'kitchen',
+                  'Dapur / Makanan',
+                  HugeIcons.strokeRoundedSquare,
+                ),
                 const SizedBox(width: 6),
-                _buildStationFilter('pastry', 'Pastri', HugeIcons.strokeRoundedTime01),
+                _buildStationFilter(
+                  'pastry',
+                  'Pastri',
+                  HugeIcons.strokeRoundedTime01,
+                ),
                 const SizedBox(width: 12),
               ],
             ),
@@ -98,7 +119,9 @@ class _KdsScreenState extends ConsumerState<KdsScreen> {
         stream: db.watchActiveKdsOrders(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Center(child: Text('Ralat memuat pesanan: ${snapshot.error}'));
+            return Center(
+              child: Text('Ralat memuat pesanan: ${snapshot.error}'),
+            );
           }
           final allOrders = snapshot.data ?? [];
 
@@ -113,8 +136,11 @@ class _KdsScreenState extends ConsumerState<KdsScreen> {
                       color: AppTheme.primaryCoffee.withOpacity(0.1),
                       shape: BoxShape.circle,
                     ),
-                    child: HugeIcon(icon: HugeIcons.strokeRoundedCheckmarkBadge01,
-                        size: 64, color: AppTheme.primaryCoffee),
+                    child: HugeIcon(
+                      icon: HugeIcons.strokeRoundedCheckmarkBadge01,
+                      size: 64,
+                      color: AppTheme.primaryCoffee,
+                    ),
                   ),
                   const SizedBox(height: 16),
                   const Text(
@@ -143,10 +169,10 @@ class _KdsScreenState extends ConsumerState<KdsScreen> {
                     final crossAxisCount = width > 1300
                         ? 4
                         : width > 900
-                            ? 3
-                            : width > 600
-                                ? 2
-                                : 1;
+                        ? 3
+                        : width > 600
+                        ? 2
+                        : 1;
 
                     return GridView.builder(
                       padding: const EdgeInsets.all(16),
@@ -186,7 +212,11 @@ class _KdsScreenState extends ConsumerState<KdsScreen> {
       label: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          HugeIcon(icon: icon, size: 16, color: isSelected ? Colors.white : AppTheme.darkEspresso),
+          HugeIcon(
+            icon: icon,
+            size: 16,
+            color: isSelected ? Colors.white : AppTheme.darkEspresso,
+          ),
           const SizedBox(width: 6),
           Text(label),
         ],
@@ -212,9 +242,7 @@ class _KdsScreenState extends ConsumerState<KdsScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
-        border: const Border(
-          bottom: BorderSide(color: Color(0xFFEDE3D8)),
-        ),
+        border: const Border(bottom: BorderSide(color: Color(0xFFEDE3D8))),
       ),
       child: Row(
         children: [
@@ -299,7 +327,9 @@ class _KdsScreenState extends ConsumerState<KdsScreen> {
           return Container(
             decoration: BoxDecoration(
               color: Theme.of(context).scaffoldBackgroundColor,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(24),
+              ),
             ),
             padding: const EdgeInsets.all(20),
             child: Column(
@@ -310,11 +340,17 @@ class _KdsScreenState extends ConsumerState<KdsScreen> {
                   children: [
                     const Row(
                       children: [
-                        HugeIcon(icon: HugeIcons.strokeRoundedRestaurant01, color: AppTheme.primaryCoffee),
+                        HugeIcon(
+                          icon: HugeIcons.strokeRoundedRestaurant01,
+                          color: AppTheme.primaryCoffee,
+                        ),
                         SizedBox(width: 8),
                         Text(
                           'Pesanan Selesai / Dihidang (Recall)',
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ],
                     ),
@@ -327,15 +363,20 @@ class _KdsScreenState extends ConsumerState<KdsScreen> {
                 const SizedBox(height: 12),
                 Expanded(
                   child: FutureBuilder<List<Order>>(
-                    future: (db.select(db.orders)
-                          ..where((o) => o.status.equals('completed'))
-                          ..orderBy([(o) => drift.OrderingTerm.desc(o.createdAt)])
-                          ..limit(15))
-                        .get(),
+                    future:
+                        (db.select(db.orders)
+                              ..where((o) => o.status.equals('completed'))
+                              ..orderBy([
+                                (o) => drift.OrderingTerm.desc(o.createdAt),
+                              ])
+                              ..limit(15))
+                            .get(),
                     builder: (context, snap) {
                       final doneOrders = snap.data ?? [];
                       if (doneOrders.isEmpty) {
-                        return const Center(child: Text('Tiada pesanan selesai hari ini.'));
+                        return const Center(
+                          child: Text('Tiada pesanan selesai hari ini.'),
+                        );
                       }
                       return ListView.separated(
                         controller: scrollController,
@@ -345,19 +386,30 @@ class _KdsScreenState extends ConsumerState<KdsScreen> {
                           final o = doneOrders[i];
                           return Card(
                             child: ListTile(
-                              leading: HugeIcon(icon: HugeIcons.strokeRoundedCheckmarkBadge01, color: AppTheme.successGreen),
+                              leading: HugeIcon(
+                                icon: HugeIcons.strokeRoundedCheckmarkBadge01,
+                                color: AppTheme.successGreen,
+                              ),
                               title: Text(
                                 '${o.orderNumber} • ${o.orderType.toUpperCase()}',
-                                style: const TextStyle(fontWeight: FontWeight.w700),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                ),
                               ),
                               subtitle: Text(
                                 'Masa: ${DateFormat('hh:mm a').format(o.createdAt)} • Jumlah: RM ${o.totalAmount.toStringAsFixed(2)}',
                               ),
                               trailing: OutlinedButton.icon(
-                                icon: HugeIcon(icon: HugeIcons.strokeRoundedUndo, size: 16),
+                                icon: HugeIcon(
+                                  icon: HugeIcons.strokeRoundedUndo,
+                                  size: 16,
+                                ),
                                 label: const Text('Recall ke KDS'),
                                 onPressed: () async {
-                                  await db.updateOrderStatus(o.id, 'in_progress');
+                                  await db.updateOrderStatus(
+                                    o.id,
+                                    'in_progress',
+                                  );
                                   if (ctx.mounted) Navigator.pop(ctx);
                                   setState(() {});
                                 },
@@ -428,8 +480,8 @@ class _KdsTicketCard extends StatelessWidget {
           color: isReady
               ? AppTheme.successGreen
               : isInProgress
-                  ? const Color(0xFF1976D2)
-                  : const Color(0xFFE0D5C7),
+              ? const Color(0xFF1976D2)
+              : const Color(0xFFE0D5C7),
           width: isReady || isInProgress ? 2 : 1,
         ),
         boxShadow: [
@@ -450,9 +502,11 @@ class _KdsTicketCard extends StatelessWidget {
               color: isReady
                   ? AppTheme.successGreen.withOpacity(0.12)
                   : isInProgress
-                      ? const Color(0xFF1976D2).withOpacity(0.1)
-                      : const Color(0xFFF5EDE3),
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(14)),
+                  ? const Color(0xFF1976D2).withOpacity(0.1)
+                  : const Color(0xFFF5EDE3),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(14),
+              ),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -470,8 +524,8 @@ class _KdsTicketCard extends StatelessWidget {
                     ),
                     Row(
                       children: [
-                        HugeIcon(icon: 
-                          order.orderType == 'dine_in'
+                        HugeIcon(
+                          icon: order.orderType == 'dine_in'
                               ? HugeIcons.strokeRoundedShoppingBag01
                               : HugeIcons.strokeRoundedTime01,
                           size: 14,
@@ -494,7 +548,10 @@ class _KdsTicketCard extends StatelessWidget {
                 ),
                 // Aging Timer Badge
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 5,
+                  ),
                   decoration: BoxDecoration(
                     color: timerBg,
                     borderRadius: BorderRadius.circular(12),
@@ -503,7 +560,11 @@ class _KdsTicketCard extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      HugeIcon(icon: HugeIcons.strokeRoundedTimer01, size: 14, color: timerColor),
+                      HugeIcon(
+                        icon: HugeIcons.strokeRoundedTimer01,
+                        size: 14,
+                        color: timerColor,
+                      ),
                       const SizedBox(width: 4),
                       Text(
                         timerString,
@@ -523,7 +584,9 @@ class _KdsTicketCard extends StatelessWidget {
           // Items List
           Expanded(
             child: FutureBuilder<List<OrderItem>>(
-              future: (db.select(db.orderItems)..where((i) => i.orderId.equals(order.id))).get(),
+              future: (db.select(
+                db.orderItems,
+              )..where((i) => i.orderId.equals(order.id))).get(),
               builder: (context, snapshot) {
                 final items = snapshot.data ?? [];
                 if (items.isEmpty) {
@@ -537,7 +600,10 @@ class _KdsTicketCard extends StatelessWidget {
                 }
 
                 return ListView.separated(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 10,
+                  ),
                   itemCount: items.length,
                   separatorBuilder: (_, __) => const Divider(height: 12),
                   itemBuilder: (context, i) {
@@ -579,7 +645,10 @@ class _KdsTicketCard extends StatelessWidget {
                               if (item.modifiers.isNotEmpty) ...[
                                 const SizedBox(height: 2),
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 6,
+                                    vertical: 2,
+                                  ),
                                   decoration: BoxDecoration(
                                     color: const Color(0xFFFFF3E0),
                                     borderRadius: BorderRadius.circular(4),
@@ -617,12 +686,19 @@ class _KdsTicketCard extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  HugeIcon(icon: HugeIcons.strokeRoundedPlay, size: 14, color: Color(0xFFF57F17)),
+                  HugeIcon(
+                    icon: HugeIcons.strokeRoundedPlay,
+                    size: 14,
+                    color: Color(0xFFF57F17),
+                  ),
                   const SizedBox(width: 6),
                   Expanded(
                     child: Text(
                       'Nota: ${order.notes}',
-                      style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600),
+                      style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                      ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),

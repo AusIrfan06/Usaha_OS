@@ -40,7 +40,10 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
       appBar: AppBar(
         title: const Row(
           children: [
-            HugeIcon(icon: HugeIcons.strokeRoundedPackage, color: AppTheme.primaryCoffee),
+            HugeIcon(
+              icon: HugeIcons.strokeRoundedPackage,
+              color: AppTheme.primaryCoffee,
+            ),
             SizedBox(width: 10),
             Text(
               'Audit Stok Fizikal & Varians (Stock Take)',
@@ -56,17 +59,20 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
           labelColor: AppTheme.primaryCoffee,
           unselectedLabelColor: AppTheme.mutedText,
           tabs: const [
-            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedEdit01), text: 'Kiraan Stok Semasa'),
-            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedFile02), text: 'Log Audit & Varians'),
+            Tab(
+              icon: HugeIcon(icon: HugeIcons.strokeRoundedEdit01),
+              text: 'Kiraan Stok Semasa',
+            ),
+            Tab(
+              icon: HugeIcon(icon: HugeIcons.strokeRoundedFile02),
+              text: 'Log Audit & Varians',
+            ),
           ],
         ),
       ),
       body: TabBarView(
         controller: _tabController,
-        children: [
-          _buildStockTakeEntryTab(),
-          _buildAuditHistoryTab(),
-        ],
+        children: [_buildStockTakeEntryTab(), _buildAuditHistoryTab()],
       ),
     );
   }
@@ -79,12 +85,19 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
     final ingredientsAsync = ref.watch(ingredientsProvider);
 
     return ingredientsAsync.when(
-      loading: () => const Center(child: CircularProgressIndicator(color: AppTheme.primaryCoffee)),
-      error: (err, _) => Center(child: Text('Ralat: $err', style: const TextStyle(color: Colors.red))),
+      loading: () => const Center(
+        child: CircularProgressIndicator(color: AppTheme.primaryCoffee),
+      ),
+      error: (err, _) => Center(
+        child: Text('Ralat: $err', style: const TextStyle(color: Colors.red)),
+      ),
       data: (ingredients) {
         if (ingredients.isEmpty) {
           return const Center(
-            child: Text('Tiada ramuan dalam pangkalan data', style: TextStyle(color: AppTheme.mutedText)),
+            child: Text(
+              'Tiada ramuan dalam pangkalan data',
+              style: TextStyle(color: AppTheme.mutedText),
+            ),
           );
         }
 
@@ -132,7 +145,11 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
                   _buildKpiCard(
                     title: 'Nilai Varians Bersih',
                     value: 'RM ${totalVarianceValue.toStringAsFixed(2)}',
-                    color: totalVarianceValue < 0 ? Colors.red : (totalVarianceValue > 0 ? Colors.green : Colors.white),
+                    color: totalVarianceValue < 0
+                        ? Colors.red
+                        : (totalVarianceValue > 0
+                              ? Colors.green
+                              : Colors.white),
                     icon: HugeIcons.strokeRoundedSquare,
                   ),
                   const Spacer(),
@@ -140,16 +157,24 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppTheme.primaryCoffee,
                       foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 14,
+                      ),
                     ),
-                    icon: HugeIcon(icon: HugeIcons.strokeRoundedCheckmarkBadge01),
-                    label: const Text('Selaraskan Semua Stok', style: TextStyle(fontWeight: FontWeight.bold)),
+                    icon: HugeIcon(
+                      icon: HugeIcons.strokeRoundedCheckmarkBadge01,
+                    ),
+                    label: const Text(
+                      'Selaraskan Semua Stok',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                     onPressed: () => _commitAllAudits(ingredients),
                   ),
                 ],
               ),
             ),
-            const Divider(height: 1, ),
+            const Divider(height: 1),
 
             // Ingredients Stock Take Table
             Expanded(
@@ -170,7 +195,9 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
                       borderRadius: BorderRadius.circular(12),
                       side: BorderSide(
                         color: hasVariance
-                            ? (varianceQty < 0 ? Colors.red.withOpacity(0.5) : Colors.orange.withOpacity(0.5))
+                            ? (varianceQty < 0
+                                  ? Colors.red.withOpacity(0.5)
+                                  : Colors.orange.withOpacity(0.5))
                             : Colors.white10,
                       ),
                     ),
@@ -195,12 +222,19 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
                                 const SizedBox(height: 4),
                                 Text(
                                   'Kos/Unit: RM ${ing.costPerUnit.toStringAsFixed(3)} / ${ing.unit}',
-                                  style: const TextStyle(color: AppTheme.mutedText, fontSize: 12),
+                                  style: const TextStyle(
+                                    color: AppTheme.mutedText,
+                                    fontSize: 12,
+                                  ),
                                 ),
                                 const SizedBox(height: 2),
                                 Text(
                                   'Stok Sistem: ${ing.currentStock.toStringAsFixed(1)} ${ing.unit}',
-                                  style: const TextStyle(color: Colors.cyan, fontSize: 13, fontWeight: FontWeight.w600),
+                                  style: const TextStyle(
+                                    color: Colors.cyan,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ],
                             ),
@@ -212,11 +246,17 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
                             child: Row(
                               children: [
                                 IconButton(
-                                  icon: HugeIcon(icon: HugeIcons.strokeRoundedRemove01, color: Colors.red),
+                                  icon: HugeIcon(
+                                    icon: HugeIcons.strokeRoundedRemove01,
+                                    color: Colors.red,
+                                  ),
                                   onPressed: () {
                                     setState(() {
-                                      final current = _physicalCounts[ing.id] ?? ing.currentStock;
-                                      _physicalCounts[ing.id] = (current - 1).clamp(0.0, 99999.0);
+                                      final current =
+                                          _physicalCounts[ing.id] ??
+                                          ing.currentStock;
+                                      _physicalCounts[ing.id] = (current - 1)
+                                          .clamp(0.0, 99999.0);
                                     });
                                   },
                                 ),
@@ -225,12 +265,18 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
                                   child: TextFormField(
                                     key: ValueKey('ing_${ing.id}_$physical'),
                                     initialValue: physical.toStringAsFixed(1),
-                                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15,
+                                    ),
                                     textAlign: TextAlign.center,
                                     keyboardType: TextInputType.number,
                                     decoration: InputDecoration(
                                       suffixText: ing.unit,
-                                      suffixStyle: const TextStyle(color: AppTheme.mutedText, fontSize: 11),
+                                      suffixStyle: const TextStyle(
+                                        color: AppTheme.mutedText,
+                                        fontSize: 11,
+                                      ),
                                       isDense: true,
                                       border: const OutlineInputBorder(),
                                     ),
@@ -244,10 +290,15 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
                                   ),
                                 ),
                                 IconButton(
-                                  icon: HugeIcon(icon: HugeIcons.strokeRoundedAdd01, color: Colors.green),
+                                  icon: HugeIcon(
+                                    icon: HugeIcons.strokeRoundedAdd01,
+                                    color: Colors.green,
+                                  ),
                                   onPressed: () {
                                     setState(() {
-                                      final current = _physicalCounts[ing.id] ?? ing.currentStock;
+                                      final current =
+                                          _physicalCounts[ing.id] ??
+                                          ing.currentStock;
                                       _physicalCounts[ing.id] = current + 1;
                                     });
                                   },
@@ -267,7 +318,11 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
                                     Text(
                                       'Varians: ${varianceQty >= 0 ? '+' : ''}${varianceQty.toStringAsFixed(1)} ${ing.unit}',
                                       style: TextStyle(
-                                        color: varianceQty == 0 ? Colors.green : (varianceQty < 0 ? Colors.red : Colors.orange),
+                                        color: varianceQty == 0
+                                            ? Colors.green
+                                            : (varianceQty < 0
+                                                  ? Colors.red
+                                                  : Colors.orange),
                                         fontWeight: FontWeight.bold,
                                         fontSize: 13,
                                       ),
@@ -278,7 +333,9 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
                                 Text(
                                   'Impak RM: ${varianceCost >= 0 ? '+' : ''}RM ${varianceCost.toStringAsFixed(2)}',
                                   style: TextStyle(
-                                    color: varianceCost < 0 ? Colors.redAccent : Colors.white70,
+                                    color: varianceCost < 0
+                                        ? Colors.redAccent
+                                        : Colors.white70,
                                     fontSize: 12,
                                   ),
                                 ),
@@ -291,25 +348,51 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
                             Expanded(
                               flex: 3,
                               child: DropdownButtonFormField<String>(
-                                value: _varianceReasons[ing.id] ?? 'Pemeriksaan Rutin',
+                                value:
+                                    _varianceReasons[ing.id] ??
+                                    'Pemeriksaan Rutin',
                                 dropdownColor: Colors.white,
                                 style: const TextStyle(fontSize: 12),
                                 decoration: const InputDecoration(
                                   labelText: 'Sebab Varians',
-                                  labelStyle: TextStyle(color: AppTheme.mutedText, fontSize: 11),
+                                  labelStyle: TextStyle(
+                                    color: AppTheme.mutedText,
+                                    fontSize: 11,
+                                  ),
                                   isDense: true,
                                   border: OutlineInputBorder(),
                                 ),
                                 items: const [
-                                  DropdownMenuItem(value: 'Pemeriksaan Rutin', child: Text('Pemeriksaan Rutin')),
-                                  DropdownMenuItem(value: 'Pembaziran (Wastage)', child: Text('Pembaziran (Wastage)')),
-                                  DropdownMenuItem(value: 'Tarikh Luput (Expired)', child: Text('Tarikh Luput (Expired)')),
-                                  DropdownMenuItem(value: 'Tumpahan (Spillage)', child: Text('Tumpahan (Spillage)')),
-                                  DropdownMenuItem(value: 'Makanan Staf (Staff Meal)', child: Text('Makanan Staf')),
-                                  DropdownMenuItem(value: 'Ralat Kiraan / Lain-lain', child: Text('Ralat Kiraan')),
+                                  DropdownMenuItem(
+                                    value: 'Pemeriksaan Rutin',
+                                    child: Text('Pemeriksaan Rutin'),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: 'Pembaziran (Wastage)',
+                                    child: Text('Pembaziran (Wastage)'),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: 'Tarikh Luput (Expired)',
+                                    child: Text('Tarikh Luput (Expired)'),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: 'Tumpahan (Spillage)',
+                                    child: Text('Tumpahan (Spillage)'),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: 'Makanan Staf (Staff Meal)',
+                                    child: Text('Makanan Staf'),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: 'Ralat Kiraan / Lain-lain',
+                                    child: Text('Ralat Kiraan'),
+                                  ),
                                 ],
                                 onChanged: (val) {
-                                  if (val != null) setState(() => _varianceReasons[ing.id] = val);
+                                  if (val != null)
+                                    setState(
+                                      () => _varianceReasons[ing.id] = val,
+                                    );
                                 },
                               ),
                             ),
@@ -319,12 +402,25 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
                           // Individual commit button
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: hasVariance ? Colors.orange.shade800 : Colors.white,
+                              backgroundColor: hasVariance
+                                  ? Colors.orange.shade800
+                                  : Colors.white,
                               foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 8,
+                              ),
                             ),
-                            onPressed: () => _commitSingleAudit(ing, physical, varianceQty, varianceCost),
-                            child: const Text('Selaras', style: TextStyle(fontSize: 12)),
+                            onPressed: () => _commitSingleAudit(
+                              ing,
+                              physical,
+                              varianceQty,
+                              varianceCost,
+                            ),
+                            child: const Text(
+                              'Selaras',
+                              style: TextStyle(fontSize: 12),
+                            ),
                           ),
                         ],
                       ),
@@ -359,10 +455,17 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: const TextStyle(color: AppTheme.mutedText, fontSize: 11)),
+              Text(
+                title,
+                style: const TextStyle(color: AppTheme.mutedText, fontSize: 11),
+              ),
               Text(
                 value,
-                style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 16),
+                style: TextStyle(
+                  color: color,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
               ),
             ],
           ),
@@ -371,28 +474,37 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
     );
   }
 
-  Future<void> _commitSingleAudit(Ingredient ing, double physical, double varianceQty, double varianceCost) async {
+  Future<void> _commitSingleAudit(
+    Ingredient ing,
+    double physical,
+    double varianceQty,
+    double varianceCost,
+  ) async {
     final reason = _varianceReasons[ing.id] ?? 'Pemeriksaan Rutin';
 
-    await ref.read(databaseProvider).insertStockAudit(
-      StockAuditsCompanion.insert(
-        ingredientId: ing.id,
-        ingredientName: ing.name,
-        unit: drift.Value(ing.unit),
-        expectedStock: drift.Value(ing.currentStock),
-        actualStock: drift.Value(physical),
-        varianceQuantity: drift.Value(varianceQty),
-        varianceValue: drift.Value(varianceCost),
-        reason: drift.Value(reason),
-        auditedBy: const drift.Value('Pengurus Syif'),
-      ),
-      adjustInventory: true,
-    );
+    await ref
+        .read(databaseProvider)
+        .insertStockAudit(
+          StockAuditsCompanion.insert(
+            ingredientId: ing.id,
+            ingredientName: ing.name,
+            unit: drift.Value(ing.unit),
+            expectedStock: drift.Value(ing.currentStock),
+            actualStock: drift.Value(physical),
+            varianceQuantity: drift.Value(varianceQty),
+            varianceValue: drift.Value(varianceCost),
+            reason: drift.Value(reason),
+            auditedBy: const drift.Value('Pengurus Syif'),
+          ),
+          adjustInventory: true,
+        );
 
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Stok ${ing.name} berjaya diselaraskan kepada $physical ${ing.unit}!'),
+        content: Text(
+          'Stok ${ing.name} berjaya diselaraskan kepada $physical ${ing.unit}!',
+        ),
         backgroundColor: Colors.green,
       ),
     );
@@ -411,10 +523,15 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Batal', style: TextStyle(color: AppTheme.mutedText)),
+            child: const Text(
+              'Batal',
+              style: TextStyle(color: AppTheme.mutedText),
+            ),
           ),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: AppTheme.primaryCoffee),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.primaryCoffee,
+            ),
             onPressed: () async {
               for (final ing in ingredients) {
                 final physical = _physicalCounts[ing.id] ?? ing.currentStock;
@@ -422,20 +539,22 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
                 final varianceCost = varianceQty * ing.costPerUnit;
                 final reason = _varianceReasons[ing.id] ?? 'Pemeriksaan Rutin';
 
-                await ref.read(databaseProvider).insertStockAudit(
-                  StockAuditsCompanion.insert(
-                    ingredientId: ing.id,
-                    ingredientName: ing.name,
-                    unit: drift.Value(ing.unit),
-                    expectedStock: drift.Value(ing.currentStock),
-                    actualStock: drift.Value(physical),
-                    varianceQuantity: drift.Value(varianceQty),
-                    varianceValue: drift.Value(varianceCost),
-                    reason: drift.Value(reason),
-                    auditedBy: const drift.Value('Pengurus Syif'),
-                  ),
-                  adjustInventory: true,
-                );
+                await ref
+                    .read(databaseProvider)
+                    .insertStockAudit(
+                      StockAuditsCompanion.insert(
+                        ingredientId: ing.id,
+                        ingredientName: ing.name,
+                        unit: drift.Value(ing.unit),
+                        expectedStock: drift.Value(ing.currentStock),
+                        actualStock: drift.Value(physical),
+                        varianceQuantity: drift.Value(varianceQty),
+                        varianceValue: drift.Value(varianceCost),
+                        reason: drift.Value(reason),
+                        auditedBy: const drift.Value('Pengurus Syif'),
+                      ),
+                      adjustInventory: true,
+                    );
               }
 
               if (!ctx.mounted) return;
@@ -443,7 +562,9 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
               if (mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text('Semua ramuan berjaya diselaraskan & log audit direkodkan!'),
+                    content: Text(
+                      'Semua ramuan berjaya diselaraskan & log audit direkodkan!',
+                    ),
                     backgroundColor: Colors.green,
                   ),
                 );
@@ -465,12 +586,19 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
     final df = DateFormat('dd MMM yyyy, HH:mm');
 
     return auditsAsync.when(
-      loading: () => const Center(child: CircularProgressIndicator(color: AppTheme.primaryCoffee)),
-      error: (err, _) => Center(child: Text('Ralat: $err', style: const TextStyle(color: Colors.red))),
+      loading: () => const Center(
+        child: CircularProgressIndicator(color: AppTheme.primaryCoffee),
+      ),
+      error: (err, _) => Center(
+        child: Text('Ralat: $err', style: const TextStyle(color: Colors.red)),
+      ),
       data: (audits) {
         if (audits.isEmpty) {
           return const Center(
-            child: Text('Tiada rekod audit stok lagi', style: TextStyle(color: AppTheme.mutedText)),
+            child: Text(
+              'Tiada rekod audit stok lagi',
+              style: TextStyle(color: AppTheme.mutedText),
+            ),
           );
         }
 
@@ -484,12 +612,18 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
             return Card(
               color: Colors.white,
               margin: const EdgeInsets.only(bottom: 8),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
               child: ListTile(
                 leading: CircleAvatar(
-                  backgroundColor: isLoss ? Colors.red.withOpacity(0.2) : Colors.green.withOpacity(0.2),
-                  child: HugeIcon(icon: 
-                    isLoss ? HugeIcons.strokeRoundedSquare : HugeIcons.strokeRoundedSquare,
+                  backgroundColor: isLoss
+                      ? Colors.red.withOpacity(0.2)
+                      : Colors.green.withOpacity(0.2),
+                  child: HugeIcon(
+                    icon: isLoss
+                        ? HugeIcons.strokeRoundedSquare
+                        : HugeIcons.strokeRoundedSquare,
                     color: isLoss ? Colors.red : Colors.green,
                   ),
                 ),
@@ -501,21 +635,30 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
                     ),
                     const SizedBox(width: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 2,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
                         audit.reason,
-                        style: const TextStyle(color: AppTheme.primaryCoffee, fontSize: 11),
+                        style: const TextStyle(
+                          color: AppTheme.primaryCoffee,
+                          fontSize: 11,
+                        ),
                       ),
                     ),
                   ],
                 ),
                 subtitle: Text(
                   'Sistem: ${audit.expectedStock.toStringAsFixed(1)} ➔ Fizikal: ${audit.actualStock.toStringAsFixed(1)} ${audit.unit} • Diaudit oleh: ${audit.auditedBy} (${df.format(audit.auditedAt)})',
-                  style: const TextStyle(color: AppTheme.mutedText, fontSize: 12),
+                  style: const TextStyle(
+                    color: AppTheme.mutedText,
+                    fontSize: 12,
+                  ),
                 ),
                 trailing: Column(
                   mainAxisAlignment: MainAxisAlignment.center,

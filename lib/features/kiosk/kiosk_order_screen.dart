@@ -25,7 +25,6 @@ class KioskOrderScreen extends ConsumerStatefulWidget {
 }
 
 class _KioskOrderScreenState extends ConsumerState<KioskOrderScreen> {
-
   void _resetInactivity() {
     // Reserved for future inactivity timeout
   }
@@ -61,15 +60,9 @@ class _KioskOrderScreenState extends ConsumerState<KioskOrderScreen> {
               child: Row(
                 children: [
                   // Left: Menu area (65%)
-                  const Expanded(
-                    flex: 65,
-                    child: _KioskMenuArea(),
-                  ),
+                  const Expanded(flex: 65, child: _KioskMenuArea()),
                   // Divider
-                  Container(
-                    width: 1,
-                    color: const Color(0xFFEDE3D8),
-                  ),
+                  Container(width: 1, color: const Color(0xFFEDE3D8)),
                   // Right: Cart panel (35%)
                   Expanded(
                     flex: 35,
@@ -215,10 +208,8 @@ class _KioskMenuArea extends ConsumerWidget {
         // Menu grid
         Expanded(
           child: menuItemsAsync.when(
-            loading: () =>
-                const Center(child: CircularProgressIndicator()),
-            error: (_, __) =>
-                const Center(child: Text('Ralat memuatkan menu')),
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (_, __) => const Center(child: Text('Ralat memuatkan menu')),
             data: (items) {
               if (items.isEmpty) {
                 return Center(
@@ -286,8 +277,7 @@ class _KioskCategoryTabs extends StatelessWidget {
               child: _KioskCategoryChip(
                 label: cat.name,
                 selected: selectedId == cat.id,
-                onTap: () =>
-                    onSelect(selectedId == cat.id ? null : cat.id),
+                onTap: () => onSelect(selectedId == cat.id ? null : cat.id),
               ),
             ),
           ),
@@ -316,9 +306,7 @@ class _KioskCategoryChip extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
         decoration: BoxDecoration(
-          color: selected
-              ? AppTheme.primaryCoffee
-              : AppTheme.surfaceVariant,
+          color: selected ? AppTheme.primaryCoffee : AppTheme.surfaceVariant,
           borderRadius: BorderRadius.circular(20),
           boxShadow: selected
               ? [
@@ -471,8 +459,7 @@ class _KioskMenuCard extends ConsumerWidget {
                         _KioskQtyControl(
                           qty: qty,
                           onAdd: () => cartNotifier.addItem(item),
-                          onRemove: () =>
-                              cartNotifier.decrementItem(item.id),
+                          onRemove: () => cartNotifier.decrementItem(item.id),
                         )
                       else
                         Container(
@@ -614,8 +601,7 @@ class _KioskCartPanelState extends ConsumerState<_KioskCartPanel> {
     final cart = ref.watch(cartProvider);
     final cartNotifier = ref.read(cartProvider.notifier);
     final subtotal = cartNotifier.subtotal;
-    final tax =
-        FeatureFlags.sstEnabled ? subtotal * FeatureFlags.sstRate : 0.0;
+    final tax = FeatureFlags.sstEnabled ? subtotal * FeatureFlags.sstRate : 0.0;
     final total = subtotal + tax;
     final itemCount = cartNotifier.totalItemCount;
 
@@ -627,8 +613,7 @@ class _KioskCartPanelState extends ConsumerState<_KioskCartPanel> {
           Container(
             padding: const EdgeInsets.all(20),
             decoration: const BoxDecoration(
-              border:
-                  Border(bottom: BorderSide(color: Color(0xFFEDE3D8))),
+              border: Border(bottom: BorderSide(color: Color(0xFFEDE3D8))),
             ),
             child: Row(
               children: [
@@ -650,7 +635,9 @@ class _KioskCartPanelState extends ConsumerState<_KioskCartPanel> {
                 if (cart.isNotEmpty)
                   Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 4),
+                      horizontal: 10,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: AppTheme.primaryCoffee.withOpacity(0.12),
                       borderRadius: BorderRadius.circular(12),
@@ -706,11 +693,8 @@ class _KioskCartPanelState extends ConsumerState<_KioskCartPanel> {
                 : ListView.separated(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     itemCount: cart.length,
-                    separatorBuilder: (_, __) => const Divider(
-                      height: 1,
-                      indent: 16,
-                      endIndent: 16,
-                    ),
+                    separatorBuilder: (_, __) =>
+                        const Divider(height: 1, indent: 16, endIndent: 16),
                     itemBuilder: (context, i) =>
                         _KioskCartItemRow(item: cart[i]),
                   ),
@@ -721,8 +705,7 @@ class _KioskCartPanelState extends ConsumerState<_KioskCartPanel> {
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
               color: Colors.white,
-              border: const Border(
-                  top: BorderSide(color: Color(0xFFEDE3D8))),
+              border: const Border(top: BorderSide(color: Color(0xFFEDE3D8))),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.04),
@@ -796,8 +779,9 @@ class _KioskCartPanelState extends ConsumerState<_KioskCartPanel> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
-                      disabledBackgroundColor:
-                          AppTheme.mutedText.withOpacity(0.2),
+                      disabledBackgroundColor: AppTheme.mutedText.withOpacity(
+                        0.2,
+                      ),
                     ),
                   ),
                 ),
@@ -810,7 +794,10 @@ class _KioskCartPanelState extends ConsumerState<_KioskCartPanel> {
   }
 
   Future<void> _checkout(
-      BuildContext context, WidgetRef ref, double total) async {
+    BuildContext context,
+    WidgetRef ref,
+    double total,
+  ) async {
     final db = ref.read(databaseProvider);
     final cart = ref.read(cartProvider);
     final cartNotifier = ref.read(cartProvider.notifier);
@@ -819,8 +806,7 @@ class _KioskCartPanelState extends ConsumerState<_KioskCartPanel> {
     if (cart.isEmpty) return;
 
     final subtotal = cartNotifier.subtotal;
-    final tax =
-        FeatureFlags.sstEnabled ? subtotal * FeatureFlags.sstRate : 0.0;
+    final tax = FeatureFlags.sstEnabled ? subtotal * FeatureFlags.sstRate : 0.0;
     final now = DateTime.now();
     final rnd = Random().nextInt(9000) + 1000;
     final orderNumber =
@@ -932,9 +918,7 @@ class _KioskTypeButton extends StatelessWidget {
             HugeIcon(
               icon: icon,
               size: 18,
-              color: selected
-                  ? AppTheme.primaryCoffee
-                  : AppTheme.mutedText,
+              color: selected ? AppTheme.primaryCoffee : AppTheme.mutedText,
             ),
             const SizedBox(width: 8),
             Text(
@@ -942,9 +926,7 @@ class _KioskTypeButton extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
-                color: selected
-                    ? AppTheme.primaryCoffee
-                    : AppTheme.mutedText,
+                color: selected ? AppTheme.primaryCoffee : AppTheme.mutedText,
               ),
             ),
           ],
@@ -1027,10 +1009,7 @@ class _KioskCartItemRow extends ConsumerWidget {
           Expanded(
             child: Text(
               item.menuItem.name,
-              style: const TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 14,
-              ),
+              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),

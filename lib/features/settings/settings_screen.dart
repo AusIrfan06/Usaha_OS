@@ -42,10 +42,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   Future<void> _loadPrefs() async {
     final p = await SharedPreferences.getInstance();
     _nameCtrl.text = p.getString('outlet_name') ?? 'Usaha Cafe & Roastery';
-    _addressCtrl.text = p.getString('outlet_address') ?? 'No. 12, Jalan SS2/64, Petaling Jaya, Selangor';
+    _addressCtrl.text =
+        p.getString('outlet_address') ??
+        'No. 12, Jalan SS2/64, Petaling Jaya, Selangor';
     _phoneCtrl.text = p.getString('outlet_phone') ?? '03-7890 1234';
     _ssmCtrl.text = p.getString('outlet_ssm') ?? '202301098765 (1523456-X)';
-    _sstNoCtrl.text = p.getString('outlet_sst') ?? ref.read(sstSettingsProvider).sstNumber;
+    _sstNoCtrl.text =
+        p.getString('outlet_sst') ?? ref.read(sstSettingsProvider).sstNumber;
     setState(() => _loading = false);
   }
 
@@ -57,7 +60,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     await p.setString('outlet_ssm', _ssmCtrl.text.trim());
     await p.setString('outlet_sst', _sstNoCtrl.text.trim());
 
-    ref.read(sstSettingsProvider.notifier).updateSstNumber(_sstNoCtrl.text.trim());
+    ref
+        .read(sstSettingsProvider.notifier)
+        .updateSstNumber(_sstNoCtrl.text.trim());
 
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -86,7 +91,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             padding: const EdgeInsets.only(right: 16),
             child: FilledButton.icon(
               onPressed: _save,
-              style: FilledButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 20)),
+              style: FilledButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+              ),
               icon: HugeIcon(icon: HugeIcons.strokeRoundedSave, size: 16),
               label: const Text('Simpan'),
             ),
@@ -97,7 +104,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         padding: const EdgeInsets.all(16),
         children: [
           // ── Outlet Info ───────────────────────────────────────────
-          _sectionHeader('Maklumat Premis / Kafe', HugeIcons.strokeRoundedStore01),
+          _sectionHeader(
+            'Maklumat Premis / Kafe',
+            HugeIcons.strokeRoundedStore01,
+          ),
           const SizedBox(height: 12),
           UCard(
             child: Column(
@@ -136,7 +146,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           const SizedBox(height: 24),
 
           // ── SST Tax Engine (Phase 3) ──────────────────────────────
-          _sectionHeader('Enjin Cukai SST Malaysia (F&B 6%)', HugeIcons.strokeRoundedInvoice01),
+          _sectionHeader(
+            'Enjin Cukai SST Malaysia (F&B 6%)',
+            HugeIcons.strokeRoundedInvoice01,
+          ),
           const SizedBox(height: 12),
           UCard(
             child: Column(
@@ -145,7 +158,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   padding: const EdgeInsets.all(14),
                   child: Row(
                     children: [
-                      HugeIcon(icon: HugeIcons.strokeRoundedBank, size: 20, color: AppTheme.primaryCoffee),
+                      HugeIcon(
+                        icon: HugeIcons.strokeRoundedBank,
+                        size: 20,
+                        color: AppTheme.primaryCoffee,
+                      ),
                       const SizedBox(width: 14),
                       Expanded(
                         child: Column(
@@ -155,12 +172,20 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                               children: [
                                 Text(
                                   'Cukai Perkhidmatan SST (F&B 6%)',
-                                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14, color: AppTheme.darkEspresso),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 14,
+                                    color: AppTheme.darkEspresso,
+                                  ),
                                 ),
                                 SizedBox(width: 8),
                                 Text(
                                   '[FASA 3 AKTIF]',
-                                  style: TextStyle(color: Colors.green, fontSize: 10, fontWeight: FontWeight.bold),
+                                  style: TextStyle(
+                                    color: Colors.green,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ],
                             ),
@@ -169,7 +194,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                               sstSettings.isEnabled
                                   ? 'SST 6% dikenakan secara automatik semasa checkout POS dan dicetak pada resit.'
                                   : 'SST dimatikan (Bagi perniagaan bawah ambang RM1.5 Juta perkhidmatan F&B).',
-                              style: const TextStyle(fontSize: 12, color: AppTheme.mutedText),
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: AppTheme.mutedText,
+                              ),
                             ),
                           ],
                         ),
@@ -194,25 +222,41 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   ),
                   _divider(),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 10,
+                    ),
                     child: Row(
                       children: [
-                        const Text('Kadar Cukai:', style: TextStyle(color: AppTheme.mutedText, fontSize: 13)),
+                        const Text(
+                          'Kadar Cukai:',
+                          style: TextStyle(
+                            color: AppTheme.mutedText,
+                            fontSize: 13,
+                          ),
+                        ),
                         const SizedBox(width: 12),
                         ChoiceChip(
                           label: const Text('6% (F&B Standard)'),
                           selected: sstSettings.rate == 0.06,
-                          onSelected: (_) => ref.read(sstSettingsProvider.notifier).updateRate(0.06),
+                          onSelected: (_) => ref
+                              .read(sstSettingsProvider.notifier)
+                              .updateRate(0.06),
                         ),
                         const SizedBox(width: 8),
                         ChoiceChip(
                           label: const Text('8% (General)'),
                           selected: sstSettings.rate == 0.08,
-                          onSelected: (_) => ref.read(sstSettingsProvider.notifier).updateRate(0.08),
+                          onSelected: (_) => ref
+                              .read(sstSettingsProvider.notifier)
+                              .updateRate(0.08),
                         ),
                         const Spacer(),
                         OutlinedButton.icon(
-                          icon: HugeIcon(icon: HugeIcons.strokeRoundedBluetooth, size: 16),
+                          icon: HugeIcon(
+                            icon: HugeIcons.strokeRoundedBluetooth,
+                            size: 16,
+                          ),
                           label: const Text('Penyata SST-02'),
                           onPressed: () => _showSst02Summary(context),
                         ),
@@ -226,7 +270,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           const SizedBox(height: 24),
 
           // ── PDPA & Data Management (Phase 3) ──────────────────────
-          _sectionHeader('Pematuhan PDPA & Keselamatan Data', HugeIcons.strokeRoundedSecurity),
+          _sectionHeader(
+            'Pematuhan PDPA & Keselamatan Data',
+            HugeIcons.strokeRoundedSecurity,
+          ),
           const SizedBox(height: 12),
           UCard(
             child: Column(
@@ -235,7 +282,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   padding: const EdgeInsets.all(14),
                   child: Row(
                     children: [
-                      HugeIcon(icon: HugeIcons.strokeRoundedSearch01, color: Colors.blue, size: 22),
+                      HugeIcon(
+                        icon: HugeIcons.strokeRoundedSearch01,
+                        color: Colors.blue,
+                        size: 22,
+                      ),
                       const SizedBox(width: 14),
                       const Expanded(
                         child: Column(
@@ -243,22 +294,34 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           children: [
                             Text(
                               'Akta Perlindungan Data Peribadi (PDPA 2010)',
-                              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14, color: AppTheme.darkEspresso),
+                              style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 14,
+                                color: AppTheme.darkEspresso,
+                              ),
                             ),
                             Text(
                               'Eksport atau rawakkan data peribadi pelanggan bagi mematuhi hak privasi data.',
-                              style: TextStyle(fontSize: 12, color: AppTheme.mutedText),
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: AppTheme.mutedText,
+                              ),
                             ),
                           ],
                         ),
                       ),
                       OutlinedButton.icon(
-                        icon: HugeIcon(icon: HugeIcons.strokeRoundedDownload01, size: 16),
+                        icon: HugeIcon(
+                          icon: HugeIcons.strokeRoundedDownload01,
+                          size: 16,
+                        ),
                         label: const Text('Eksport Data'),
                         onPressed: () {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                              content: Text('Data pelanggan berjaya dieksport dalam format selamat (CSV)!'),
+                              content: Text(
+                                'Data pelanggan berjaya dieksport dalam format selamat (CSV)!',
+                              ),
                               backgroundColor: Colors.green,
                             ),
                           );
@@ -273,7 +336,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           const SizedBox(height: 24),
 
           // ── Cloud & Sync ──────────────────────────────────────────
-          _sectionHeader('Awan & Sinkronisasi (Supabase)', HugeIcons.strokeRoundedCloudServer),
+          _sectionHeader(
+            'Awan & Sinkronisasi (Supabase)',
+            HugeIcons.strokeRoundedCloudServer,
+          ),
           const SizedBox(height: 12),
           UCard(
             child: Column(
@@ -282,7 +348,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   padding: const EdgeInsets.all(16),
                   child: Row(
                     children: [
-                      HugeIcon(icon: HugeIcons.strokeRoundedCloudUpload, size: 22, color: AppTheme.successGreen),
+                      HugeIcon(
+                        icon: HugeIcons.strokeRoundedCloudUpload,
+                        size: 22,
+                        color: AppTheme.successGreen,
+                      ),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Column(
@@ -290,7 +360,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           children: [
                             const Text(
                               'Supabase 2-Way Sync (Cloud & Offline)',
-                              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14, color: AppTheme.darkEspresso),
+                              style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 14,
+                                color: AppTheme.darkEspresso,
+                              ),
                             ),
                             ValueListenableBuilder<bool>(
                               valueListenable: syncService.isRealtimeConnected,
@@ -301,17 +375,24 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                     if (!SupabaseConfig.isConfigured) {
                                       return const Text(
                                         '⚠️ Belum dikonfigurasi — edit lib/core/constants/supabase_config.dart',
-                                        style: TextStyle(fontSize: 12, color: AppTheme.mutedText),
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: AppTheme.mutedText,
+                                        ),
                                       );
                                     }
                                     final syncTimeStr = lastSync != null
                                         ? ' • Terakhir: ${lastSync.hour.toString().padLeft(2, '0')}:${lastSync.minute.toString().padLeft(2, '0')}:${lastSync.second.toString().padLeft(2, '0')}'
                                         : '';
                                     return Text(
-                                      connected ? '🟢 Realtime Aktif$syncTimeStr' : '🟡 Menyambung ke Supabase…$syncTimeStr',
+                                      connected
+                                          ? '🟢 Realtime Aktif$syncTimeStr'
+                                          : '🟡 Menyambung ke Supabase…$syncTimeStr',
                                       style: TextStyle(
                                         fontSize: 12,
-                                        color: connected ? AppTheme.successGreen : AppTheme.warningAmber,
+                                        color: connected
+                                            ? AppTheme.successGreen
+                                            : AppTheme.warningAmber,
                                         fontWeight: FontWeight.w500,
                                       ),
                                     );
@@ -328,18 +409,28 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           return OutlinedButton.icon(
                             style: OutlinedButton.styleFrom(
                               foregroundColor: AppTheme.primaryCoffee,
-                              side: const BorderSide(color: AppTheme.primaryCoffee),
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                              side: const BorderSide(
+                                color: AppTheme.primaryCoffee,
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 8,
+                              ),
                             ),
                             onPressed: isSyncing
                                 ? null
                                 : () async {
                                     await syncService.pullAllFromSupabase();
                                     if (context.mounted) {
-                                      ScaffoldMessenger.of(context).showSnackBar(
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
                                         const SnackBar(
-                                          content: Text('✅ Data berjaya diselaraskan dengan Supabase!'),
-                                          backgroundColor: AppTheme.primaryCoffee,
+                                          content: Text(
+                                            '✅ Data berjaya diselaraskan dengan Supabase!',
+                                          ),
+                                          backgroundColor:
+                                              AppTheme.primaryCoffee,
                                         ),
                                       );
                                     }
@@ -348,10 +439,19 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                 ? const SizedBox(
                                     width: 14,
                                     height: 14,
-                                    child: CircularProgressIndicator(strokeWidth: 2, color: AppTheme.primaryCoffee),
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: AppTheme.primaryCoffee,
+                                    ),
                                   )
-                                : HugeIcon(icon: HugeIcons.strokeRoundedRefresh01, size: 16),
-                            label: Text(isSyncing ? 'Menyelaras…' : 'Selaras Sekarang', style: const TextStyle(fontSize: 12)),
+                                : HugeIcon(
+                                    icon: HugeIcons.strokeRoundedRefresh01,
+                                    size: 16,
+                                  ),
+                            label: Text(
+                              isSyncing ? 'Menyelaras…' : 'Selaras Sekarang',
+                              style: const TextStyle(fontSize: 12),
+                            ),
                           );
                         },
                       ),
@@ -361,7 +461,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 _divider(),
                 _infoTile(
                   title: 'Pangkalan Data Setempat (Drift SQLite)',
-                  subtitle: 'Offline-first — sentiasa berfungsi walaupun tiada internet',
+                  subtitle:
+                      'Offline-first — sentiasa berfungsi walaupun tiada internet',
                   icon: HugeIcons.strokeRoundedDatabase,
                   statusColor: AppTheme.successGreen,
                   statusLabel: 'Online',
@@ -372,14 +473,18 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           const SizedBox(height: 24),
 
           // ── App Info ──────────────────────────────────────────────
-          _sectionHeader('Tentang Sistem', HugeIcons.strokeRoundedInformationSquare),
+          _sectionHeader(
+            'Tentang Sistem',
+            HugeIcons.strokeRoundedInformationSquare,
+          ),
           const SizedBox(height: 12),
           UCard(
             child: Column(
               children: [
                 _infoTile(
                   title: AppConstants.appName,
-                  subtitle: 'Malaysia Cafe POS & Operations Suite v${AppConstants.version}',
+                  subtitle:
+                      'Malaysia Cafe POS & Operations Suite v${AppConstants.version}',
                   icon: HugeIcons.strokeRoundedSettings02,
                   statusColor: AppTheme.primaryCoffee,
                   statusLabel: '',
@@ -387,7 +492,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 _divider(),
                 _infoTile(
                   title: 'Fasa 1 — Core POS & Live Stock',
-                  subtitle: 'Pesanan • Bayaran DuitNow/Tunai • Tolakan Stok Ramuan',
+                  subtitle:
+                      'Pesanan • Bayaran DuitNow/Tunai • Tolakan Stok Ramuan',
                   icon: HugeIcons.strokeRoundedCheckmarkBadge01,
                   statusColor: AppTheme.successGreen,
                   statusLabel: 'Selesai',
@@ -395,7 +501,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 _divider(),
                 _infoTile(
                   title: 'Fasa 2 — KDS, Tugas & CRM',
-                  subtitle: 'KDS Stesen • Checklist Syif • Kad Cop Ganjaran • Kehadiran PIN',
+                  subtitle:
+                      'KDS Stesen • Checklist Syif • Kad Cop Ganjaran • Kehadiran PIN',
                   icon: HugeIcons.strokeRoundedCheckmarkBadge01,
                   statusColor: AppTheme.successGreen,
                   statusLabel: 'Selesai',
@@ -403,7 +510,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 _divider(),
                 _infoTile(
                   title: 'Fasa 3 — SST, PO, Stock Take & Petty Cash',
-                  subtitle: 'Enjin SST 6% • Pembekal & PO • Audit Varians • Aliran Tunai Laci',
+                  subtitle:
+                      'Enjin SST 6% • Pembekal & PO • Audit Varians • Aliran Tunai Laci',
                   icon: HugeIcons.strokeRoundedCheckmarkBadge01,
                   statusColor: AppTheme.successGreen,
                   statusLabel: 'Selesai',
@@ -429,22 +537,41 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       builder: (ctx) => AlertDialog(
         title: const Row(
           children: [
-            HugeIcon(icon: HugeIcons.strokeRoundedBank, color: AppTheme.primaryCoffee),
+            HugeIcon(
+              icon: HugeIcons.strokeRoundedBank,
+              color: AppTheme.primaryCoffee,
+            ),
             SizedBox(width: 10),
-            Text('Ringkasan Penyata SST-02', style: TextStyle(fontWeight: FontWeight.bold)),
+            Text(
+              'Ringkasan Penyata SST-02',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
           ],
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('No. SST: ${sstSettings.sstNumber}', style: const TextStyle(fontWeight: FontWeight.w600)),
+            Text(
+              'No. SST: ${sstSettings.sstNumber}',
+              style: const TextStyle(fontWeight: FontWeight.w600),
+            ),
             const SizedBox(height: 12),
-            _summaryRow('Jumlah Nilai Jualan Bercukai:', 'RM ${totalSales.toStringAsFixed(2)}'),
+            _summaryRow(
+              'Jumlah Nilai Jualan Bercukai:',
+              'RM ${totalSales.toStringAsFixed(2)}',
+            ),
             const SizedBox(height: 6),
-            _summaryRow('Kadar Cukai Perkhidmatan:', '${(sstSettings.rate * 100).toStringAsFixed(0)}%'),
+            _summaryRow(
+              'Kadar Cukai Perkhidmatan:',
+              '${(sstSettings.rate * 100).toStringAsFixed(0)}%',
+            ),
             const Divider(height: 20),
-            _summaryRow('Jumlah Cukai SST Kena Bayar:', 'RM ${totalSst.toStringAsFixed(2)}', isBold: true),
+            _summaryRow(
+              'Jumlah Cukai SST Kena Bayar:',
+              'RM ${totalSst.toStringAsFixed(2)}',
+              isBold: true,
+            ),
           ],
         ),
         actions: [
@@ -460,9 +587,21 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   Widget _summaryRow(String label, String value, {bool isBold = false}) {
     return Row(
       children: [
-        Text(label, style: TextStyle(fontWeight: isBold ? FontWeight.bold : FontWeight.normal, fontSize: 13)),
+        Text(
+          label,
+          style: TextStyle(
+            fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+            fontSize: 13,
+          ),
+        ),
         const Spacer(),
-        Text(value, style: TextStyle(fontWeight: isBold ? FontWeight.bold : FontWeight.w600, color: isBold ? AppTheme.primaryCoffee : null)),
+        Text(
+          value,
+          style: TextStyle(
+            fontWeight: isBold ? FontWeight.bold : FontWeight.w600,
+            color: isBold ? AppTheme.primaryCoffee : null,
+          ),
+        ),
       ],
     );
   }
@@ -504,7 +643,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               children: [
                 Text(
                   label,
-                  style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppTheme.mutedText),
+                  style: const TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    color: AppTheme.mutedText,
+                  ),
                 ),
                 TextField(
                   controller: controller,
@@ -517,7 +660,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     enabledBorder: InputBorder.none,
                     focusedBorder: InputBorder.none,
                   ),
-                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: AppTheme.darkEspresso),
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: AppTheme.darkEspresso,
+                  ),
                 ),
               ],
             ),
@@ -544,8 +691,21 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14, color: AppTheme.darkEspresso)),
-                Text(subtitle, style: const TextStyle(fontSize: 12, color: AppTheme.mutedText)),
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 14,
+                    color: AppTheme.darkEspresso,
+                  ),
+                ),
+                Text(
+                  subtitle,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: AppTheme.mutedText,
+                  ),
+                ),
               ],
             ),
           ),
@@ -556,7 +716,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 color: statusColor.withOpacity(0.12),
                 borderRadius: BorderRadius.circular(6),
               ),
-              child: Text(statusLabel, style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: statusColor)),
+              child: Text(
+                statusLabel,
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  color: statusColor,
+                ),
+              ),
             ),
         ],
       ),

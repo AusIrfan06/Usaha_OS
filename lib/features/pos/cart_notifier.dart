@@ -39,11 +39,9 @@ class CartNotifier extends StateNotifier<List<CartItem>> {
 
   void clear() => state = [];
 
-  double get subtotal =>
-      state.fold(0.0, (sum, i) => sum + i.subtotal);
+  double get subtotal => state.fold(0.0, (sum, i) => sum + i.subtotal);
 
-  int get totalItemCount =>
-      state.fold(0, (sum, i) => sum + i.quantity);
+  int get totalItemCount => state.fold(0, (sum, i) => sum + i.quantity);
 
   int quantityOf(int menuItemId) {
     final idx = state.indexWhere((i) => i.menuItem.id == menuItemId);

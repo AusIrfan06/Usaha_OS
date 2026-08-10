@@ -38,8 +38,11 @@ class _LoyaltyScreenState extends ConsumerState<LoyaltyScreen> {
                 color: AppTheme.primaryCoffee.withOpacity(0.15),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: HugeIcon(icon: HugeIcons.strokeRoundedGift,
-                  color: AppTheme.primaryCoffee, size: 22),
+              child: HugeIcon(
+                icon: HugeIcons.strokeRoundedGift,
+                color: AppTheme.primaryCoffee,
+                size: 22,
+              ),
             ),
             const SizedBox(width: 12),
             const Column(
@@ -73,7 +76,9 @@ class _LoyaltyScreenState extends ConsumerState<LoyaltyScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
             decoration: BoxDecoration(
               color: Theme.of(context).cardColor,
-              border: const Border(bottom: BorderSide(color: Color(0xFFEDE3D8))),
+              border: const Border(
+                bottom: BorderSide(color: Color(0xFFEDE3D8)),
+              ),
             ),
             child: Row(
               children: [
@@ -81,11 +86,16 @@ class _LoyaltyScreenState extends ConsumerState<LoyaltyScreen> {
                   child: TextField(
                     controller: _searchCtrl,
                     decoration: InputDecoration(
-                      hintText: 'Cari nama atau nombor telefon ahli (Cth: 0123456789)...',
-                      prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedSearch01),
+                      hintText:
+                          'Cari nama atau nombor telefon ahli (Cth: 0123456789)...',
+                      prefixIcon: HugeIcon(
+                        icon: HugeIcons.strokeRoundedSearch01,
+                      ),
                       suffixIcon: _searchQuery.isNotEmpty
                           ? IconButton(
-                              icon: HugeIcon(icon: HugeIcons.strokeRoundedSearch01),
+                              icon: HugeIcon(
+                                icon: HugeIcons.strokeRoundedSearch01,
+                              ),
                               onPressed: () {
                                 _searchCtrl.clear();
                                 setState(() => _searchQuery = '');
@@ -93,7 +103,8 @@ class _LoyaltyScreenState extends ConsumerState<LoyaltyScreen> {
                             )
                           : null,
                     ),
-                    onChanged: (val) => setState(() => _searchQuery = val.trim().toLowerCase()),
+                    onChanged: (val) =>
+                        setState(() => _searchQuery = val.trim().toLowerCase()),
                   ),
                 ),
               ],
@@ -117,20 +128,28 @@ class _LoyaltyScreenState extends ConsumerState<LoyaltyScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        HugeIcon(icon: HugeIcons.strokeRoundedUserGroup, size: 64, color: AppTheme.mutedText.withOpacity(0.6)),
+                        HugeIcon(
+                          icon: HugeIcons.strokeRoundedUserGroup,
+                          size: 64,
+                          color: AppTheme.mutedText.withOpacity(0.6),
+                        ),
                         const SizedBox(height: 16),
                         Text(
                           _searchQuery.isEmpty
                               ? 'Tiada Ahli Didaftarkan Lagi'
                               : 'Tiada ahli dijumpai untuk "$_searchQuery"',
-                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                         const SizedBox(height: 8),
                         if (_searchQuery.isEmpty)
                           FilledButton.icon(
                             icon: HugeIcon(icon: HugeIcons.strokeRoundedAdd01),
                             label: const Text('Daftar Ahli Pertama'),
-                            onPressed: () => _showAddCustomerDialog(context, db),
+                            onPressed: () =>
+                                _showAddCustomerDialog(context, db),
                           ),
                       ],
                     ),
@@ -144,17 +163,19 @@ class _LoyaltyScreenState extends ConsumerState<LoyaltyScreen> {
                     if (isWide) {
                       return GridView.builder(
                         padding: const EdgeInsets.all(20),
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 16,
-                          childAspectRatio: 1.5,
-                        ),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 16,
+                              mainAxisSpacing: 16,
+                              childAspectRatio: 1.5,
+                            ),
                         itemCount: filtered.length,
                         itemBuilder: (context, i) => _CustomerLoyaltyCard(
                           customer: filtered[i],
                           db: db,
-                          onEdit: () => _showEditCustomerDialog(context, db, filtered[i]),
+                          onEdit: () =>
+                              _showEditCustomerDialog(context, db, filtered[i]),
                         ),
                       );
                     }
@@ -166,7 +187,8 @@ class _LoyaltyScreenState extends ConsumerState<LoyaltyScreen> {
                       itemBuilder: (context, i) => _CustomerLoyaltyCard(
                         customer: filtered[i],
                         db: db,
-                        onEdit: () => _showEditCustomerDialog(context, db, filtered[i]),
+                        onEdit: () =>
+                            _showEditCustomerDialog(context, db, filtered[i]),
                       ),
                     );
                   },
@@ -189,7 +211,10 @@ class _LoyaltyScreenState extends ConsumerState<LoyaltyScreen> {
       builder: (ctx) => AlertDialog(
         title: const Row(
           children: [
-            HugeIcon(icon: HugeIcons.strokeRoundedAdd01, color: AppTheme.primaryCoffee),
+            HugeIcon(
+              icon: HugeIcons.strokeRoundedAdd01,
+              color: AppTheme.primaryCoffee,
+            ),
             SizedBox(width: 8),
             Text('Daftar Ahli Baru'),
           ],
@@ -200,33 +225,50 @@ class _LoyaltyScreenState extends ConsumerState<LoyaltyScreen> {
             children: [
               TextField(
                 controller: nameCtrl,
-                decoration: const InputDecoration(labelText: 'Nama Penuh Pelanggan *', hintText: 'Cth: Ahmad Faizal'),
+                decoration: const InputDecoration(
+                  labelText: 'Nama Penuh Pelanggan *',
+                  hintText: 'Cth: Ahmad Faizal',
+                ),
               ),
               const SizedBox(height: 12),
               TextField(
                 controller: phoneCtrl,
                 keyboardType: TextInputType.phone,
-                decoration: const InputDecoration(labelText: 'Nombor Telefon *', hintText: 'Cth: 0123456789'),
+                decoration: const InputDecoration(
+                  labelText: 'Nombor Telefon *',
+                  hintText: 'Cth: 0123456789',
+                ),
               ),
               const SizedBox(height: 12),
               TextField(
                 controller: emailCtrl,
                 keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(labelText: 'Emel (Pilihan)', hintText: 'Cth: faizal@gmail.com'),
+                decoration: const InputDecoration(
+                  labelText: 'Emel (Pilihan)',
+                  hintText: 'Cth: faizal@gmail.com',
+                ),
               ),
             ],
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Batal')),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Batal'),
+          ),
           FilledButton(
             onPressed: () async {
-              if (nameCtrl.text.trim().isEmpty || phoneCtrl.text.trim().isEmpty) return;
+              if (nameCtrl.text.trim().isEmpty || phoneCtrl.text.trim().isEmpty)
+                return;
               await db.insertCustomer(
                 CustomersCompanion.insert(
                   name: nameCtrl.text.trim(),
                   phone: phoneCtrl.text.trim(),
-                  email: drift.Value(emailCtrl.text.trim().isEmpty ? null : emailCtrl.text.trim()),
+                  email: drift.Value(
+                    emailCtrl.text.trim().isEmpty
+                        ? null
+                        : emailCtrl.text.trim(),
+                  ),
                   tier: const drift.Value('Bronze'),
                   points: const drift.Value(10), // Welcome bonus points!
                   stampsCount: const drift.Value(1), // Welcome stamp!
@@ -241,16 +283,25 @@ class _LoyaltyScreenState extends ConsumerState<LoyaltyScreen> {
     );
   }
 
-  void _showEditCustomerDialog(BuildContext context, AppDatabase db, Customer customer) {
+  void _showEditCustomerDialog(
+    BuildContext context,
+    AppDatabase db,
+    Customer customer,
+  ) {
     final pointsCtrl = TextEditingController(text: customer.points.toString());
-    final stampsCtrl = TextEditingController(text: customer.stampsCount.toString());
+    final stampsCtrl = TextEditingController(
+      text: customer.stampsCount.toString(),
+    );
 
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
         title: Row(
           children: [
-            HugeIcon(icon: HugeIcons.strokeRoundedEdit01, color: AppTheme.primaryCoffee),
+            HugeIcon(
+              icon: HugeIcons.strokeRoundedEdit01,
+              color: AppTheme.primaryCoffee,
+            ),
             const SizedBox(width: 8),
             Text('Kemas Kini: ${customer.name}'),
           ],
@@ -261,13 +312,19 @@ class _LoyaltyScreenState extends ConsumerState<LoyaltyScreen> {
             TextField(
               controller: pointsCtrl,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(labelText: 'Baki Mata Ganjaran', suffixText: 'pts'),
+              decoration: const InputDecoration(
+                labelText: 'Baki Mata Ganjaran',
+                suffixText: 'pts',
+              ),
             ),
             const SizedBox(height: 12),
             TextField(
               controller: stampsCtrl,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(labelText: 'Jumlah Cop (Maks 10)', suffixText: 'cop'),
+              decoration: const InputDecoration(
+                labelText: 'Jumlah Cop (Maks 10)',
+                suffixText: 'cop',
+              ),
             ),
           ],
         ),
@@ -283,9 +340,15 @@ class _LoyaltyScreenState extends ConsumerState<LoyaltyScreen> {
           FilledButton(
             onPressed: () async {
               final newPts = int.tryParse(pointsCtrl.text) ?? customer.points;
-              final newStamps = (int.tryParse(stampsCtrl.text) ?? customer.stampsCount).clamp(0, 10);
+              final newStamps =
+                  (int.tryParse(stampsCtrl.text) ?? customer.stampsCount).clamp(
+                    0,
+                    10,
+                  );
               await db.updateCustomer(
-                customer.toCompanion(true).copyWith(
+                customer
+                    .toCompanion(true)
+                    .copyWith(
                       points: drift.Value(newPts),
                       stampsCount: drift.Value(newStamps),
                     ),
@@ -319,21 +382,21 @@ class _CustomerLoyaltyCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final (tierColor, tierGradient) = switch (customer.tier) {
       'Platinum' => (
-          const Color(0xFF37474F),
-          const LinearGradient(colors: [Color(0xFF455A64), Color(0xFF263238)])
-        ),
+        const Color(0xFF37474F),
+        const LinearGradient(colors: [Color(0xFF455A64), Color(0xFF263238)]),
+      ),
       'Gold' => (
-          const Color(0xFFFFA000),
-          const LinearGradient(colors: [Color(0xFFFFB300), Color(0xFFFF8F00)])
-        ),
+        const Color(0xFFFFA000),
+        const LinearGradient(colors: [Color(0xFFFFB300), Color(0xFFFF8F00)]),
+      ),
       'Silver' => (
-          const Color(0xFF78909C),
-          const LinearGradient(colors: [Color(0xFF90A4AE), Color(0xFF607D8B)])
-        ),
+        const Color(0xFF78909C),
+        const LinearGradient(colors: [Color(0xFF90A4AE), Color(0xFF607D8B)]),
+      ),
       _ => (
-          const Color(0xFF8D4E1C),
-          const LinearGradient(colors: [Color(0xFFA1887F), Color(0xFF6D4C41)])
-        ),
+        const Color(0xFF8D4E1C),
+        const LinearGradient(colors: [Color(0xFFA1887F), Color(0xFF6D4C41)]),
+      ),
     };
 
     return Container(
@@ -364,32 +427,56 @@ class _CustomerLoyaltyCard extends StatelessWidget {
                   children: [
                     Text(
                       customer.name,
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
                     const SizedBox(height: 2),
                     Row(
                       children: [
-                        HugeIcon(icon: HugeIcons.strokeRoundedCall, size: 14, color: AppTheme.mutedText),
+                        HugeIcon(
+                          icon: HugeIcons.strokeRoundedCall,
+                          size: 14,
+                          color: AppTheme.mutedText,
+                        ),
                         const SizedBox(width: 4),
-                        Text(customer.phone, style: const TextStyle(fontSize: 12, color: AppTheme.mutedText)),
+                        Text(
+                          customer.phone,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: AppTheme.mutedText,
+                          ),
+                        ),
                       ],
                     ),
                   ],
                 ),
                 // Tier Badge
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 5,
+                  ),
                   decoration: BoxDecoration(
                     gradient: tierGradient,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
                     children: [
-                      HugeIcon(icon: HugeIcons.strokeRoundedStar, size: 14, color: Colors.white),
+                      HugeIcon(
+                        icon: HugeIcons.strokeRoundedStar,
+                        size: 14,
+                        color: Colors.white,
+                      ),
                       const SizedBox(width: 4),
                       Text(
                         customer.tier.toUpperCase(),
-                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 11),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w800,
+                          fontSize: 11,
+                        ),
                       ),
                     ],
                   ),
@@ -412,11 +499,21 @@ class _CustomerLoyaltyCard extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('Mata Ganjaran', style: TextStyle(fontSize: 11, color: AppTheme.mutedText)),
+                        const Text(
+                          'Mata Ganjaran',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: AppTheme.mutedText,
+                          ),
+                        ),
                         const SizedBox(height: 2),
                         Text(
                           '${customer.points} pts',
-                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: AppTheme.primaryCoffee),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w800,
+                            color: AppTheme.primaryCoffee,
+                          ),
                         ),
                       ],
                     ),
@@ -433,11 +530,21 @@ class _CustomerLoyaltyCard extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('Jumlah Belanja', style: TextStyle(fontSize: 11, color: AppTheme.mutedText)),
+                        const Text(
+                          'Jumlah Belanja',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: AppTheme.mutedText,
+                          ),
+                        ),
                         const SizedBox(height: 2),
                         Text(
                           'RM ${customer.totalSpent.toStringAsFixed(2)}',
-                          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: AppTheme.darkEspresso),
+                          style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w800,
+                            color: AppTheme.darkEspresso,
+                          ),
                         ),
                       ],
                     ),
@@ -457,14 +564,28 @@ class _CustomerLoyaltyCard extends StatelessWidget {
                   children: [
                     const Row(
                       children: [
-                        HugeIcon(icon: HugeIcons.strokeRoundedUser, size: 14, color: AppTheme.primaryCoffee),
+                        HugeIcon(
+                          icon: HugeIcons.strokeRoundedUser,
+                          size: 14,
+                          color: AppTheme.primaryCoffee,
+                        ),
                         SizedBox(width: 4),
-                        Text('Kad Cop Kopi Percuma', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700)),
+                        Text(
+                          'Kad Cop Kopi Percuma',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
                       ],
                     ),
                     Text(
                       '${customer.stampsCount}/10 Cop',
-                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: AppTheme.primaryCoffee),
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w800,
+                        color: AppTheme.primaryCoffee,
+                      ),
                     ),
                   ],
                 ),
@@ -483,21 +604,36 @@ class _CustomerLoyaltyCard extends StatelessWidget {
                         color: isStamped
                             ? AppTheme.primaryCoffee
                             : isLast
-                                ? const Color(0xFFFFECB3)
-                                : const Color(0xFFEDE3D8),
+                            ? const Color(0xFFFFECB3)
+                            : const Color(0xFFEDE3D8),
                         border: isLast
-                            ? Border.all(color: Colors.amber.shade700, width: 1.5)
+                            ? Border.all(
+                                color: Colors.amber.shade700,
+                                width: 1.5,
+                              )
                             : null,
                       ),
                       child: Center(
                         child: isStamped
-                            ? HugeIcon(icon: HugeIcons.strokeRoundedCheckmarkBadge01, size: 14, color: Colors.white)
+                            ? HugeIcon(
+                                icon: HugeIcons.strokeRoundedCheckmarkBadge01,
+                                size: 14,
+                                color: Colors.white,
+                              )
                             : isLast
-                                ? HugeIcon(icon: HugeIcons.strokeRoundedCoffee01, size: 12, color: Color(0xFFE65100))
-                                : Text(
-                                    '${idx + 1}',
-                                    style: const TextStyle(fontSize: 9, color: AppTheme.mutedText, fontWeight: FontWeight.w700),
-                                  ),
+                            ? HugeIcon(
+                                icon: HugeIcons.strokeRoundedCoffee01,
+                                size: 12,
+                                color: Color(0xFFE65100),
+                              )
+                            : Text(
+                                '${idx + 1}',
+                                style: const TextStyle(
+                                  fontSize: 9,
+                                  color: AppTheme.mutedText,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
                       ),
                     );
                   }),
@@ -513,18 +649,26 @@ class _CustomerLoyaltyCard extends StatelessWidget {
               children: [
                 if (customer.stampsCount >= 10)
                   FilledButton.icon(
-                    icon: HugeIcon(icon: HugeIcons.strokeRoundedTicket01, size: 16),
+                    icon: HugeIcon(
+                      icon: HugeIcons.strokeRoundedTicket01,
+                      size: 16,
+                    ),
                     label: const Text('Tebus Kopi Percuma!'),
                     style: FilledButton.styleFrom(
                       backgroundColor: AppTheme.successGreen,
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 6,
+                      ),
                     ),
                     onPressed: () async {
                       final ok = await db.redeemCustomerStamps(customer.id);
                       if (ok && context.mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                            content: Text('🎉 Berjaya menebus 1 Kopi Percuma untuk ahli ini!'),
+                            content: Text(
+                              '🎉 Berjaya menebus 1 Kopi Percuma untuk ahli ini!',
+                            ),
                             backgroundColor: AppTheme.successGreen,
                           ),
                         );
@@ -536,10 +680,17 @@ class _CustomerLoyaltyCard extends StatelessWidget {
                     customer.lastVisitedAt != null
                         ? 'Lawatan Terakhir: ${DateFormat('dd/MM/yyyy').format(customer.lastVisitedAt!)}'
                         : 'Ahli Baru',
-                    style: const TextStyle(fontSize: 11, color: AppTheme.mutedText),
+                    style: const TextStyle(
+                      fontSize: 11,
+                      color: AppTheme.mutedText,
+                    ),
                   ),
                 IconButton(
-                  icon: HugeIcon(icon: HugeIcons.strokeRoundedSettings01, size: 18, color: AppTheme.mutedText),
+                  icon: HugeIcon(
+                    icon: HugeIcons.strokeRoundedSettings01,
+                    size: 18,
+                    color: AppTheme.mutedText,
+                  ),
                   onPressed: onEdit,
                 ),
               ],

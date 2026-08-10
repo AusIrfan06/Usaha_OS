@@ -14,7 +14,8 @@ class AdvancedAnalyticsScreen extends ConsumerStatefulWidget {
       _AdvancedAnalyticsScreenState();
 }
 
-class _AdvancedAnalyticsScreenState extends ConsumerState<AdvancedAnalyticsScreen>
+class _AdvancedAnalyticsScreenState
+    extends ConsumerState<AdvancedAnalyticsScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
@@ -39,7 +40,10 @@ class _AdvancedAnalyticsScreenState extends ConsumerState<AdvancedAnalyticsScree
       appBar: AppBar(
         title: const Text(
           'Analitik Lanjutan & COGS Intelligence',
-          style: TextStyle(fontWeight: FontWeight.w800, color: AppTheme.darkEspresso),
+          style: TextStyle(
+            fontWeight: FontWeight.w800,
+            color: AppTheme.darkEspresso,
+          ),
         ),
         backgroundColor: AppTheme.warmCream,
         surfaceTintColor: Colors.transparent,
@@ -50,10 +54,22 @@ class _AdvancedAnalyticsScreenState extends ConsumerState<AdvancedAnalyticsScree
           unselectedLabelColor: AppTheme.mutedText,
           indicatorColor: AppTheme.primaryCoffee,
           tabs: const [
-            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedPieChart01), text: 'COGS & Margin Item'),
-            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedClock01), text: 'Peta Waktu Puncak (Heatmap)'),
-            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedUser), text: 'Prestasi Staf'),
-            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedBank), text: 'Penyata Untung Rugi (P&L)'),
+            Tab(
+              icon: HugeIcon(icon: HugeIcons.strokeRoundedPieChart01),
+              text: 'COGS & Margin Item',
+            ),
+            Tab(
+              icon: HugeIcon(icon: HugeIcons.strokeRoundedClock01),
+              text: 'Peta Waktu Puncak (Heatmap)',
+            ),
+            Tab(
+              icon: HugeIcon(icon: HugeIcons.strokeRoundedUser),
+              text: 'Prestasi Staf',
+            ),
+            Tab(
+              icon: HugeIcon(icon: HugeIcons.strokeRoundedBank),
+              text: 'Penyata Untung Rugi (P&L)',
+            ),
           ],
         ),
       ),
@@ -79,7 +95,9 @@ class _AdvancedAnalyticsScreenState extends ConsumerState<AdvancedAnalyticsScree
       error: (e, _) => Center(child: Text('Ralat: $e')),
       data: (items) {
         if (items.isEmpty) {
-          return const Center(child: Text('Tiada data menu untuk analisis COGS'));
+          return const Center(
+            child: Text('Tiada data menu untuk analisis COGS'),
+          );
         }
 
         return ListView(
@@ -90,16 +108,24 @@ class _AdvancedAnalyticsScreenState extends ConsumerState<AdvancedAnalyticsScree
               decoration: BoxDecoration(
                 color: AppTheme.primaryCoffee.withOpacity(0.08),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppTheme.primaryCoffee.withOpacity(0.2)),
+                border: Border.all(
+                  color: AppTheme.primaryCoffee.withOpacity(0.2),
+                ),
               ),
               child: const Row(
                 children: [
-                  HugeIcon(icon: HugeIcons.strokeRoundedSquare, color: AppTheme.primaryCoffee),
+                  HugeIcon(
+                    icon: HugeIcons.strokeRoundedSquare,
+                    color: AppTheme.primaryCoffee,
+                  ),
                   SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       'Analisis COGS dikira secara automatik berdasarkan resipi BOM (Bill of Materials) dan kos pembelian bahan mentah terkini.',
-                      style: TextStyle(fontSize: 13, color: AppTheme.darkEspresso),
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: AppTheme.darkEspresso,
+                      ),
                     ),
                   ),
                 ],
@@ -122,7 +148,9 @@ class _AdvancedAnalyticsScreenState extends ConsumerState<AdvancedAnalyticsScree
 
               return Card(
                 margin: const EdgeInsets.only(bottom: 12),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Column(
@@ -133,11 +161,17 @@ class _AdvancedAnalyticsScreenState extends ConsumerState<AdvancedAnalyticsScree
                           Expanded(
                             child: Text(
                               item['name'] as String,
-                              style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 16,
+                              ),
                             ),
                           ),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 4,
+                            ),
                             decoration: BoxDecoration(
                               color: marginColor.withOpacity(0.12),
                               borderRadius: BorderRadius.circular(12),
@@ -145,7 +179,11 @@ class _AdvancedAnalyticsScreenState extends ConsumerState<AdvancedAnalyticsScree
                             ),
                             child: Text(
                               'Margin: ${margin.toStringAsFixed(1)}%',
-                              style: TextStyle(color: marginColor, fontWeight: FontWeight.w800, fontSize: 12),
+                              style: TextStyle(
+                                color: marginColor,
+                                fontWeight: FontWeight.w800,
+                                fontSize: 12,
+                              ),
                             ),
                           ),
                         ],
@@ -153,9 +191,21 @@ class _AdvancedAnalyticsScreenState extends ConsumerState<AdvancedAnalyticsScree
                       const SizedBox(height: 12),
                       Row(
                         children: [
-                          _buildCogsMetricCell('Harga Jualan', CurrencyFormatter.format(sellingPrice), AppTheme.darkEspresso),
-                          _buildCogsMetricCell('Kos Bahan (COGS)', CurrencyFormatter.format(cogs), Colors.red.shade700),
-                          _buildCogsMetricCell('Untung Kasar / Unit', CurrencyFormatter.format(profit), AppTheme.successGreen),
+                          _buildCogsMetricCell(
+                            'Harga Jualan',
+                            CurrencyFormatter.format(sellingPrice),
+                            AppTheme.darkEspresso,
+                          ),
+                          _buildCogsMetricCell(
+                            'Kos Bahan (COGS)',
+                            CurrencyFormatter.format(cogs),
+                            Colors.red.shade700,
+                          ),
+                          _buildCogsMetricCell(
+                            'Untung Kasar / Unit',
+                            CurrencyFormatter.format(profit),
+                            AppTheme.successGreen,
+                          ),
                         ],
                       ),
                       const SizedBox(height: 10),
@@ -165,7 +215,9 @@ class _AdvancedAnalyticsScreenState extends ConsumerState<AdvancedAnalyticsScree
                           value: (margin / 100).clamp(0.0, 1.0),
                           minHeight: 8,
                           backgroundColor: Colors.grey.shade200,
-                          valueColor: AlwaysStoppedAnimation<Color>(marginColor),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            marginColor,
+                          ),
                         ),
                       ),
                     ],
@@ -184,9 +236,19 @@ class _AdvancedAnalyticsScreenState extends ConsumerState<AdvancedAnalyticsScree
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: const TextStyle(fontSize: 11, color: AppTheme.mutedText)),
+          Text(
+            label,
+            style: const TextStyle(fontSize: 11, color: AppTheme.mutedText),
+          ),
           const SizedBox(height: 2),
-          Text(value, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: color)),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
+          ),
         ],
       ),
     );
@@ -210,7 +272,9 @@ class _AdvancedAnalyticsScreenState extends ConsumerState<AdvancedAnalyticsScree
         return ListView(
           padding: EdgeInsets.all(isTablet ? 24 : 16),
           children: [
-            const SectionHeader(title: 'Peta Waktu Puncak Pesanan (Hourly Rush Heatmap)'),
+            const SectionHeader(
+              title: 'Peta Waktu Puncak Pesanan (Hourly Rush Heatmap)',
+            ),
             const SizedBox(height: 8),
             const Text(
               'Menunjukkan taburan pesanan & hasil jualan dari jam 7:00 pagi hingga 11:00 malam untuk optimasi jadual barista & staf.',
@@ -219,7 +283,9 @@ class _AdvancedAnalyticsScreenState extends ConsumerState<AdvancedAnalyticsScree
             const SizedBox(height: 20),
 
             Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
               child: Padding(
                 padding: const EdgeInsets.all(18),
                 child: Column(
@@ -240,8 +306,12 @@ class _AdvancedAnalyticsScreenState extends ConsumerState<AdvancedAnalyticsScree
                             child: Text(
                               label,
                               style: TextStyle(
-                                fontWeight: isPeak ? FontWeight.w900 : FontWeight.w600,
-                                color: isPeak ? AppTheme.primaryCoffee : AppTheme.darkEspresso,
+                                fontWeight: isPeak
+                                    ? FontWeight.w900
+                                    : FontWeight.w600,
+                                color: isPeak
+                                    ? AppTheme.primaryCoffee
+                                    : AppTheme.darkEspresso,
                                 fontSize: 12,
                               ),
                             ),
@@ -262,7 +332,9 @@ class _AdvancedAnalyticsScreenState extends ConsumerState<AdvancedAnalyticsScree
                                   child: Container(
                                     height: 22,
                                     decoration: BoxDecoration(
-                                      color: isPeak ? AppTheme.primaryCoffee : Colors.brown.shade200,
+                                      color: isPeak
+                                          ? AppTheme.primaryCoffee
+                                          : Colors.brown.shade200,
                                       borderRadius: BorderRadius.circular(6),
                                     ),
                                   ),
@@ -276,9 +348,21 @@ class _AdvancedAnalyticsScreenState extends ConsumerState<AdvancedAnalyticsScree
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                Text('$orders pesanan', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                                Text(
+                                  '$orders pesanan',
+                                  style: const TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                                 const SizedBox(width: 6),
-                                Text(CurrencyFormatter.format(sales), style: const TextStyle(fontSize: 11, color: AppTheme.mutedText)),
+                                Text(
+                                  CurrencyFormatter.format(sales),
+                                  style: const TextStyle(
+                                    fontSize: 11,
+                                    color: AppTheme.mutedText,
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -324,7 +408,9 @@ class _AdvancedAnalyticsScreenState extends ConsumerState<AdvancedAnalyticsScree
 
               return Card(
                 margin: const EdgeInsets.only(bottom: 12),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Row(
@@ -340,7 +426,11 @@ class _AdvancedAnalyticsScreenState extends ConsumerState<AdvancedAnalyticsScree
                         alignment: Alignment.center,
                         child: Text(
                           '#$rank',
-                          style: TextStyle(fontWeight: FontWeight.w900, color: badgeColor, fontSize: 13),
+                          style: TextStyle(
+                            fontWeight: FontWeight.w900,
+                            color: badgeColor,
+                            fontSize: 13,
+                          ),
                         ),
                       ),
                       const SizedBox(width: 16),
@@ -350,11 +440,17 @@ class _AdvancedAnalyticsScreenState extends ConsumerState<AdvancedAnalyticsScree
                           children: [
                             Text(
                               staff['name'] as String,
-                              style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 15,
+                              ),
                             ),
                             Text(
                               'Jawatan: ${staff['role']} • $orderCount pesanan',
-                              style: const TextStyle(color: AppTheme.mutedText, fontSize: 12),
+                              style: const TextStyle(
+                                color: AppTheme.mutedText,
+                                fontSize: 12,
+                              ),
                             ),
                           ],
                         ),
@@ -364,11 +460,18 @@ class _AdvancedAnalyticsScreenState extends ConsumerState<AdvancedAnalyticsScree
                         children: [
                           Text(
                             CurrencyFormatter.format(totalSales),
-                            style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16, color: AppTheme.darkEspresso),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w900,
+                              fontSize: 16,
+                              color: AppTheme.darkEspresso,
+                            ),
                           ),
                           Text(
                             'Purata: ${CurrencyFormatter.format(avgTicket)}',
-                            style: const TextStyle(fontSize: 11, color: AppTheme.mutedText),
+                            style: const TextStyle(
+                              fontSize: 11,
+                              color: AppTheme.mutedText,
+                            ),
                           ),
                         ],
                       ),
@@ -407,7 +510,9 @@ class _AdvancedAnalyticsScreenState extends ConsumerState<AdvancedAnalyticsScree
           children: [
             Card(
               elevation: 3,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
               child: Padding(
                 padding: const EdgeInsets.all(20),
                 child: Column(
@@ -418,27 +523,56 @@ class _AdvancedAnalyticsScreenState extends ConsumerState<AdvancedAnalyticsScree
                       children: [
                         const Text(
                           'Penyata Untung & Rugi (P&L)',
-                          style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18, color: AppTheme.darkEspresso),
+                          style: TextStyle(
+                            fontWeight: FontWeight.w900,
+                            fontSize: 18,
+                            color: AppTheme.darkEspresso,
+                          ),
                         ),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 4,
+                          ),
                           decoration: BoxDecoration(
                             color: AppTheme.primaryCoffee.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: const Text('Bulan Semasa', style: TextStyle(color: AppTheme.primaryCoffee, fontSize: 11, fontWeight: FontWeight.bold)),
+                          child: const Text(
+                            'Bulan Semasa',
+                            style: TextStyle(
+                              color: AppTheme.primaryCoffee,
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                       ],
                     ),
                     const Divider(height: 24),
 
-                    _buildPnlRow('Jualan Kasar (Gross Revenue)', CurrencyFormatter.format(grossRevenue)),
-                    _buildPnlRow('Pesanan Dibatalkan / Void', '- ${CurrencyFormatter.format(voidLoss)}', isDeduction: true),
+                    _buildPnlRow(
+                      'Jualan Kasar (Gross Revenue)',
+                      CurrencyFormatter.format(grossRevenue),
+                    ),
+                    _buildPnlRow(
+                      'Pesanan Dibatalkan / Void',
+                      '- ${CurrencyFormatter.format(voidLoss)}',
+                      isDeduction: true,
+                    ),
                     const Divider(height: 16),
-                    _buildPnlRow('Jualan Bersih (Net Sales)', CurrencyFormatter.format(netSales), isBold: true),
+                    _buildPnlRow(
+                      'Jualan Bersih (Net Sales)',
+                      CurrencyFormatter.format(netSales),
+                      isBold: true,
+                    ),
                     const SizedBox(height: 12),
 
-                    _buildPnlRow('Kos Bahan Mentah (COGS BOM)', '- ${CurrencyFormatter.format(cogs)}', isDeduction: true),
+                    _buildPnlRow(
+                      'Kos Bahan Mentah (COGS BOM)',
+                      '- ${CurrencyFormatter.format(cogs)}',
+                      isDeduction: true,
+                    ),
                     const Divider(height: 16),
                     _buildPnlRow(
                       'Untung Kasar (Gross Profit)',
@@ -448,7 +582,11 @@ class _AdvancedAnalyticsScreenState extends ConsumerState<AdvancedAnalyticsScree
                     ),
                     const SizedBox(height: 12),
 
-                    _buildPnlRow('Perbelanjaan Operasi & Runcit (Opex)', '- ${CurrencyFormatter.format(expenses)}', isDeduction: true),
+                    _buildPnlRow(
+                      'Perbelanjaan Operasi & Runcit (Opex)',
+                      '- ${CurrencyFormatter.format(expenses)}',
+                      isDeduction: true,
+                    ),
                     const Divider(height: 24, thickness: 2),
 
                     _buildPnlRow(
@@ -456,7 +594,9 @@ class _AdvancedAnalyticsScreenState extends ConsumerState<AdvancedAnalyticsScree
                       '${CurrencyFormatter.format(netProfit)} (${netMargin.toStringAsFixed(1)}%)',
                       isBold: true,
                       isTotal: true,
-                      color: netProfit >= 0 ? AppTheme.successGreen : AppTheme.dangerRed,
+                      color: netProfit >= 0
+                          ? AppTheme.successGreen
+                          : AppTheme.dangerRed,
                     ),
                   ],
                 ),
@@ -469,14 +609,21 @@ class _AdvancedAnalyticsScreenState extends ConsumerState<AdvancedAnalyticsScree
                 backgroundColor: AppTheme.primaryCoffee,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
               icon: HugeIcon(icon: HugeIcons.strokeRoundedSquare),
-              label: const Text('Eksport Laporan P&L untuk Akauntan', style: TextStyle(fontWeight: FontWeight.bold)),
+              label: const Text(
+                'Eksport Laporan P&L untuk Akauntan',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               onPressed: () {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text('Penyata Untung Rugi (P&L) telah dieksport ke format PDF/CSV.'),
+                    content: Text(
+                      'Penyata Untung Rugi (P&L) telah dieksport ke format PDF/CSV.',
+                    ),
                     backgroundColor: AppTheme.successGreen,
                   ),
                 );
@@ -514,7 +661,9 @@ class _AdvancedAnalyticsScreenState extends ConsumerState<AdvancedAnalyticsScree
             style: TextStyle(
               fontSize: isTotal ? 16 : 13,
               fontWeight: isBold || isTotal ? FontWeight.w900 : FontWeight.w600,
-              color: color ?? (isDeduction ? Colors.red.shade700 : AppTheme.darkEspresso),
+              color:
+                  color ??
+                  (isDeduction ? Colors.red.shade700 : AppTheme.darkEspresso),
             ),
           ),
         ],

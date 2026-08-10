@@ -13,10 +13,10 @@ class CartItem {
   });
 
   CartItem copyWith({int? quantity, String? modifiers}) => CartItem(
-        menuItem: menuItem,
-        quantity: quantity ?? this.quantity,
-        modifiers: modifiers ?? this.modifiers,
-      );
+    menuItem: menuItem,
+    quantity: quantity ?? this.quantity,
+    modifiers: modifiers ?? this.modifiers,
+  );
 
   double get subtotal => menuItem.basePrice * quantity;
 }

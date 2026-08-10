@@ -38,7 +38,10 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
       appBar: AppBar(
         title: const Row(
           children: [
-            HugeIcon(icon: HugeIcons.strokeRoundedBank, color: AppTheme.primaryCoffee),
+            HugeIcon(
+              icon: HugeIcons.strokeRoundedBank,
+              color: AppTheme.primaryCoffee,
+            ),
             SizedBox(width: 10),
             Text(
               'Perbelanjaan & Tunai Runcit (Petty Cash)',
@@ -54,17 +57,20 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
           labelColor: AppTheme.primaryCoffee,
           unselectedLabelColor: AppTheme.mutedText,
           tabs: const [
-            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedFile02), text: 'Log Perbelanjaan'),
-            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedRegister), text: 'Imbangan Laci Tunai (Cash Drawer)'),
+            Tab(
+              icon: HugeIcon(icon: HugeIcons.strokeRoundedFile02),
+              text: 'Log Perbelanjaan',
+            ),
+            Tab(
+              icon: HugeIcon(icon: HugeIcons.strokeRoundedRegister),
+              text: 'Imbangan Laci Tunai (Cash Drawer)',
+            ),
           ],
         ),
       ),
       body: TabBarView(
         controller: _tabController,
-        children: [
-          _buildExpensesTab(),
-          _buildCashDrawerTab(),
-        ],
+        children: [_buildExpensesTab(), _buildCashDrawerTab()],
       ),
     );
   }
@@ -88,14 +94,24 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
             children: [
               totalExpensesAsync.when(
                 loading: () => const Text('Mengira...', style: TextStyle()),
-                error: (e, _) => Text('Ralat: $e', style: const TextStyle(color: Colors.red)),
+                error: (e, _) => Text(
+                  'Ralat: $e',
+                  style: const TextStyle(color: Colors.red),
+                ),
                 data: (totalToday) => Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Jumlah Perbelanjaan Hari Ini:', style: TextStyle(color: AppTheme.mutedText, fontSize: 12)),
+                    const Text(
+                      'Jumlah Perbelanjaan Hari Ini:',
+                      style: TextStyle(color: AppTheme.mutedText, fontSize: 12),
+                    ),
                     Text(
                       'RM ${totalToday.toStringAsFixed(2)}',
-                      style: const TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold, fontSize: 20),
+                      style: const TextStyle(
+                        color: Colors.redAccent,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
                     ),
                   ],
                 ),
@@ -105,7 +121,10 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.primaryCoffee,
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 10,
+                  ),
                 ),
                 icon: HugeIcon(icon: HugeIcons.strokeRoundedAdd01, size: 18),
                 label: const Text('Rekod Perbelanjaan'),
@@ -114,22 +133,39 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
             ],
           ),
         ),
-        const Divider(height: 1, ),
+        const Divider(height: 1),
 
         // List of Expenses
         Expanded(
           child: expensesAsync.when(
-            loading: () => const Center(child: CircularProgressIndicator(color: AppTheme.primaryCoffee)),
-            error: (err, _) => Center(child: Text('Ralat: $err', style: const TextStyle(color: Colors.red))),
+            loading: () => const Center(
+              child: CircularProgressIndicator(color: AppTheme.primaryCoffee),
+            ),
+            error: (err, _) => Center(
+              child: Text(
+                'Ralat: $err',
+                style: const TextStyle(color: Colors.red),
+              ),
+            ),
             data: (expenses) {
               if (expenses.isEmpty) {
                 return Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      HugeIcon(icon: HugeIcons.strokeRoundedInvoice01, size: 64, color: AppTheme.mutedText.withOpacity(0.5)),
+                      HugeIcon(
+                        icon: HugeIcons.strokeRoundedInvoice01,
+                        size: 64,
+                        color: AppTheme.mutedText.withOpacity(0.5),
+                      ),
                       const SizedBox(height: 12),
-                      const Text('Tiada rekod perbelanjaan', style: TextStyle(color: AppTheme.mutedText, fontSize: 16)),
+                      const Text(
+                        'Tiada rekod perbelanjaan',
+                        style: TextStyle(
+                          color: AppTheme.mutedText,
+                          fontSize: 16,
+                        ),
+                      ),
                       const SizedBox(height: 8),
                       TextButton.icon(
                         onPressed: () => _showAddExpenseDialog(context),
@@ -156,28 +192,45 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
                   return Card(
                     color: Colors.white,
                     margin: const EdgeInsets.only(bottom: 10),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                     child: ListTile(
                       leading: CircleAvatar(
                         backgroundColor: catColor.withOpacity(0.2),
-                        child: HugeIcon(icon: HugeIcons.strokeRoundedMoney01, color: catColor),
+                        child: HugeIcon(
+                          icon: HugeIcons.strokeRoundedMoney01,
+                          color: catColor,
+                        ),
                       ),
                       title: Row(
                         children: [
                           Text(
-                            e.description.isNotEmpty ? e.description : e.category,
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                            e.description.isNotEmpty
+                                ? e.description
+                                : e.category,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                            ),
                           ),
                           const SizedBox(width: 8),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 2,
+                            ),
                             decoration: BoxDecoration(
                               color: catColor.withOpacity(0.2),
                               borderRadius: BorderRadius.circular(4),
                             ),
                             child: Text(
                               e.category,
-                              style: TextStyle(color: catColor, fontSize: 11, fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                color: catColor,
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ],
@@ -188,11 +241,17 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
                           const SizedBox(height: 4),
                           Text(
                             'Penerima: ${e.recipient.isNotEmpty ? e.recipient : '-'} • Kaedah: ${e.paymentMethod.toUpperCase()}${e.receiptNumber != null ? ' (No: ${e.receiptNumber})' : ''}',
-                            style: const TextStyle(color: AppTheme.mutedText, fontSize: 12),
+                            style: const TextStyle(
+                              color: AppTheme.mutedText,
+                              fontSize: 12,
+                            ),
                           ),
                           Text(
                             'Direkod oleh: ${e.recordedBy} (${df.format(e.expenseDate)})',
-                            style: const TextStyle(color: AppTheme.mutedText, fontSize: 11),
+                            style: const TextStyle(
+                              color: AppTheme.mutedText,
+                              fontSize: 11,
+                            ),
                           ),
                         ],
                       ),
@@ -208,7 +267,11 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
                             ),
                           ),
                           IconButton(
-                            icon: HugeIcon(icon: HugeIcons.strokeRoundedDelete01, color: AppTheme.mutedText, size: 20),
+                            icon: HugeIcon(
+                              icon: HugeIcons.strokeRoundedDelete01,
+                              color: AppTheme.mutedText,
+                              size: 20,
+                            ),
                             onPressed: () {
                               ref.read(databaseProvider).deleteExpense(e.id);
                             },
@@ -239,7 +302,10 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setState) => AlertDialog(
           backgroundColor: Colors.white,
-          title: const Text('Rekod Perbelanjaan / Tunai Runcit', style: TextStyle()),
+          title: const Text(
+            'Rekod Perbelanjaan / Tunai Runcit',
+            style: TextStyle(),
+          ),
           content: SingleChildScrollView(
             child: SizedBox(
               width: 420,
@@ -270,14 +336,35 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
                     value: category,
                     dropdownColor: Colors.white,
                     style: const TextStyle(),
-                    decoration: const InputDecoration(labelText: 'Kategori Perbelanjaan', border: OutlineInputBorder()),
+                    decoration: const InputDecoration(
+                      labelText: 'Kategori Perbelanjaan',
+                      border: OutlineInputBorder(),
+                    ),
                     items: const [
-                      DropdownMenuItem(value: 'Petty Cash', child: Text('Tunai Runcit (Petty Cash Kecemasan)')),
-                      DropdownMenuItem(value: 'Ingredients', child: Text('Bahan Mentah / Ais / Susu')),
-                      DropdownMenuItem(value: 'Utilities', child: Text('Utiliti (Elektrik / Air / Internet)')),
-                      DropdownMenuItem(value: 'Maintenance', child: Text('Penyelenggaraan & Pembaikan')),
-                      DropdownMenuItem(value: 'Staff Wages', child: Text('Gaji Harian / Sambilan')),
-                      DropdownMenuItem(value: 'Miscellaneous', child: Text('Lain-lain')),
+                      DropdownMenuItem(
+                        value: 'Petty Cash',
+                        child: Text('Tunai Runcit (Petty Cash Kecemasan)'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'Ingredients',
+                        child: Text('Bahan Mentah / Ais / Susu'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'Utilities',
+                        child: Text('Utiliti (Elektrik / Air / Internet)'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'Maintenance',
+                        child: Text('Penyelenggaraan & Pembaikan'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'Staff Wages',
+                        child: Text('Gaji Harian / Sambilan'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'Miscellaneous',
+                        child: Text('Lain-lain'),
+                      ),
                     ],
                     onChanged: (v) => setState(() => category = v!),
                   ),
@@ -286,11 +373,23 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
                     value: paymentMethod,
                     dropdownColor: Colors.white,
                     style: const TextStyle(),
-                    decoration: const InputDecoration(labelText: 'Kaedah Bayaran', border: OutlineInputBorder()),
+                    decoration: const InputDecoration(
+                      labelText: 'Kaedah Bayaran',
+                      border: OutlineInputBorder(),
+                    ),
                     items: const [
-                      DropdownMenuItem(value: 'cash', child: Text('Tunai dari Laci (Cash Drawer)')),
-                      DropdownMenuItem(value: 'duitnow', child: Text('DuitNow QR Kafe')),
-                      DropdownMenuItem(value: 'bank_transfer', child: Text('Pindahan Bank Syarikat')),
+                      DropdownMenuItem(
+                        value: 'cash',
+                        child: Text('Tunai dari Laci (Cash Drawer)'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'duitnow',
+                        child: Text('DuitNow QR Kafe'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'bank_transfer',
+                        child: Text('Pindahan Bank Syarikat'),
+                      ),
                     ],
                     onChanged: (v) => setState(() => paymentMethod = v!),
                   ),
@@ -319,31 +418,47 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('Batal', style: TextStyle(color: AppTheme.mutedText)),
+              child: const Text(
+                'Batal',
+                style: TextStyle(color: AppTheme.mutedText),
+              ),
             ),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: AppTheme.primaryCoffee),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.primaryCoffee,
+              ),
               onPressed: () async {
                 final amount = double.tryParse(amountCtrl.text);
-                if (amount == null || amount <= 0 || descCtrl.text.trim().isEmpty) return;
+                if (amount == null ||
+                    amount <= 0 ||
+                    descCtrl.text.trim().isEmpty)
+                  return;
 
-                await ref.read(databaseProvider).insertExpense(
-                  ExpensesCompanion.insert(
-                    category: drift.Value(category),
-                    amount: drift.Value(amount),
-                    paymentMethod: drift.Value(paymentMethod),
-                    recipient: drift.Value(recipientCtrl.text.trim()),
-                    description: drift.Value(descCtrl.text.trim()),
-                    receiptNumber: drift.Value(receiptCtrl.text.trim().isNotEmpty ? receiptCtrl.text.trim() : null),
-                    recordedBy: const drift.Value('Staf Kafe'),
-                  ),
-                );
+                await ref
+                    .read(databaseProvider)
+                    .insertExpense(
+                      ExpensesCompanion.insert(
+                        category: drift.Value(category),
+                        amount: drift.Value(amount),
+                        paymentMethod: drift.Value(paymentMethod),
+                        recipient: drift.Value(recipientCtrl.text.trim()),
+                        description: drift.Value(descCtrl.text.trim()),
+                        receiptNumber: drift.Value(
+                          receiptCtrl.text.trim().isNotEmpty
+                              ? receiptCtrl.text.trim()
+                              : null,
+                        ),
+                        recordedBy: const drift.Value('Staf Kafe'),
+                      ),
+                    );
 
                 if (!ctx.mounted) return;
                 Navigator.pop(ctx);
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text('Perbelanjaan RM ${amount.toStringAsFixed(2)} berjaya direkodkan!'),
+                    content: Text(
+                      'Perbelanjaan RM ${amount.toStringAsFixed(2)} berjaya direkodkan!',
+                    ),
                     backgroundColor: Colors.green,
                   ),
                 );
@@ -386,7 +501,10 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
               const CircleAvatar(
                 radius: 30,
                 backgroundColor: AppTheme.primaryCoffee,
-                child: HugeIcon(icon: HugeIcons.strokeRoundedRegister, size: 32, ),
+                child: HugeIcon(
+                  icon: HugeIcons.strokeRoundedRegister,
+                  size: 32,
+                ),
               ),
               const SizedBox(width: 16),
               Column(
@@ -398,7 +516,10 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
                   ),
                   balanceAsync.when(
                     loading: () => const Text('Mengira...', style: TextStyle()),
-                    error: (err, _) => Text('Ralat: $err', style: const TextStyle(color: Colors.red)),
+                    error: (err, _) => Text(
+                      'Ralat: $err',
+                      style: const TextStyle(color: Colors.red),
+                    ),
                     data: (bal) => Text(
                       'RM ${bal.toStringAsFixed(2)}',
                       style: const TextStyle(
@@ -438,12 +559,22 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
 
         Expanded(
           child: drawerLogsAsync.when(
-            loading: () => const Center(child: CircularProgressIndicator(color: AppTheme.primaryCoffee)),
-            error: (err, _) => Center(child: Text('Ralat: $err', style: const TextStyle(color: Colors.red))),
+            loading: () => const Center(
+              child: CircularProgressIndicator(color: AppTheme.primaryCoffee),
+            ),
+            error: (err, _) => Center(
+              child: Text(
+                'Ralat: $err',
+                style: const TextStyle(color: Colors.red),
+              ),
+            ),
             data: (logs) {
               if (logs.isEmpty) {
                 return const Center(
-                  child: Text('Tiada log pergerakan tunai hari ini', style: TextStyle(color: AppTheme.mutedText)),
+                  child: Text(
+                    'Tiada log pergerakan tunai hari ini',
+                    style: TextStyle(color: AppTheme.mutedText),
+                  ),
                 );
               }
 
@@ -452,29 +583,41 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
                 itemCount: logs.length,
                 itemBuilder: (context, index) {
                   final log = logs[index];
-                  final isPositive = log.type == 'float_in' || log.type == 'cash_in';
+                  final isPositive =
+                      log.type == 'float_in' || log.type == 'cash_in';
 
                   return Card(
                     color: Colors.white,
                     margin: const EdgeInsets.only(bottom: 8),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                     child: ListTile(
-                      leading: HugeIcon(icon: 
-                        isPositive ? HugeIcons.strokeRoundedSquare : HugeIcons.strokeRoundedSquare,
+                      leading: HugeIcon(
+                        icon: isPositive
+                            ? HugeIcons.strokeRoundedSquare
+                            : HugeIcons.strokeRoundedSquare,
                         color: isPositive ? Colors.green : Colors.orange,
                       ),
                       title: Text(
-                        log.reason.isNotEmpty ? log.reason : log.type.toUpperCase(),
+                        log.reason.isNotEmpty
+                            ? log.reason
+                            : log.type.toUpperCase(),
                         style: const TextStyle(fontWeight: FontWeight.w600),
                       ),
                       subtitle: Text(
                         'Oleh: ${log.recordedBy} • ${df.format(log.createdAt)}',
-                        style: const TextStyle(color: AppTheme.mutedText, fontSize: 12),
+                        style: const TextStyle(
+                          color: AppTheme.mutedText,
+                          fontSize: 12,
+                        ),
                       ),
                       trailing: Text(
                         '${isPositive ? '+' : '-'} RM ${log.amount.toStringAsFixed(2)}',
                         style: TextStyle(
-                          color: isPositive ? Colors.greenAccent : Colors.orangeAccent,
+                          color: isPositive
+                              ? Colors.greenAccent
+                              : Colors.orangeAccent,
                           fontWeight: FontWeight.bold,
                           fontSize: 15,
                         ),
@@ -500,7 +643,10 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setState) => AlertDialog(
           backgroundColor: Colors.white,
-          title: const Text('Pergerakan Tunai Laci (Cash Drawer)', style: TextStyle()),
+          title: const Text(
+            'Pergerakan Tunai Laci (Cash Drawer)',
+            style: TextStyle(),
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -508,12 +654,27 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
                 value: type,
                 dropdownColor: Colors.white,
                 style: const TextStyle(),
-                decoration: const InputDecoration(labelText: 'Jenis Tindakan', border: OutlineInputBorder()),
+                decoration: const InputDecoration(
+                  labelText: 'Jenis Tindakan',
+                  border: OutlineInputBorder(),
+                ),
                 items: const [
-                  DropdownMenuItem(value: 'float_in', child: Text('Float In (Tambah Apungan Pagi)')),
-                  DropdownMenuItem(value: 'cash_in', child: Text('Cash In (Kemasukan Tunai Tambahan)')),
-                  DropdownMenuItem(value: 'cash_out', child: Text('Cash Out (Pengeluaran Tunai Runcit)')),
-                  DropdownMenuItem(value: 'drop', child: Text('Cash Drop / Simpan ke Peti Besi')),
+                  DropdownMenuItem(
+                    value: 'float_in',
+                    child: Text('Float In (Tambah Apungan Pagi)'),
+                  ),
+                  DropdownMenuItem(
+                    value: 'cash_in',
+                    child: Text('Cash In (Kemasukan Tunai Tambahan)'),
+                  ),
+                  DropdownMenuItem(
+                    value: 'cash_out',
+                    child: Text('Cash Out (Pengeluaran Tunai Runcit)'),
+                  ),
+                  DropdownMenuItem(
+                    value: 'drop',
+                    child: Text('Cash Drop / Simpan ke Peti Besi'),
+                  ),
                 ],
                 onChanged: (v) => setState(() => type = v!),
               ),
@@ -542,28 +703,37 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('Batal', style: TextStyle(color: AppTheme.mutedText)),
+              child: const Text(
+                'Batal',
+                style: TextStyle(color: AppTheme.mutedText),
+              ),
             ),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: AppTheme.primaryCoffee),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.primaryCoffee,
+              ),
               onPressed: () async {
                 final amount = double.tryParse(amountCtrl.text);
                 if (amount == null || amount <= 0) return;
 
-                await ref.read(databaseProvider).insertCashDrawerLog(
-                  CashDrawerLogsCompanion.insert(
-                    type: type,
-                    amount: drift.Value(amount),
-                    reason: drift.Value(reasonCtrl.text.trim()),
-                    recordedBy: const drift.Value('Staf Kafe'),
-                  ),
-                );
+                await ref
+                    .read(databaseProvider)
+                    .insertCashDrawerLog(
+                      CashDrawerLogsCompanion.insert(
+                        type: type,
+                        amount: drift.Value(amount),
+                        reason: drift.Value(reasonCtrl.text.trim()),
+                        recordedBy: const drift.Value('Staf Kafe'),
+                      ),
+                    );
 
                 if (!ctx.mounted) return;
                 Navigator.pop(ctx);
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text('Log tunai RM ${amount.toStringAsFixed(2)} direkodkan!'),
+                    content: Text(
+                      'Log tunai RM ${amount.toStringAsFixed(2)} direkodkan!',
+                    ),
                     backgroundColor: Colors.green,
                   ),
                 );

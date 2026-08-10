@@ -33,30 +33,12 @@ final appRouter = GoRouter(
       builder: (context, state, child) =>
           _AppShell(location: state.fullPath ?? '/', child: child),
       routes: [
-        GoRoute(
-          path: '/',
-          builder: (_, __) => const DashboardScreen(),
-        ),
-        GoRoute(
-          path: '/pos',
-          builder: (_, __) => const PosScreen(),
-        ),
-        GoRoute(
-          path: '/kds',
-          builder: (_, __) => const KdsScreen(),
-        ),
-        GoRoute(
-          path: '/tasks',
-          builder: (_, __) => const TasksScreen(),
-        ),
-        GoRoute(
-          path: '/loyalty',
-          builder: (_, __) => const LoyaltyScreen(),
-        ),
-        GoRoute(
-          path: '/staff',
-          builder: (_, __) => const StaffScreen(),
-        ),
+        GoRoute(path: '/', builder: (_, __) => const DashboardScreen()),
+        GoRoute(path: '/pos', builder: (_, __) => const PosScreen()),
+        GoRoute(path: '/kds', builder: (_, __) => const KdsScreen()),
+        GoRoute(path: '/tasks', builder: (_, __) => const TasksScreen()),
+        GoRoute(path: '/loyalty', builder: (_, __) => const LoyaltyScreen()),
+        GoRoute(path: '/staff', builder: (_, __) => const StaffScreen()),
         GoRoute(
           path: '/suppliers',
           builder: (_, __) => const SuppliersPoScreen(),
@@ -65,70 +47,41 @@ final appRouter = GoRouter(
           path: '/stock-take',
           builder: (_, __) => const StockTakeScreen(),
         ),
-        GoRoute(
-          path: '/expenses',
-          builder: (_, __) => const ExpensesScreen(),
-        ),
-        GoRoute(
-          path: '/outlets',
-          builder: (_, __) => const OutletsScreen(),
-        ),
-        GoRoute(
-          path: '/delivery',
-          builder: (_, __) => const DeliveryScreen(),
-        ),
+        GoRoute(path: '/expenses', builder: (_, __) => const ExpensesScreen()),
+        GoRoute(path: '/outlets', builder: (_, __) => const OutletsScreen()),
+        GoRoute(path: '/delivery', builder: (_, __) => const DeliveryScreen()),
         GoRoute(
           path: '/analytics',
           builder: (_, __) => const AdvancedAnalyticsScreen(),
         ),
-        GoRoute(
-          path: '/orders',
-          builder: (_, __) => const OrdersScreen(),
-        ),
+        GoRoute(path: '/orders', builder: (_, __) => const OrdersScreen()),
         GoRoute(
           path: '/inventory',
           builder: (_, __) => const InventoryScreen(),
         ),
-        GoRoute(
-          path: '/reports',
-          builder: (_, __) => const ReportsScreen(),
-        ),
-        GoRoute(
-          path: '/settings',
-          builder: (_, __) => const SettingsScreen(),
-        ),
+        GoRoute(path: '/reports', builder: (_, __) => const ReportsScreen()),
+        GoRoute(path: '/settings', builder: (_, __) => const SettingsScreen()),
         GoRoute(
           path: '/ai-forecast',
           builder: (_, __) => const AiForecastScreen(),
         ),
-        GoRoute(
-          path: '/einvoice',
-          builder: (_, __) => const EinvoiceScreen(),
-        ),
+        GoRoute(path: '/einvoice', builder: (_, __) => const EinvoiceScreen()),
       ],
     ),
     // Full-screen routes (outside shell — no nav bar/rail)
     GoRoute(
       path: '/payment/:orderId',
-      builder: (_, state) => PaymentScreen(
-        orderId: int.parse(state.pathParameters['orderId']!),
-      ),
+      builder: (_, state) =>
+          PaymentScreen(orderId: int.parse(state.pathParameters['orderId']!)),
     ),
     GoRoute(
       path: '/receipt/:orderId',
-      builder: (_, state) => ReceiptScreen(
-        orderId: int.parse(state.pathParameters['orderId']!),
-      ),
+      builder: (_, state) =>
+          ReceiptScreen(orderId: int.parse(state.pathParameters['orderId']!)),
     ),
     // Kiosk — full-screen routes (no nav bar/rail, locked for customers)
-    GoRoute(
-      path: '/kiosk',
-      builder: (_, __) => const KioskModeScreen(),
-    ),
-    GoRoute(
-      path: '/kiosk/order',
-      builder: (_, __) => const KioskOrderScreen(),
-    ),
+    GoRoute(path: '/kiosk', builder: (_, __) => const KioskModeScreen()),
+    GoRoute(path: '/kiosk/order', builder: (_, __) => const KioskOrderScreen()),
     GoRoute(
       path: '/kiosk/checkout/:orderId',
       builder: (_, state) => KioskCheckoutScreen(
@@ -157,22 +110,102 @@ class _AppShell extends StatelessWidget {
   const _AppShell({required this.location, required this.child});
 
   static const _destinations = [
-    _Dest(HugeIcons.strokeRoundedHome01, HugeIcons.strokeRoundedHome01, 'Dashboard', '/'),
-    _Dest(HugeIcons.strokeRoundedShoppingCart01, HugeIcons.strokeRoundedShoppingCart01, 'POS', '/pos'),
-    _Dest(HugeIcons.strokeRoundedRestaurant01, HugeIcons.strokeRoundedRestaurant01, 'KDS', '/kds'),
-    _Dest(HugeIcons.strokeRoundedTask01, HugeIcons.strokeRoundedTask01, 'Tugasan', '/tasks'),
-    _Dest(HugeIcons.strokeRoundedGift, HugeIcons.strokeRoundedGift, 'Loyalty', '/loyalty'),
-    _Dest(HugeIcons.strokeRoundedUserGroup, HugeIcons.strokeRoundedBadge, 'Staf', '/staff'),
-    _Dest(HugeIcons.strokeRoundedTruckDelivery, HugeIcons.strokeRoundedTruckDelivery, 'Pembekal & PO', '/suppliers'),
-    _Dest(HugeIcons.strokeRoundedPackage, HugeIcons.strokeRoundedPackage, 'Stock Take', '/stock-take'),
-    _Dest(HugeIcons.strokeRoundedBank, HugeIcons.strokeRoundedBank, 'Perbelanjaan', '/expenses'),
-    _Dest(HugeIcons.strokeRoundedStore01, HugeIcons.strokeRoundedStore01, 'Multi-Outlet', '/outlets'),
-    _Dest(HugeIcons.strokeRoundedScooter01, HugeIcons.strokeRoundedScooter01, 'Delivery Hub', '/delivery'),
-    _Dest(HugeIcons.strokeRoundedPresentation01, HugeIcons.strokeRoundedPresentation01, 'Analitik Lanjutan', '/analytics'),
-    _Dest(HugeIcons.strokeRoundedInvoice01, HugeIcons.strokeRoundedInvoice01, 'Pesanan', '/orders'),
-    _Dest(HugeIcons.strokeRoundedPackage, HugeIcons.strokeRoundedPackage, 'Inventori', '/inventory'),
-    _Dest(HugeIcons.strokeRoundedBarChart, HugeIcons.strokeRoundedBarChart, 'Laporan', '/reports'),
-    _Dest(HugeIcons.strokeRoundedSettings02, HugeIcons.strokeRoundedSettings02, 'Tetapan', '/settings'),
+    _Dest(
+      HugeIcons.strokeRoundedHome01,
+      HugeIcons.strokeRoundedHome01,
+      'Dashboard',
+      '/',
+    ),
+    _Dest(
+      HugeIcons.strokeRoundedShoppingCart01,
+      HugeIcons.strokeRoundedShoppingCart01,
+      'POS',
+      '/pos',
+    ),
+    _Dest(
+      HugeIcons.strokeRoundedRestaurant01,
+      HugeIcons.strokeRoundedRestaurant01,
+      'KDS',
+      '/kds',
+    ),
+    _Dest(
+      HugeIcons.strokeRoundedTask01,
+      HugeIcons.strokeRoundedTask01,
+      'Tugasan',
+      '/tasks',
+    ),
+    _Dest(
+      HugeIcons.strokeRoundedGift,
+      HugeIcons.strokeRoundedGift,
+      'Loyalty',
+      '/loyalty',
+    ),
+    _Dest(
+      HugeIcons.strokeRoundedUserGroup,
+      HugeIcons.strokeRoundedBadge,
+      'Staf',
+      '/staff',
+    ),
+    _Dest(
+      HugeIcons.strokeRoundedTruckDelivery,
+      HugeIcons.strokeRoundedTruckDelivery,
+      'Pembekal & PO',
+      '/suppliers',
+    ),
+    _Dest(
+      HugeIcons.strokeRoundedPackage,
+      HugeIcons.strokeRoundedPackage,
+      'Stock Take',
+      '/stock-take',
+    ),
+    _Dest(
+      HugeIcons.strokeRoundedBank,
+      HugeIcons.strokeRoundedBank,
+      'Perbelanjaan',
+      '/expenses',
+    ),
+    _Dest(
+      HugeIcons.strokeRoundedStore01,
+      HugeIcons.strokeRoundedStore01,
+      'Multi-Outlet',
+      '/outlets',
+    ),
+    _Dest(
+      HugeIcons.strokeRoundedScooter01,
+      HugeIcons.strokeRoundedScooter01,
+      'Delivery Hub',
+      '/delivery',
+    ),
+    _Dest(
+      HugeIcons.strokeRoundedPresentation01,
+      HugeIcons.strokeRoundedPresentation01,
+      'Analitik Lanjutan',
+      '/analytics',
+    ),
+    _Dest(
+      HugeIcons.strokeRoundedInvoice01,
+      HugeIcons.strokeRoundedInvoice01,
+      'Pesanan',
+      '/orders',
+    ),
+    _Dest(
+      HugeIcons.strokeRoundedPackage,
+      HugeIcons.strokeRoundedPackage,
+      'Inventori',
+      '/inventory',
+    ),
+    _Dest(
+      HugeIcons.strokeRoundedBarChart,
+      HugeIcons.strokeRoundedBarChart,
+      'Laporan',
+      '/reports',
+    ),
+    _Dest(
+      HugeIcons.strokeRoundedSettings02,
+      HugeIcons.strokeRoundedSettings02,
+      'Tetapan',
+      '/settings',
+    ),
   ];
 
   int get _index {
@@ -219,11 +252,25 @@ class _AppShell extends StatelessWidget {
             final isHuge = d.icon is List<List<dynamic>>;
             return NavigationDestination(
               icon: isHuge
-                  ? HugeIcon(icon: d.icon as List<List<dynamic>>, size: 24, color: AppTheme.mutedText)
-                  : HugeIcon(icon: d.icon as dynamic, color: AppTheme.mutedText),
+                  ? HugeIcon(
+                      icon: d.icon as List<List<dynamic>>,
+                      size: 24,
+                      color: AppTheme.mutedText,
+                    )
+                  : HugeIcon(
+                      icon: d.icon as dynamic,
+                      color: AppTheme.mutedText,
+                    ),
               selectedIcon: isHuge
-                  ? HugeIcon(icon: d.activeIcon as List<List<dynamic>>, size: 24, color: AppTheme.primaryCoffee)
-                  : HugeIcon(icon: d.activeIcon as dynamic, color: AppTheme.primaryCoffee),
+                  ? HugeIcon(
+                      icon: d.activeIcon as List<List<dynamic>>,
+                      size: 24,
+                      color: AppTheme.primaryCoffee,
+                    )
+                  : HugeIcon(
+                      icon: d.activeIcon as dynamic,
+                      color: AppTheme.primaryCoffee,
+                    ),
               label: d.label,
             );
           }),
@@ -285,7 +332,9 @@ class _AppShell extends StatelessWidget {
                 final d = moreDestinations[i];
                 final isSelected = location == d.path;
                 final isHuge = d.activeIcon is List<List<dynamic>>;
-                final iconColor = isSelected ? AppTheme.primaryCoffee : AppTheme.darkEspresso;
+                final iconColor = isSelected
+                    ? AppTheme.primaryCoffee
+                    : AppTheme.darkEspresso;
 
                 return InkWell(
                   onTap: () {
@@ -295,24 +344,43 @@ class _AppShell extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: isSelected ? AppTheme.primaryCoffee.withOpacity(0.15) : AppTheme.surfaceVariant,
+                      color: isSelected
+                          ? AppTheme.primaryCoffee.withOpacity(0.15)
+                          : AppTheme.surfaceVariant,
                       borderRadius: BorderRadius.circular(12),
-                      border: isSelected ? Border.all(color: AppTheme.primaryCoffee, width: 1.5) : null,
+                      border: isSelected
+                          ? Border.all(
+                              color: AppTheme.primaryCoffee,
+                              width: 1.5,
+                            )
+                          : null,
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         isHuge
-                            ? HugeIcon(icon: d.activeIcon as List<List<dynamic>>, color: iconColor, size: 26)
-                            : HugeIcon(icon: d.activeIcon as dynamic, color: iconColor, size: 26),
+                            ? HugeIcon(
+                                icon: d.activeIcon as List<List<dynamic>>,
+                                color: iconColor,
+                                size: 26,
+                              )
+                            : HugeIcon(
+                                icon: d.activeIcon as dynamic,
+                                color: iconColor,
+                                size: 26,
+                              ),
                         const SizedBox(height: 6),
                         Text(
                           d.label,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 11,
-                            fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                            color: isSelected ? AppTheme.primaryCoffee : AppTheme.darkEspresso,
+                            fontWeight: isSelected
+                                ? FontWeight.w800
+                                : FontWeight.w600,
+                            color: isSelected
+                                ? AppTheme.primaryCoffee
+                                : AppTheme.darkEspresso,
                           ),
                         ),
                       ],
@@ -361,11 +429,14 @@ class _AppShell extends StatelessWidget {
                         ),
                         if (extended) ...[
                           const SizedBox(height: 8),
-                          const Text('Usaha OS',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 13,
-                                  color: AppTheme.darkEspresso)),
+                          const Text(
+                            'Usaha OS',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 13,
+                              color: AppTheme.darkEspresso,
+                            ),
+                          ),
                         ],
                       ],
                     ),
@@ -374,11 +445,25 @@ class _AppShell extends StatelessWidget {
                     final isHuge = d.icon is List<List<dynamic>>;
                     return NavigationRailDestination(
                       icon: isHuge
-                          ? HugeIcon(icon: d.icon as List<List<dynamic>>, size: 24, color: AppTheme.mutedText)
-                          : HugeIcon(icon: d.icon as dynamic, color: AppTheme.mutedText),
+                          ? HugeIcon(
+                              icon: d.icon as List<List<dynamic>>,
+                              size: 24,
+                              color: AppTheme.mutedText,
+                            )
+                          : HugeIcon(
+                              icon: d.icon as dynamic,
+                              color: AppTheme.mutedText,
+                            ),
                       selectedIcon: isHuge
-                          ? HugeIcon(icon: d.activeIcon as List<List<dynamic>>, size: 24, color: AppTheme.primaryCoffee)
-                          : HugeIcon(icon: d.activeIcon as dynamic, color: AppTheme.primaryCoffee),
+                          ? HugeIcon(
+                              icon: d.activeIcon as List<List<dynamic>>,
+                              size: 24,
+                              color: AppTheme.primaryCoffee,
+                            )
+                          : HugeIcon(
+                              icon: d.activeIcon as dynamic,
+                              color: AppTheme.primaryCoffee,
+                            ),
                       label: Text(d.label),
                     );
                   }).toList(),
@@ -386,8 +471,7 @@ class _AppShell extends StatelessWidget {
               ),
             ),
           ),
-          Container(
-              width: 1, color: const Color(0xFFEDE3D8)),
+          Container(width: 1, color: const Color(0xFFEDE3D8)),
           Expanded(child: child),
         ],
       ),

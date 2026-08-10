@@ -42,7 +42,10 @@ class _OutletsScreenState extends ConsumerState<OutletsScreen>
       appBar: AppBar(
         title: const Text(
           'Pengurusan Multi-Outlet & Pemindahan Stok',
-          style: TextStyle(fontWeight: FontWeight.w800, color: AppTheme.darkEspresso),
+          style: TextStyle(
+            fontWeight: FontWeight.w800,
+            color: AppTheme.darkEspresso,
+          ),
         ),
         backgroundColor: AppTheme.warmCream,
         surfaceTintColor: Colors.transparent,
@@ -52,8 +55,14 @@ class _OutletsScreenState extends ConsumerState<OutletsScreen>
           unselectedLabelColor: AppTheme.mutedText,
           indicatorColor: AppTheme.primaryCoffee,
           tabs: const [
-            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedStore01), text: 'Senarai Cawangan'),
-            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedPackage), text: 'Pemindahan Stok (Transfer)'),
+            Tab(
+              icon: HugeIcon(icon: HugeIcons.strokeRoundedStore01),
+              text: 'Senarai Cawangan',
+            ),
+            Tab(
+              icon: HugeIcon(icon: HugeIcons.strokeRoundedPackage),
+              text: 'Pemindahan Stok (Transfer)',
+            ),
           ],
         ),
       ),
@@ -65,7 +74,12 @@ class _OutletsScreenState extends ConsumerState<OutletsScreen>
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (e, _) => Center(child: Text('Ralat: $e')),
             data: (outletsList) {
-              return _buildOutletsTab(context, outletsList, activeOutlet, isTablet);
+              return _buildOutletsTab(
+                context,
+                outletsList,
+                activeOutlet,
+                isTablet,
+              );
             },
           ),
 
@@ -82,8 +96,14 @@ class _OutletsScreenState extends ConsumerState<OutletsScreen>
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: AppTheme.primaryCoffee,
         foregroundColor: Colors.white,
-        icon: HugeIcon(icon: _tabController.index == 0 ? HugeIcons.strokeRoundedAdd01 : HugeIcons.strokeRoundedPackage),
-        label: Text(_tabController.index == 0 ? 'Tambah Cawangan' : 'Pindah Stok'),
+        icon: HugeIcon(
+          icon: _tabController.index == 0
+              ? HugeIcons.strokeRoundedAdd01
+              : HugeIcons.strokeRoundedPackage,
+        ),
+        label: Text(
+          _tabController.index == 0 ? 'Tambah Cawangan' : 'Pindah Stok',
+        ),
         onPressed: () {
           if (_tabController.index == 0) {
             _showAddOutletDialog(context);
@@ -105,7 +125,12 @@ class _OutletsScreenState extends ConsumerState<OutletsScreen>
       return const Center(child: Text('Tiada cawangan direkodkan'));
     }
 
-    final currentSelected = activeOutlet ?? outletsList.firstWhere((o) => o.isPrimary, orElse: () => outletsList.first);
+    final currentSelected =
+        activeOutlet ??
+        outletsList.firstWhere(
+          (o) => o.isPrimary,
+          orElse: () => outletsList.first,
+        );
 
     return ListView(
       padding: EdgeInsets.all(isTablet ? 24 : 16),
@@ -136,7 +161,11 @@ class _OutletsScreenState extends ConsumerState<OutletsScreen>
                   color: Colors.white.withOpacity(0.15),
                   shape: BoxShape.circle,
                 ),
-                child: HugeIcon(icon: HugeIcons.strokeRoundedStore01, color: Colors.white, size: 28),
+                child: HugeIcon(
+                  icon: HugeIcons.strokeRoundedStore01,
+                  color: Colors.white,
+                  size: 28,
+                ),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -164,13 +193,19 @@ class _OutletsScreenState extends ConsumerState<OutletsScreen>
                     const SizedBox(height: 2),
                     Text(
                       'Kod: ${currentSelected.code} • Pelaras Harga: ${(currentSelected.priceMultiplier * 100).toStringAsFixed(0)}%',
-                      style: const TextStyle(color: Colors.white70, fontSize: 12),
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 12,
+                      ),
                     ),
                   ],
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: AppTheme.successGreen,
                   borderRadius: BorderRadius.circular(20),
@@ -178,11 +213,19 @@ class _OutletsScreenState extends ConsumerState<OutletsScreen>
                 child: const Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    HugeIcon(icon: HugeIcons.strokeRoundedCheckmarkBadge01, color: Colors.white, size: 14),
+                    HugeIcon(
+                      icon: HugeIcons.strokeRoundedCheckmarkBadge01,
+                      color: Colors.white,
+                      size: 14,
+                    ),
                     SizedBox(width: 4),
                     Text(
                       'Aktif',
-                      style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ],
                 ),
@@ -192,7 +235,9 @@ class _OutletsScreenState extends ConsumerState<OutletsScreen>
         ),
         const SizedBox(height: 24),
 
-        const SectionHeader(title: 'Senarai Semua Cawangan (HQ & Cawangan Tambahan)'),
+        const SectionHeader(
+          title: 'Senarai Semua Cawangan (HQ & Cawangan Tambahan)',
+        ),
         const SizedBox(height: 12),
 
         ...outletsList.map((outlet) {
@@ -219,9 +264,13 @@ class _OutletsScreenState extends ConsumerState<OutletsScreen>
                           : Colors.grey.withOpacity(0.12),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: HugeIcon(icon: 
-                      outlet.isPrimary ? HugeIcons.strokeRoundedBank : HugeIcons.strokeRoundedStore01,
-                      color: outlet.isPrimary ? AppTheme.primaryCoffee : AppTheme.darkEspresso,
+                    child: HugeIcon(
+                      icon: outlet.isPrimary
+                          ? HugeIcons.strokeRoundedBank
+                          : HugeIcons.strokeRoundedStore01,
+                      color: outlet.isPrimary
+                          ? AppTheme.primaryCoffee
+                          : AppTheme.darkEspresso,
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -233,19 +282,29 @@ class _OutletsScreenState extends ConsumerState<OutletsScreen>
                           children: [
                             Text(
                               outlet.name,
-                              style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 16,
+                              ),
                             ),
                             if (outlet.isPrimary) ...[
                               const SizedBox(width: 8),
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 6,
+                                  vertical: 2,
+                                ),
                                 decoration: BoxDecoration(
                                   color: AppTheme.primaryCoffee,
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                                 child: const Text(
                                   'HQ',
-                                  style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ],
@@ -253,13 +312,21 @@ class _OutletsScreenState extends ConsumerState<OutletsScreen>
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          outlet.address.isNotEmpty ? outlet.address : 'Tiada alamat',
-                          style: const TextStyle(color: AppTheme.mutedText, fontSize: 12),
+                          outlet.address.isNotEmpty
+                              ? outlet.address
+                              : 'Tiada alamat',
+                          style: const TextStyle(
+                            color: AppTheme.mutedText,
+                            fontSize: 12,
+                          ),
                         ),
                         const SizedBox(height: 2),
                         Text(
                           'Tel: ${outlet.phone.isNotEmpty ? outlet.phone : '-'} • Pelaras Harga: ${(outlet.priceMultiplier * 100).toStringAsFixed(0)}%',
-                          style: const TextStyle(color: AppTheme.mutedText, fontSize: 12),
+                          style: const TextStyle(
+                            color: AppTheme.mutedText,
+                            fontSize: 12,
+                          ),
                         ),
                       ],
                     ),
@@ -267,21 +334,31 @@ class _OutletsScreenState extends ConsumerState<OutletsScreen>
                   const SizedBox(width: 12),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: isSelected ? Colors.grey.shade200 : AppTheme.primaryCoffee,
-                      foregroundColor: isSelected ? AppTheme.darkEspresso : Colors.white,
+                      backgroundColor: isSelected
+                          ? Colors.grey.shade200
+                          : AppTheme.primaryCoffee,
+                      foregroundColor: isSelected
+                          ? AppTheme.darkEspresso
+                          : Colors.white,
                       elevation: 0,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
                     onPressed: () {
                       ref.read(activeOutletProvider.notifier).state = outlet;
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('Cawangan aktif ditukar kepada: ${outlet.name}'),
+                          content: Text(
+                            'Cawangan aktif ditukar kepada: ${outlet.name}',
+                          ),
                           backgroundColor: AppTheme.successGreen,
                         ),
                       );
                     },
-                    child: Text(isSelected ? 'Sedang Digunakan' : 'Pilih Cawangan'),
+                    child: Text(
+                      isSelected ? 'Sedang Digunakan' : 'Pilih Cawangan',
+                    ),
                   ),
                 ],
               ),
@@ -305,20 +382,26 @@ class _OutletsScreenState extends ConsumerState<OutletsScreen>
     final ingredientsAsync = ref.watch(ingredientsProvider);
 
     final outletsMap = {
-      for (var o in outletsAsync.value ?? <Outlet>[]) o.id: o.name
+      for (var o in outletsAsync.value ?? <Outlet>[]) o.id: o.name,
     };
     final ingMap = {
-      for (var i in ingredientsAsync.value ?? <Ingredient>[]) i.id: i
+      for (var i in ingredientsAsync.value ?? <Ingredient>[]) i.id: i,
     };
 
     return ListView(
       padding: EdgeInsets.all(isTablet ? 24 : 16),
       children: [
-        const SectionHeader(title: 'Log Pemindahan Stok Antara Cawangan (Inter-Branch)'),
+        const SectionHeader(
+          title: 'Log Pemindahan Stok Antara Cawangan (Inter-Branch)',
+        ),
         const SizedBox(height: 12),
         ...transfersList.map((trf) {
-          final sourceName = outletsMap[trf.sourceOutletId] ?? 'Cawangan #${trf.sourceOutletId}';
-          final targetName = outletsMap[trf.targetOutletId] ?? 'Cawangan #${trf.targetOutletId}';
+          final sourceName =
+              outletsMap[trf.sourceOutletId] ??
+              'Cawangan #${trf.sourceOutletId}';
+          final targetName =
+              outletsMap[trf.targetOutletId] ??
+              'Cawangan #${trf.targetOutletId}';
           final ing = ingMap[trf.ingredientId];
           final ingName = ing?.name ?? 'Bahan #${trf.ingredientId}';
           final unit = ing?.unit ?? 'unit';
@@ -338,7 +421,9 @@ class _OutletsScreenState extends ConsumerState<OutletsScreen>
 
           return Card(
             margin: const EdgeInsets.only(bottom: 12),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+            ),
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -348,11 +433,17 @@ class _OutletsScreenState extends ConsumerState<OutletsScreen>
                     children: [
                       Text(
                         trf.transferNumber,
-                        style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 15),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w900,
+                          fontSize: 15,
+                        ),
                       ),
                       const Spacer(),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
                           color: statusColor.withOpacity(0.12),
                           borderRadius: BorderRadius.circular(12),
@@ -360,7 +451,11 @@ class _OutletsScreenState extends ConsumerState<OutletsScreen>
                         ),
                         child: Text(
                           statusText,
-                          style: TextStyle(color: statusColor, fontSize: 11, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                            color: statusColor,
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ],
@@ -372,18 +467,48 @@ class _OutletsScreenState extends ConsumerState<OutletsScreen>
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text('DARI (SUMBER)', style: TextStyle(fontSize: 10, color: AppTheme.mutedText, fontWeight: FontWeight.bold)),
-                            Text(sourceName, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
+                            const Text(
+                              'DARI (SUMBER)',
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: AppTheme.mutedText,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              sourceName,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 13,
+                              ),
+                            ),
                           ],
                         ),
                       ),
-                      HugeIcon(icon: HugeIcons.strokeRoundedArrowRight01, color: AppTheme.primaryCoffee, size: 20),
+                      HugeIcon(
+                        icon: HugeIcons.strokeRoundedArrowRight01,
+                        color: AppTheme.primaryCoffee,
+                        size: 20,
+                      ),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            const Text('KE (DESTINASI)', style: TextStyle(fontSize: 10, color: AppTheme.mutedText, fontWeight: FontWeight.bold)),
-                            Text(targetName, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
+                            const Text(
+                              'KE (DESTINASI)',
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: AppTheme.mutedText,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              targetName,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 13,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -399,23 +524,42 @@ class _OutletsScreenState extends ConsumerState<OutletsScreen>
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('$ingName: ${trf.quantity} $unit', style: const TextStyle(fontWeight: FontWeight.bold)),
-                        Text('Pemohon: ${trf.requestedBy}', style: const TextStyle(fontSize: 12, color: AppTheme.mutedText)),
+                        Text(
+                          '$ingName: ${trf.quantity} $unit',
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          'Pemohon: ${trf.requestedBy}',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: AppTheme.mutedText,
+                          ),
+                        ),
                       ],
                     ),
                   ),
                   if (trf.notes.isNotEmpty) ...[
                     const SizedBox(height: 6),
-                    Text('Nota: ${trf.notes}', style: const TextStyle(fontStyle: FontStyle.italic, fontSize: 12, color: AppTheme.mutedText)),
+                    Text(
+                      'Nota: ${trf.notes}',
+                      style: const TextStyle(
+                        fontStyle: FontStyle.italic,
+                        fontSize: 12,
+                        color: AppTheme.mutedText,
+                      ),
+                    ),
                   ],
-                  if (trf.status == 'in_transit' || trf.status == 'pending') ...[
+                  if (trf.status == 'in_transit' ||
+                      trf.status == 'pending') ...[
                     const SizedBox(height: 12),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         OutlinedButton(
                           onPressed: () {
-                            ref.read(databaseProvider).updateStockTransferStatus(trf.id, 'cancelled');
+                            ref
+                                .read(databaseProvider)
+                                .updateStockTransferStatus(trf.id, 'cancelled');
                           },
                           child: const Text('Batal'),
                         ),
@@ -425,13 +569,20 @@ class _OutletsScreenState extends ConsumerState<OutletsScreen>
                             backgroundColor: AppTheme.successGreen,
                             foregroundColor: Colors.white,
                           ),
-                          icon: HugeIcon(icon: HugeIcons.strokeRoundedCheckmarkBadge01, size: 16),
+                          icon: HugeIcon(
+                            icon: HugeIcons.strokeRoundedCheckmarkBadge01,
+                            size: 16,
+                          ),
                           label: const Text('Sahkan Penerimaan'),
                           onPressed: () {
-                            ref.read(databaseProvider).updateStockTransferStatus(trf.id, 'received');
+                            ref
+                                .read(databaseProvider)
+                                .updateStockTransferStatus(trf.id, 'received');
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                content: Text('Stok berjaya disahkan dan diterima di cawangan destinasi!'),
+                                content: Text(
+                                  'Stok berjaya disahkan dan diterima di cawangan destinasi!',
+                                ),
                                 backgroundColor: AppTheme.successGreen,
                               ),
                             );
@@ -467,12 +618,16 @@ class _OutletsScreenState extends ConsumerState<OutletsScreen>
               children: [
                 TextField(
                   controller: nameCtrl,
-                  decoration: const InputDecoration(labelText: 'Nama Cawangan (e.g. Usaha Coffee KLCC)'),
+                  decoration: const InputDecoration(
+                    labelText: 'Nama Cawangan (e.g. Usaha Coffee KLCC)',
+                  ),
                 ),
                 const SizedBox(height: 8),
                 TextField(
                   controller: codeCtrl,
-                  decoration: const InputDecoration(labelText: 'Kod Cawangan (e.g. MY-KL-04)'),
+                  decoration: const InputDecoration(
+                    labelText: 'Kod Cawangan (e.g. MY-KL-04)',
+                  ),
                 ),
                 const SizedBox(height: 8),
                 TextField(
@@ -482,13 +637,18 @@ class _OutletsScreenState extends ConsumerState<OutletsScreen>
                 const SizedBox(height: 8),
                 TextField(
                   controller: phoneCtrl,
-                  decoration: const InputDecoration(labelText: 'Nombor Telefon'),
+                  decoration: const InputDecoration(
+                    labelText: 'Nombor Telefon',
+                  ),
                 ),
                 const SizedBox(height: 12),
                 Row(
                   children: [
                     const Text('Pelaras Harga: '),
-                    Text('${(priceMultiplier * 100).toStringAsFixed(0)}%', style: const TextStyle(fontWeight: FontWeight.bold)),
+                    Text(
+                      '${(priceMultiplier * 100).toStringAsFixed(0)}%',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
                   ],
                 ),
                 Slider(
@@ -503,19 +663,24 @@ class _OutletsScreenState extends ConsumerState<OutletsScreen>
             ),
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Batal')),
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('Batal'),
+            ),
             ElevatedButton(
               onPressed: () async {
                 if (nameCtrl.text.isEmpty || codeCtrl.text.isEmpty) return;
-                await ref.read(databaseProvider).insertOutlet(
-                  OutletsCompanion.insert(
-                    name: nameCtrl.text.trim(),
-                    code: codeCtrl.text.trim(),
-                    address: Value(addressCtrl.text.trim()),
-                    phone: Value(phoneCtrl.text.trim()),
-                    priceMultiplier: Value(priceMultiplier),
-                  ),
-                );
+                await ref
+                    .read(databaseProvider)
+                    .insertOutlet(
+                      OutletsCompanion.insert(
+                        name: nameCtrl.text.trim(),
+                        code: codeCtrl.text.trim(),
+                        address: Value(addressCtrl.text.trim()),
+                        phone: Value(phoneCtrl.text.trim()),
+                        priceMultiplier: Value(priceMultiplier),
+                      ),
+                    );
                 if (ctx.mounted) Navigator.pop(ctx);
               },
               child: const Text('Simpan'),
@@ -532,7 +697,11 @@ class _OutletsScreenState extends ConsumerState<OutletsScreen>
 
     if (outlets.length < 2) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Sekurang-kurangnya 2 cawangan diperlukan untuk pemindahan stok')),
+        const SnackBar(
+          content: Text(
+            'Sekurang-kurangnya 2 cawangan diperlukan untuk pemindahan stok',
+          ),
+        ),
       );
       return;
     }
@@ -554,58 +723,92 @@ class _OutletsScreenState extends ConsumerState<OutletsScreen>
               children: [
                 DropdownButtonFormField<int>(
                   value: sourceId,
-                  decoration: const InputDecoration(labelText: 'Cawangan Sumber (Asal)'),
-                  items: outlets.map((o) => DropdownMenuItem(value: o.id, child: Text(o.name))).toList(),
-                  onChanged: (v) => setDialogState(() => sourceId = v ?? sourceId),
+                  decoration: const InputDecoration(
+                    labelText: 'Cawangan Sumber (Asal)',
+                  ),
+                  items: outlets
+                      .map(
+                        (o) =>
+                            DropdownMenuItem(value: o.id, child: Text(o.name)),
+                      )
+                      .toList(),
+                  onChanged: (v) =>
+                      setDialogState(() => sourceId = v ?? sourceId),
                 ),
                 const SizedBox(height: 8),
                 DropdownButtonFormField<int>(
                   value: targetId,
-                  decoration: const InputDecoration(labelText: 'Cawangan Destinasi (Tujuan)'),
-                  items: outlets.map((o) => DropdownMenuItem(value: o.id, child: Text(o.name))).toList(),
-                  onChanged: (v) => setDialogState(() => targetId = v ?? targetId),
+                  decoration: const InputDecoration(
+                    labelText: 'Cawangan Destinasi (Tujuan)',
+                  ),
+                  items: outlets
+                      .map(
+                        (o) =>
+                            DropdownMenuItem(value: o.id, child: Text(o.name)),
+                      )
+                      .toList(),
+                  onChanged: (v) =>
+                      setDialogState(() => targetId = v ?? targetId),
                 ),
                 const SizedBox(height: 8),
                 DropdownButtonFormField<int>(
                   value: ingredientId,
                   decoration: const InputDecoration(labelText: 'Bahan Mentah'),
-                  items: ingredients.map((i) => DropdownMenuItem(value: i.id, child: Text('${i.name} (${i.unit})'))).toList(),
-                  onChanged: (v) => setDialogState(() => ingredientId = v ?? ingredientId),
+                  items: ingredients
+                      .map(
+                        (i) => DropdownMenuItem(
+                          value: i.id,
+                          child: Text('${i.name} (${i.unit})'),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (v) =>
+                      setDialogState(() => ingredientId = v ?? ingredientId),
                 ),
                 const SizedBox(height: 8),
                 TextField(
                   controller: qtyCtrl,
                   keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(labelText: 'Kuantiti Pemindahan'),
+                  decoration: const InputDecoration(
+                    labelText: 'Kuantiti Pemindahan',
+                  ),
                 ),
                 const SizedBox(height: 8),
                 TextField(
                   controller: notesCtrl,
-                  decoration: const InputDecoration(labelText: 'Nota / Sebab Pemindahan'),
+                  decoration: const InputDecoration(
+                    labelText: 'Nota / Sebab Pemindahan',
+                  ),
                 ),
               ],
             ),
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Batal')),
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('Batal'),
+            ),
             ElevatedButton(
               onPressed: () async {
                 final qty = double.tryParse(qtyCtrl.text) ?? 0.0;
                 if (qty <= 0) return;
-                final trfNum = 'TRF-${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}';
+                final trfNum =
+                    'TRF-${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}';
 
-                await ref.read(databaseProvider).insertStockTransfer(
-                  StockTransfersCompanion.insert(
-                    transferNumber: trfNum,
-                    sourceOutletId: sourceId,
-                    targetOutletId: targetId,
-                    ingredientId: ingredientId,
-                    quantity: qty,
-                    status: const Value('in_transit'),
-                    requestedBy: const Value('Pengurus Syif'),
-                    notes: Value(notesCtrl.text.trim()),
-                  ),
-                );
+                await ref
+                    .read(databaseProvider)
+                    .insertStockTransfer(
+                      StockTransfersCompanion.insert(
+                        transferNumber: trfNum,
+                        sourceOutletId: sourceId,
+                        targetOutletId: targetId,
+                        ingredientId: ingredientId,
+                        quantity: qty,
+                        status: const Value('in_transit'),
+                        requestedBy: const Value('Pengurus Syif'),
+                        notes: Value(notesCtrl.text.trim()),
+                      ),
+                    );
                 if (ctx.mounted) Navigator.pop(ctx);
               },
               child: const Text('Hantar Permohonan'),

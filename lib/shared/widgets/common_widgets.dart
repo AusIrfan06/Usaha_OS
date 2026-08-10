@@ -73,7 +73,11 @@ class StatusBadge extends StatelessWidget {
       'pending' => ('Pending', const Color(0xFFFFF3E0), AppTheme.warningAmber),
       'in_progress' => ('In Progress', const Color(0xFFE3F2FD), Colors.blue),
       'ready' => ('Ready', const Color(0xFFE8F5E9), AppTheme.successGreen),
-      'completed' => ('Completed', const Color(0xFFE8F5E9), AppTheme.successGreen),
+      'completed' => (
+        'Completed',
+        const Color(0xFFE8F5E9),
+        AppTheme.successGreen,
+      ),
       'voided' => ('Voided', const Color(0xFFFFEBEE), AppTheme.dangerRed),
       _ => (status, const Color(0xFFF5F5F5), Colors.grey),
     };
@@ -108,22 +112,39 @@ class OrderTypeBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (label, icon, color) = switch (orderType) {
-      'dine_in' => ('Dine-in', HugeIcons.strokeRoundedRestaurant01, const Color(0xFF6A1B9A)),
-      'takeaway' => ('Takeaway', HugeIcons.strokeRoundedShoppingBag01, AppTheme.primaryCoffee),
-      'delivery' => ('Delivery', HugeIcons.strokeRoundedTruckDelivery, AppTheme.duitNowBlue),
+      'dine_in' => (
+        'Dine-in',
+        HugeIcons.strokeRoundedRestaurant01,
+        const Color(0xFF6A1B9A),
+      ),
+      'takeaway' => (
+        'Takeaway',
+        HugeIcons.strokeRoundedShoppingBag01,
+        AppTheme.primaryCoffee,
+      ),
+      'delivery' => (
+        'Delivery',
+        HugeIcons.strokeRoundedTruckDelivery,
+        AppTheme.duitNowBlue,
+      ),
       _ => ('?', HugeIcons.strokeRoundedSquare, Colors.grey),
     };
 
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        icon is dynamic ? HugeIcon(icon: icon, size: 14, color: color) : HugeIcon(icon: icon as dynamic, size: 14, color: color),
+        icon is dynamic
+            ? HugeIcon(icon: icon, size: 14, color: color)
+            : HugeIcon(icon: icon as dynamic, size: 14, color: color),
         const SizedBox(width: 4),
-        Text(label,
-            style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: color)),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: color,
+          ),
+        ),
       ],
     );
   }
@@ -166,18 +187,32 @@ class StatCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             child: Center(
-              child: icon is List<List<dynamic>> 
-                  ? HugeIcon(icon: icon as List<List<dynamic>>, color: iconColor, size: 20)
+              child: icon is List<List<dynamic>>
+                  ? HugeIcon(
+                      icon: icon as List<List<dynamic>>,
+                      color: iconColor,
+                      size: 20,
+                    )
                   : HugeIcon(icon: icon as dynamic, color: iconColor, size: 20),
             ),
           ),
           const SizedBox(height: 14),
-          Text(value,
-              style: tt.titleLarge?.copyWith(
-                  fontWeight: FontWeight.w800, fontSize: 24, letterSpacing: -0.5)),
+          Text(
+            value,
+            style: tt.titleLarge?.copyWith(
+              fontWeight: FontWeight.w800,
+              fontSize: 24,
+              letterSpacing: -0.5,
+            ),
+          ),
           const SizedBox(height: 4),
-          Text(label,
-              style: tt.bodySmall?.copyWith(color: AppTheme.mutedText, fontWeight: FontWeight.w600)),
+          Text(
+            label,
+            style: tt.bodySmall?.copyWith(
+              color: AppTheme.mutedText,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
         ],
       ),
     );
@@ -199,8 +234,10 @@ class SectionHeader extends StatelessWidget {
     final tt = Theme.of(context).textTheme;
     return Row(
       children: [
-        Text(title,
-            style: tt.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
+        Text(
+          title,
+          style: tt.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+        ),
         const Spacer(),
         if (action != null) action!,
       ],
@@ -241,21 +278,32 @@ class EmptyState extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             child: icon is dynamic
-                ? HugeIcon(icon: icon as dynamic, size: 48, color: AppTheme.mutedText.withOpacity(0.7))
-                : HugeIcon(icon: icon, size: 48, color: AppTheme.mutedText.withOpacity(0.7)),
+                ? HugeIcon(
+                    icon: icon as dynamic,
+                    size: 48,
+                    color: AppTheme.mutedText.withOpacity(0.7),
+                  )
+                : HugeIcon(
+                    icon: icon,
+                    size: 48,
+                    color: AppTheme.mutedText.withOpacity(0.7),
+                  ),
           ),
           const SizedBox(height: 16),
-          Text(title,
-              style: tt.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w700, color: AppTheme.mutedText)),
+          Text(
+            title,
+            style: tt.titleMedium?.copyWith(
+              fontWeight: FontWeight.w700,
+              color: AppTheme.mutedText,
+            ),
+          ),
           const SizedBox(height: 8),
-          Text(subtitle,
-              textAlign: TextAlign.center,
-              style: tt.bodySmall?.copyWith(color: AppTheme.mutedText)),
-          if (action != null) ...[
-            const SizedBox(height: 20),
-            action!,
-          ],
+          Text(
+            subtitle,
+            textAlign: TextAlign.center,
+            style: tt.bodySmall?.copyWith(color: AppTheme.mutedText),
+          ),
+          if (action != null) ...[const SizedBox(height: 20), action!],
         ],
       ),
     );
@@ -277,8 +325,7 @@ class SyncDot extends StatelessWidget {
       height: 8,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color:
-            isOnline ? AppTheme.successGreen : AppTheme.mutedText,
+        color: isOnline ? AppTheme.successGreen : AppTheme.mutedText,
       ),
     );
   }

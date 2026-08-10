@@ -897,19 +897,19 @@ class DashboardScreen extends ConsumerWidget {
         route: '/pos'
       ),
       (
-        icon: HugeIcons.strokeRoundedSquare,
+        icon: HugeIcons.strokeRoundedRestaurant01,
         label: 'Dapur KDS',
         color: const Color(0xFF1565C0),
         route: '/kds'
       ),
       (
-        icon: HugeIcons.strokeRoundedSquare,
+        icon: HugeIcons.strokeRoundedTask01,
         label: 'Tugasan & Syif',
         color: const Color(0xFFE65100),
         route: '/tasks'
       ),
       (
-        icon: HugeIcons.strokeRoundedSquare,
+        icon: HugeIcons.strokeRoundedGift,
         label: 'CRM & Loyalty',
         color: const Color(0xFF6A1B9A),
         route: '/loyalty'
@@ -962,7 +962,9 @@ class DashboardScreen extends ConsumerWidget {
                         color: a.color.withOpacity(0.12),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: HugeIcon(icon: a.icon, color: a.color, size: 20),
+                      child: Center(
+                        child: HugeIcon(icon: a.icon, color: a.color, size: 20),
+                      ),
                     ),
                     Text(a.label,
                         style: const TextStyle(
@@ -992,8 +994,10 @@ class DashboardScreen extends ConsumerWidget {
                 color: AppTheme.primaryCoffee.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: HugeIcon(icon: HugeIcons.strokeRoundedSquare,
-                  size: 18, color: AppTheme.primaryCoffee),
+              child: Center(
+                child: HugeIcon(icon: HugeIcons.strokeRoundedInvoice01,
+                    size: 18, color: AppTheme.primaryCoffee),
+              ),
             ),
             const SizedBox(width: 12),
             Expanded(

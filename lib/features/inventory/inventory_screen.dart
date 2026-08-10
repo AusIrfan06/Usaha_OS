@@ -10,8 +10,7 @@ class InventoryScreen extends ConsumerStatefulWidget {
   const InventoryScreen({super.key});
 
   @override
-  ConsumerState<InventoryScreen> createState() =>
-      _InventoryScreenState();
+  ConsumerState<InventoryScreen> createState() => _InventoryScreenState();
 }
 
 class _InventoryScreenState extends ConsumerState<InventoryScreen> {
@@ -28,21 +27,25 @@ class _InventoryScreenState extends ConsumerState<InventoryScreen> {
         actions: [
           ingredientsAsync.maybeWhen(
             data: (items) {
-              final low =
-                  items.where((i) => i.currentStock <= i.reorderPoint);
+              final low = items.where((i) => i.currentStock <= i.reorderPoint);
               if (low.isEmpty) return const SizedBox.shrink();
               return Padding(
                 padding: const EdgeInsets.only(right: 12),
                 child: Chip(
-                  backgroundColor:
-                      AppTheme.warningAmber.withOpacity(0.12),
-                  label: Text('${low.length} low',
-                      style: const TextStyle(
-                          color: AppTheme.warningAmber,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 12)),
-                  avatar: HugeIcon(icon: HugeIcons.strokeRoundedAlert01,
-                      color: AppTheme.warningAmber, size: 14),
+                  backgroundColor: AppTheme.warningAmber.withOpacity(0.12),
+                  label: Text(
+                    '${low.length} low',
+                    style: const TextStyle(
+                      color: AppTheme.warningAmber,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 12,
+                    ),
+                  ),
+                  avatar: HugeIcon(
+                    icon: HugeIcons.strokeRoundedAlert01,
+                    color: AppTheme.warningAmber,
+                    size: 14,
+                  ),
                   side: BorderSide.none,
                 ),
               );
@@ -59,7 +62,10 @@ class _InventoryScreenState extends ConsumerState<InventoryScreen> {
             child: TextField(
               decoration: const InputDecoration(
                 hintText: 'Search ingredients…',
-                prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedSearch01, size: 20),
+                prefixIcon: HugeIcon(
+                  icon: HugeIcons.strokeRoundedSearch01,
+                  size: 20,
+                ),
               ),
               onChanged: (v) => setState(() => _search = v),
             ),
@@ -67,18 +73,18 @@ class _InventoryScreenState extends ConsumerState<InventoryScreen> {
           // List
           Expanded(
             child: ingredientsAsync.when(
-              loading: () =>
-                  const Center(child: CircularProgressIndicator()),
-              error: (e, _) =>
-                  Center(child: Text('Error: $e')),
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (e, _) => Center(child: Text('Error: $e')),
               data: (items) {
                 final filtered = _search.isEmpty
                     ? items
                     : items
-                        .where((i) => i.name
-                            .toLowerCase()
-                            .contains(_search.toLowerCase()))
-                        .toList();
+                          .where(
+                            (i) => i.name.toLowerCase().contains(
+                              _search.toLowerCase(),
+                            ),
+                          )
+                          .toList();
 
                 if (filtered.isEmpty) {
                   return const EmptyState(
@@ -91,8 +97,7 @@ class _InventoryScreenState extends ConsumerState<InventoryScreen> {
                 return ListView.separated(
                   padding: EdgeInsets.all(isTablet ? 24 : 16),
                   itemCount: filtered.length,
-                  separatorBuilder: (_, __) =>
-                      const SizedBox(height: 10),
+                  separatorBuilder: (_, __) => const SizedBox(height: 10),
                   itemBuilder: (ctx, i) =>
                       _IngredientCard(ingredient: filtered[i]),
                 );
@@ -148,9 +153,12 @@ class _IngredientCard extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(ingredient.name,
-                        style: tt.titleSmall
-                            ?.copyWith(fontWeight: FontWeight.w700)),
+                    Text(
+                      ingredient.name,
+                      style: tt.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
                     const SizedBox(height: 2),
                     Row(
                       children: [
@@ -163,11 +171,14 @@ class _IngredientCard extends ConsumerWidget {
                           ),
                         ),
                         const SizedBox(width: 6),
-                        Text(_statusLabel,
-                            style: TextStyle(
-                                fontSize: 12,
-                                color: _statusColor,
-                                fontWeight: FontWeight.w600)),
+                        Text(
+                          _statusLabel,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: _statusColor,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ],
                     ),
                   ],
@@ -180,13 +191,13 @@ class _IngredientCard extends ConsumerWidget {
                   Text(
                     '${ingredient.currentStock.toStringAsFixed(1)} ${ingredient.unit}',
                     style: tt.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w800,
-                        color: _statusColor),
+                      fontWeight: FontWeight.w800,
+                      color: _statusColor,
+                    ),
                   ),
                   Text(
                     'Reorder at ${ingredient.reorderPoint.toStringAsFixed(0)} ${ingredient.unit}',
-                    style: tt.bodySmall
-                        ?.copyWith(color: AppTheme.mutedText),
+                    style: tt.bodySmall?.copyWith(color: AppTheme.mutedText),
                   ),
                 ],
               ),
@@ -200,48 +211,52 @@ class _IngredientCard extends ConsumerWidget {
               value: _stockPercent,
               minHeight: 6,
               backgroundColor: _statusColor.withOpacity(0.12),
-              valueColor:
-                  AlwaysStoppedAnimation<Color>(_statusColor),
+              valueColor: AlwaysStoppedAnimation<Color>(_statusColor),
             ),
           ),
           const SizedBox(height: 12),
           // Quick adjust buttons
           Row(
             children: [
-              Text('Adjust:',
-                  style: tt.bodySmall
-                      ?.copyWith(color: AppTheme.mutedText)),
+              Text(
+                'Adjust:',
+                style: tt.bodySmall?.copyWith(color: AppTheme.mutedText),
+              ),
               const Spacer(),
               _adjustButton(
-                  icon: HugeIcons.strokeRoundedRemove01,
-                  delta: -1,
-                  db: db,
-                  ingredient: ingredient,
-                  ref: ref),
+                icon: HugeIcons.strokeRoundedRemove01,
+                delta: -1,
+                db: db,
+                ingredient: ingredient,
+                ref: ref,
+              ),
               const SizedBox(width: 8),
               _adjustButton(
-                  icon: HugeIcons.strokeRoundedRemove01,
-                  label: '-10',
-                  delta: -10,
-                  db: db,
-                  ingredient: ingredient,
-                  ref: ref),
+                icon: HugeIcons.strokeRoundedRemove01,
+                label: '-10',
+                delta: -10,
+                db: db,
+                ingredient: ingredient,
+                ref: ref,
+              ),
               const SizedBox(width: 8),
               _adjustButton(
-                  icon: HugeIcons.strokeRoundedAdd01,
-                  label: '+10',
-                  delta: 10,
-                  db: db,
-                  ingredient: ingredient,
-                  ref: ref),
+                icon: HugeIcons.strokeRoundedAdd01,
+                label: '+10',
+                delta: 10,
+                db: db,
+                ingredient: ingredient,
+                ref: ref,
+              ),
               const SizedBox(width: 8),
               _adjustButton(
-                  icon: HugeIcons.strokeRoundedAdd01,
-                  label: '+100',
-                  delta: 100,
-                  db: db,
-                  ingredient: ingredient,
-                  ref: ref),
+                icon: HugeIcons.strokeRoundedAdd01,
+                label: '+100',
+                delta: 100,
+                db: db,
+                ingredient: ingredient,
+                ref: ref,
+              ),
             ],
           ),
         ],

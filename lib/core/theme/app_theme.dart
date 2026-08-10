@@ -21,39 +21,58 @@ class AppTheme {
 
   // ── Light Theme ──────────────────────────────────────────────────
   static ThemeData lightTheme() {
-    final colorScheme = ColorScheme.fromSeed(
-      seedColor: primaryCoffee,
-      brightness: Brightness.light,
-    ).copyWith(
-      primary: primaryCoffee,
-      onPrimary: Colors.white,
-      secondary: darkEspresso,
-      surface: warmCream,
-      surfaceContainerHighest: surfaceVariant,
-      onSurface: darkEspresso,
-    );
+    final colorScheme =
+        ColorScheme.fromSeed(
+          seedColor: primaryCoffee,
+          brightness: Brightness.light,
+        ).copyWith(
+          primary: primaryCoffee,
+          onPrimary: Colors.white,
+          secondary: darkEspresso,
+          surface: warmCream,
+          surfaceContainerHighest: surfaceVariant,
+          onSurface: darkEspresso,
+        );
 
     final base = GoogleFonts.interTextTheme();
     final textTheme = base.copyWith(
       displayLarge: base.displayLarge?.copyWith(
-          fontWeight: FontWeight.w700, letterSpacing: -1.0, color: darkEspresso),
+        fontWeight: FontWeight.w700,
+        letterSpacing: -1.0,
+        color: darkEspresso,
+      ),
       headlineLarge: base.headlineLarge?.copyWith(
-          fontWeight: FontWeight.w700, color: darkEspresso),
+        fontWeight: FontWeight.w700,
+        color: darkEspresso,
+      ),
       headlineMedium: base.headlineMedium?.copyWith(
-          fontWeight: FontWeight.w700, color: darkEspresso),
+        fontWeight: FontWeight.w700,
+        color: darkEspresso,
+      ),
       headlineSmall: base.headlineSmall?.copyWith(
-          fontWeight: FontWeight.w700, color: darkEspresso),
+        fontWeight: FontWeight.w700,
+        color: darkEspresso,
+      ),
       titleLarge: base.titleLarge?.copyWith(
-          fontWeight: FontWeight.w700, color: darkEspresso),
+        fontWeight: FontWeight.w700,
+        color: darkEspresso,
+      ),
       titleMedium: base.titleMedium?.copyWith(
-          fontWeight: FontWeight.w600, color: darkEspresso),
+        fontWeight: FontWeight.w600,
+        color: darkEspresso,
+      ),
       titleSmall: base.titleSmall?.copyWith(
-          fontWeight: FontWeight.w600, color: darkEspresso),
+        fontWeight: FontWeight.w600,
+        color: darkEspresso,
+      ),
       bodyLarge: base.bodyLarge?.copyWith(color: const Color(0xFF5C4033)),
       bodyMedium: base.bodyMedium?.copyWith(color: const Color(0xFF5C4033)),
       bodySmall: base.bodySmall?.copyWith(color: mutedText),
       labelSmall: base.labelSmall?.copyWith(
-          fontWeight: FontWeight.w600, letterSpacing: 0.5, color: mutedText),
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0.5,
+        color: mutedText,
+      ),
     );
 
     return ThemeData(
@@ -91,8 +110,13 @@ class AppTheme {
           backgroundColor: primaryCoffee,
           foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-          textStyle: GoogleFonts.inter(fontSize: 15, fontWeight: FontWeight.w700),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+          textStyle: GoogleFonts.inter(
+            fontSize: 15,
+            fontWeight: FontWeight.w700,
+          ),
           elevation: 0,
         ),
       ),
@@ -101,14 +125,22 @@ class AppTheme {
           foregroundColor: primaryCoffee,
           side: const BorderSide(color: primaryCoffee, width: 1.5),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-          textStyle: GoogleFonts.inter(fontSize: 15, fontWeight: FontWeight.w600),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+          textStyle: GoogleFonts.inter(
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: primaryCoffee,
-          textStyle: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600),
+          textStyle: GoogleFonts.inter(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
 
@@ -116,8 +148,10 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: surfaceVariant,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: BorderSide.none,
@@ -138,7 +172,10 @@ class AppTheme {
       chipTheme: ChipThemeData(
         backgroundColor: surfaceVariant,
         selectedColor: primaryCoffee.withOpacity(0.18),
-        labelStyle: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w500),
+        labelStyle: GoogleFonts.inter(
+          fontSize: 13,
+          fontWeight: FontWeight.w500,
+        ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         side: BorderSide.none,
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
@@ -157,10 +194,16 @@ class AppTheme {
         elevation: 2,
         selectedIconTheme: const IconThemeData(color: primaryCoffee, size: 24),
         selectedLabelTextStyle: GoogleFonts.inter(
-            color: primaryCoffee, fontWeight: FontWeight.w800, fontSize: 11),
+          color: primaryCoffee,
+          fontWeight: FontWeight.w800,
+          fontSize: 11,
+        ),
         unselectedIconTheme: const IconThemeData(color: mutedText, size: 24),
-        unselectedLabelTextStyle:
-            GoogleFonts.inter(color: mutedText, fontSize: 11, fontWeight: FontWeight.w500),
+        unselectedLabelTextStyle: GoogleFonts.inter(
+          color: mutedText,
+          fontSize: 11,
+          fontWeight: FontWeight.w500,
+        ),
         indicatorColor: primaryCoffee.withOpacity(0.12),
         useIndicator: true,
         minWidth: 80,
@@ -169,7 +212,9 @@ class AppTheme {
 
       // Navigation Bar (phone)
       navigationBarTheme: NavigationBarThemeData(
-        backgroundColor: cardBg.withOpacity(0.95), // Slight transparency for modern look
+        backgroundColor: cardBg.withOpacity(
+          0.95,
+        ), // Slight transparency for modern look
         indicatorColor: primaryCoffee.withOpacity(0.14),
         elevation: 8,
         iconTheme: WidgetStateProperty.resolveWith((states) {
@@ -181,11 +226,16 @@ class AppTheme {
         labelTextStyle: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
             return GoogleFonts.inter(
-                color: primaryCoffee,
-                fontWeight: FontWeight.w800,
-                fontSize: 11);
+              color: primaryCoffee,
+              fontWeight: FontWeight.w800,
+              fontSize: 11,
+            );
           }
-          return GoogleFonts.inter(color: mutedText, fontSize: 11, fontWeight: FontWeight.w500);
+          return GoogleFonts.inter(
+            color: mutedText,
+            fontSize: 11,
+            fontWeight: FontWeight.w500,
+          );
         }),
         surfaceTintColor: Colors.transparent,
         shadowColor: const Color(0x20000000), // Subtle shadow
@@ -196,10 +246,14 @@ class AppTheme {
         labelColor: primaryCoffee,
         unselectedLabelColor: mutedText,
         indicatorColor: primaryCoffee,
-        labelStyle:
-            GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w700),
-        unselectedLabelStyle:
-            GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w500),
+        labelStyle: GoogleFonts.inter(
+          fontSize: 13,
+          fontWeight: FontWeight.w700,
+        ),
+        unselectedLabelStyle: GoogleFonts.inter(
+          fontSize: 13,
+          fontWeight: FontWeight.w500,
+        ),
         dividerColor: Colors.transparent,
       ),
     );
@@ -207,16 +261,17 @@ class AppTheme {
 
   // ── Dark Theme ───────────────────────────────────────────────────
   static ThemeData darkTheme() {
-    final colorScheme = ColorScheme.fromSeed(
-      seedColor: primaryCoffee,
-      brightness: Brightness.dark,
-    ).copyWith(
-      primary: const Color(0xFFDCA86A),
-      onPrimary: Colors.black,
-      secondary: const Color(0xFFBE8C5C),
-      surface: const Color(0xFF1A1208),
-      surfaceContainerHighest: const Color(0xFF2A1E10),
-    );
+    final colorScheme =
+        ColorScheme.fromSeed(
+          seedColor: primaryCoffee,
+          brightness: Brightness.dark,
+        ).copyWith(
+          primary: const Color(0xFFDCA86A),
+          onPrimary: Colors.black,
+          secondary: const Color(0xFFBE8C5C),
+          surface: const Color(0xFF1A1208),
+          surfaceContainerHighest: const Color(0xFF2A1E10),
+        );
 
     return ThemeData(
       useMaterial3: true,

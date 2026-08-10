@@ -33,23 +33,27 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
               loading: () => const SizedBox.shrink(),
               error: (_, __) => const SizedBox.shrink(),
               data: (orders) {
-                final completed =
-                    orders.where((o) => o.status == 'completed');
-                final total = completed.fold(
-                    0.0, (s, o) => s + o.totalAmount);
+                final completed = orders.where((o) => o.status == 'completed');
+                final total = completed.fold(0.0, (s, o) => s + o.totalAmount);
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text(CurrencyFormatter.format(total),
-                        style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w800,
-                            color: AppTheme.primaryCoffee)),
-                    Text('${completed.length} orders',
-                        style: const TextStyle(
-                            fontSize: 11,
-                            color: AppTheme.mutedText)),
+                    Text(
+                      CurrencyFormatter.format(total),
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                        color: AppTheme.primaryCoffee,
+                      ),
+                    ),
+                    Text(
+                      '${completed.length} orders',
+                      style: const TextStyle(
+                        fontSize: 11,
+                        color: AppTheme.mutedText,
+                      ),
+                    ),
                   ],
                 );
               },
@@ -65,8 +69,7 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
             color: AppTheme.cardBg,
             child: ListView(
               scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 16, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               children: [
                 _filterChip('all', 'All'),
                 _filterChip('pending', 'Pending'),
@@ -78,16 +81,12 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
           // Orders list
           Expanded(
             child: ordersAsync.when(
-              loading: () =>
-                  const Center(child: CircularProgressIndicator()),
-              error: (err, __) =>
-                  Center(child: Text('Error: $err')),
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (err, __) => Center(child: Text('Error: $err')),
               data: (orders) {
                 final filtered = _filter == 'all'
                     ? orders
-                    : orders
-                        .where((o) => o.status == _filter)
-                        .toList();
+                    : orders.where((o) => o.status == _filter).toList();
 
                 if (filtered.isEmpty) {
                   return const EmptyState(
@@ -100,10 +99,8 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
                 return ListView.separated(
                   padding: EdgeInsets.all(isTablet ? 24 : 16),
                   itemCount: filtered.length,
-                  separatorBuilder: (_, __) =>
-                      const SizedBox(height: 10),
-                  itemBuilder: (ctx, i) =>
-                      _OrderCard(order: filtered[i]),
+                  separatorBuilder: (_, __) => const SizedBox(height: 10),
+                  itemBuilder: (ctx, i) => _OrderCard(order: filtered[i]),
                 );
               },
             ),
@@ -159,9 +156,12 @@ class _OrderCard extends ConsumerWidget {
               Expanded(
                 child: Row(
                   children: [
-                    Text(order.orderNumber,
-                        style: tt.titleSmall
-                            ?.copyWith(fontWeight: FontWeight.w700)),
+                    Text(
+                      order.orderNumber,
+                      style: tt.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
                     const SizedBox(width: 10),
                     OrderTypeBadge(orderType: order.orderType),
                   ],
@@ -174,29 +174,38 @@ class _OrderCard extends ConsumerWidget {
           // Meta row
           Row(
             children: [
-              HugeIcon(icon: HugeIcons.strokeRoundedClock01,
-                  size: 14, color: AppTheme.mutedText),
+              HugeIcon(
+                icon: HugeIcons.strokeRoundedClock01,
+                size: 14,
+                color: AppTheme.mutedText,
+              ),
               const SizedBox(width: 4),
-              Text(timeStr,
-                  style: tt.bodySmall
-                      ?.copyWith(color: AppTheme.mutedText)),
+              Text(
+                timeStr,
+                style: tt.bodySmall?.copyWith(color: AppTheme.mutedText),
+              ),
               if (order.status == 'completed') ...[
                 const SizedBox(width: 16),
-                HugeIcon(icon: HugeIcons.strokeRoundedWallet01,
-                    size: 14, color: AppTheme.mutedText),
+                HugeIcon(
+                  icon: HugeIcons.strokeRoundedWallet01,
+                  size: 14,
+                  color: AppTheme.mutedText,
+                ),
                 const SizedBox(width: 4),
-                Text(payLabel,
-                    style: tt.bodySmall
-                        ?.copyWith(color: AppTheme.mutedText)),
+                Text(
+                  payLabel,
+                  style: tt.bodySmall?.copyWith(color: AppTheme.mutedText),
+                ),
               ],
               const Spacer(),
               Text(
                 CurrencyFormatter.format(order.totalAmount),
                 style: tt.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w800,
-                    color: order.status == 'voided'
-                        ? AppTheme.mutedText
-                        : AppTheme.primaryCoffee),
+                  fontWeight: FontWeight.w800,
+                  color: order.status == 'voided'
+                      ? AppTheme.mutedText
+                      : AppTheme.primaryCoffee,
+                ),
               ),
             ],
           ),
@@ -207,8 +216,7 @@ class _OrderCard extends ConsumerWidget {
             Text(
               'Tendered: ${CurrencyFormatter.format(order.tenderedAmount ?? 0)} · '
               'Change: ${CurrencyFormatter.format((order.tenderedAmount ?? 0) - order.totalAmount)}',
-              style: tt.bodySmall
-                  ?.copyWith(color: AppTheme.mutedText),
+              style: tt.bodySmall?.copyWith(color: AppTheme.mutedText),
             ),
           ],
           // Void action for pending orders
@@ -221,13 +229,19 @@ class _OrderCard extends ConsumerWidget {
                   final db = ref.read(databaseProvider);
                   await db.voidOrder(order.id);
                 },
-                icon: HugeIcon(icon: HugeIcons.strokeRoundedRemove01,
-                    size: 16, color: AppTheme.dangerRed),
-                label: const Text('Void Order',
-                    style: TextStyle(
-                        color: AppTheme.dangerRed,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 13)),
+                icon: HugeIcon(
+                  icon: HugeIcons.strokeRoundedRemove01,
+                  size: 16,
+                  color: AppTheme.dangerRed,
+                ),
+                label: const Text(
+                  'Void Order',
+                  style: TextStyle(
+                    color: AppTheme.dangerRed,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13,
+                  ),
+                ),
               ),
             ),
           ],

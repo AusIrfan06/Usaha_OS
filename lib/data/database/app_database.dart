@@ -11,8 +11,7 @@ class Categories extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get name => text()();
   TextColumn get iconCode => text().withDefault(const Constant('e532'))();
-  TextColumn get colorHex =>
-      text().withDefault(const Constant('#C17F3A'))();
+  TextColumn get colorHex => text().withDefault(const Constant('#C17F3A'))();
   IntColumn get sortOrder => integer().withDefault(const Constant(0))();
 }
 
@@ -20,12 +19,10 @@ class MenuItems extends Table {
   IntColumn get id => integer().autoIncrement()();
   IntColumn get categoryId => integer().references(Categories, #id)();
   TextColumn get name => text()();
-  TextColumn get description =>
-      text().withDefault(const Constant(''))();
+  TextColumn get description => text().withDefault(const Constant(''))();
   RealColumn get basePrice => real()();
   TextColumn get imageUrl => text().nullable()();
-  BoolColumn get isAvailable =>
-      boolean().withDefault(const Constant(true))();
+  BoolColumn get isAvailable => boolean().withDefault(const Constant(true))();
   TextColumn get preparationStation =>
       text().withDefault(const Constant('kitchen'))();
 }
@@ -34,18 +31,14 @@ class Ingredients extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get name => text()();
   TextColumn get unit => text()();
-  RealColumn get currentStock =>
-      real().withDefault(const Constant(0.0))();
-  RealColumn get reorderPoint =>
-      real().withDefault(const Constant(0.0))();
-  RealColumn get costPerUnit =>
-      real().withDefault(const Constant(0.0))();
+  RealColumn get currentStock => real().withDefault(const Constant(0.0))();
+  RealColumn get reorderPoint => real().withDefault(const Constant(0.0))();
+  RealColumn get costPerUnit => real().withDefault(const Constant(0.0))();
 }
 
 class MenuItemIngredients extends Table {
   IntColumn get menuItemId => integer().references(MenuItems, #id)();
-  IntColumn get ingredientId =>
-      integer().references(Ingredients, #id)();
+  IntColumn get ingredientId => integer().references(Ingredients, #id)();
   RealColumn get quantityRequired => real()();
 
   @override
@@ -55,20 +48,14 @@ class MenuItemIngredients extends Table {
 class Orders extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get orderNumber => text()();
-  TextColumn get orderType =>
-      text().withDefault(const Constant('takeaway'))();
+  TextColumn get orderType => text().withDefault(const Constant('takeaway'))();
   IntColumn get tableNumber => integer().nullable()();
-  TextColumn get status =>
-      text().withDefault(const Constant('pending'))();
-  DateTimeColumn get createdAt =>
-      dateTime().withDefault(currentDateAndTime)();
+  TextColumn get status => text().withDefault(const Constant('pending'))();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
   DateTimeColumn get completedAt => dateTime().nullable()();
-  RealColumn get subtotal =>
-      real().withDefault(const Constant(0.0))();
-  RealColumn get taxAmount =>
-      real().withDefault(const Constant(0.0))();
-  RealColumn get totalAmount =>
-      real().withDefault(const Constant(0.0))();
+  RealColumn get subtotal => real().withDefault(const Constant(0.0))();
+  RealColumn get taxAmount => real().withDefault(const Constant(0.0))();
+  RealColumn get totalAmount => real().withDefault(const Constant(0.0))();
   TextColumn get paymentMethod => text().nullable()();
   RealColumn get tenderedAmount => real().nullable()();
   TextColumn get notes => text().withDefault(const Constant(''))();
@@ -82,8 +69,7 @@ class OrderItems extends Table {
   IntColumn get quantity => integer()();
   RealColumn get unitPrice => real()();
   RealColumn get subtotal => real()();
-  TextColumn get modifiers =>
-      text().withDefault(const Constant(''))();
+  TextColumn get modifiers => text().withDefault(const Constant(''))();
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -94,10 +80,15 @@ class Tasks extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get title => text()();
   TextColumn get description => text().withDefault(const Constant(''))();
-  TextColumn get category => text().withDefault(const Constant('opening'))(); // opening | closing | cleaning | maintenance | handover | general
+  TextColumn get category => text().withDefault(
+    const Constant('opening'),
+  )(); // opening | closing | cleaning | maintenance | handover | general
   TextColumn get assignedTo => text().nullable()();
-  TextColumn get status => text().withDefault(const Constant('todo'))(); // todo | in_progress | completed
-  TextColumn get priority => text().withDefault(const Constant('medium'))(); // low | medium | high
+  TextColumn get status => text().withDefault(
+    const Constant('todo'),
+  )(); // todo | in_progress | completed
+  TextColumn get priority =>
+      text().withDefault(const Constant('medium'))(); // low | medium | high
   DateTimeColumn get dueDate => dateTime().nullable()();
   DateTimeColumn get completedAt => dateTime().nullable()();
   TextColumn get completedBy => text().nullable()();
@@ -110,7 +101,9 @@ class Customers extends Table {
   TextColumn get phone => text()();
   TextColumn get email => text().nullable()();
   IntColumn get points => integer().withDefault(const Constant(0))();
-  TextColumn get tier => text().withDefault(const Constant('Bronze'))(); // Bronze | Silver | Gold | Platinum
+  TextColumn get tier => text().withDefault(
+    const Constant('Bronze'),
+  )(); // Bronze | Silver | Gold | Platinum
   RealColumn get totalSpent => real().withDefault(const Constant(0.0))();
   IntColumn get stampsCount => integer().withDefault(const Constant(0))();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
@@ -120,7 +113,9 @@ class Customers extends Table {
 class StaffMembers extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get name => text()();
-  TextColumn get role => text().withDefault(const Constant('Cashier'))(); // Cashier | Barista | Kitchen Staff | Shift Manager | Owner
+  TextColumn get role => text().withDefault(
+    const Constant('Cashier'),
+  )(); // Cashier | Barista | Kitchen Staff | Shift Manager | Owner
   TextColumn get pinCode => text().withDefault(const Constant('1234'))();
   TextColumn get phone => text().nullable()();
   BoolColumn get isActive => boolean().withDefault(const Constant(true))();
@@ -132,7 +127,8 @@ class StaffAttendances extends Table {
   IntColumn get id => integer().autoIncrement()();
   IntColumn get staffId => integer().references(StaffMembers, #id)();
   TextColumn get staffName => text()();
-  DateTimeColumn get clockInTime => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get clockInTime =>
+      dateTime().withDefault(currentDateAndTime)();
   DateTimeColumn get clockOutTime => dateTime().nullable()();
   IntColumn get totalMinutes => integer().withDefault(const Constant(0))();
   TextColumn get notes => text().withDefault(const Constant(''))();
@@ -150,8 +146,11 @@ class Suppliers extends Table {
   TextColumn get phone => text().nullable()();
   TextColumn get email => text().nullable()();
   TextColumn get address => text().nullable()();
-  TextColumn get paymentTerms => text().withDefault(const Constant('COD'))(); // COD | 14_days | 30_days
-  TextColumn get category => text().withDefault(const Constant('Coffee Beans'))(); // Coffee Beans | Dairy & Milk | Syrups | Packaging | Fresh Food | Equipment
+  TextColumn get paymentTerms =>
+      text().withDefault(const Constant('COD'))(); // COD | 14_days | 30_days
+  TextColumn get category => text().withDefault(
+    const Constant('Coffee Beans'),
+  )(); // Coffee Beans | Dairy & Milk | Syrups | Packaging | Fresh Food | Equipment
   BoolColumn get isActive => boolean().withDefault(const Constant(true))();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
 }
@@ -161,7 +160,9 @@ class PurchaseOrders extends Table {
   TextColumn get poNumber => text()();
   IntColumn get supplierId => integer().references(Suppliers, #id)();
   TextColumn get supplierName => text()();
-  TextColumn get status => text().withDefault(const Constant('draft'))(); // draft | ordered | received | cancelled
+  TextColumn get status => text().withDefault(
+    const Constant('draft'),
+  )(); // draft | ordered | received | cancelled
   RealColumn get totalAmount => real().withDefault(const Constant(0.0))();
   DateTimeColumn get orderDate => dateTime().withDefault(currentDateAndTime)();
   DateTimeColumn get expectedDate => dateTime().nullable()();
@@ -188,29 +189,43 @@ class StockAudits extends Table {
   TextColumn get unit => text().withDefault(const Constant('unit'))();
   RealColumn get expectedStock => real().withDefault(const Constant(0.0))();
   RealColumn get actualStock => real().withDefault(const Constant(0.0))();
-  RealColumn get varianceQuantity => real().withDefault(const Constant(0.0))(); // actual - expected
-  RealColumn get varianceValue => real().withDefault(const Constant(0.0))(); // varianceQuantity * costPerUnit
-  TextColumn get reason => text().withDefault(const Constant('Routine Check'))(); // Routine Check | Wastage | Expiry | Spillage | Staff Meal | Discrepancy
-  TextColumn get auditedBy => text().withDefault(const Constant('Shift Manager'))();
+  RealColumn get varianceQuantity =>
+      real().withDefault(const Constant(0.0))(); // actual - expected
+  RealColumn get varianceValue => real().withDefault(
+    const Constant(0.0),
+  )(); // varianceQuantity * costPerUnit
+  TextColumn get reason => text().withDefault(
+    const Constant('Routine Check'),
+  )(); // Routine Check | Wastage | Expiry | Spillage | Staff Meal | Discrepancy
+  TextColumn get auditedBy =>
+      text().withDefault(const Constant('Shift Manager'))();
   DateTimeColumn get auditedAt => dateTime().withDefault(currentDateAndTime)();
   TextColumn get notes => text().withDefault(const Constant(''))();
 }
 
 class Expenses extends Table {
   IntColumn get id => integer().autoIncrement()();
-  TextColumn get category => text().withDefault(const Constant('Petty Cash'))(); // Petty Cash | Ingredients | Utilities | Maintenance | Staff Wages | Marketing | Miscellaneous
+  TextColumn get category => text().withDefault(
+    const Constant('Petty Cash'),
+  )(); // Petty Cash | Ingredients | Utilities | Maintenance | Staff Wages | Marketing | Miscellaneous
   RealColumn get amount => real().withDefault(const Constant(0.0))();
-  TextColumn get paymentMethod => text().withDefault(const Constant('cash'))(); // cash | duitnow | bank_transfer
-  TextColumn get recipient => text().withDefault(const Constant(''))(); // Supplier, Kedai Runcit, TNB, etc.
+  TextColumn get paymentMethod => text().withDefault(
+    const Constant('cash'),
+  )(); // cash | duitnow | bank_transfer
+  TextColumn get recipient => text().withDefault(
+    const Constant(''),
+  )(); // Supplier, Kedai Runcit, TNB, etc.
   TextColumn get description => text().withDefault(const Constant(''))();
   TextColumn get receiptNumber => text().nullable()();
   TextColumn get recordedBy => text().withDefault(const Constant('Staff'))();
-  DateTimeColumn get expenseDate => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get expenseDate =>
+      dateTime().withDefault(currentDateAndTime)();
 }
 
 class CashDrawerLogs extends Table {
   IntColumn get id => integer().autoIncrement()();
-  TextColumn get type => text()(); // float_in | cash_in | cash_out | drop | audit
+  TextColumn get type =>
+      text()(); // float_in | cash_in | cash_out | drop | audit
   RealColumn get amount => real().withDefault(const Constant(0.0))();
   TextColumn get reason => text().withDefault(const Constant(''))();
   TextColumn get recordedBy => text().withDefault(const Constant('Staff'))();
@@ -223,8 +238,10 @@ class CashDrawerLogs extends Table {
 
 class SyncTombstones extends Table {
   IntColumn get id => integer().autoIncrement()();
-  TextColumn get targetTable => text()(); // 'menu_items', 'categories', 'ingredients', 'tasks', 'customers', 'staff_members', 'orders', 'suppliers', 'expenses'
-  TextColumn get recordKey => text()(); // Natural identifier: name, phone, orderNumber, pinCode, etc.
+  TextColumn get targetTable =>
+      text()(); // 'menu_items', 'categories', 'ingredients', 'tasks', 'customers', 'staff_members', 'orders', 'suppliers', 'expenses'
+  TextColumn get recordKey =>
+      text()(); // Natural identifier: name, phone, orderNumber, pinCode, etc.
   DateTimeColumn get deletedAt => dateTime().withDefault(currentDateAndTime)();
   BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
 }
@@ -251,9 +268,12 @@ class StockTransfers extends Table {
   IntColumn get targetOutletId => integer()();
   IntColumn get ingredientId => integer()();
   RealColumn get quantity => real()();
-  TextColumn get status => text().withDefault(const Constant('pending'))(); // pending | in_transit | received | cancelled
+  TextColumn get status => text().withDefault(
+    const Constant('pending'),
+  )(); // pending | in_transit | received | cancelled
   TextColumn get requestedBy => text().withDefault(const Constant('Manager'))();
-  DateTimeColumn get transferDate => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get transferDate =>
+      dateTime().withDefault(currentDateAndTime)();
   TextColumn get notes => text().withDefault(const Constant(''))();
 }
 
@@ -267,7 +287,9 @@ class DeliveryOrders extends Table {
   RealColumn get netPayout => real().withDefault(const Constant(0.0))();
   TextColumn get riderName => text().nullable()();
   TextColumn get riderPhone => text().nullable()();
-  TextColumn get pickupStatus => text().withDefault(const Constant('pending'))(); // pending | driver_assigned | picked_up | delivered
+  TextColumn get pickupStatus => text().withDefault(
+    const Constant('pending'),
+  )(); // pending | driver_assigned | picked_up | delivered
   DateTimeColumn get estimatedPickupTime => dateTime().nullable()();
 }
 
@@ -275,28 +297,30 @@ class DeliveryOrders extends Table {
 // Database
 // ─────────────────────────────────────────────────────────────────────────────
 
-@DriftDatabase(tables: [
-  Categories,
-  MenuItems,
-  Ingredients,
-  MenuItemIngredients,
-  Orders,
-  OrderItems,
-  Tasks,
-  Customers,
-  StaffMembers,
-  StaffAttendances,
-  Suppliers,
-  PurchaseOrders,
-  PurchaseOrderItems,
-  StockAudits,
-  Expenses,
-  CashDrawerLogs,
-  SyncTombstones,
-  Outlets,
-  StockTransfers,
-  DeliveryOrders,
-])
+@DriftDatabase(
+  tables: [
+    Categories,
+    MenuItems,
+    Ingredients,
+    MenuItemIngredients,
+    Orders,
+    OrderItems,
+    Tasks,
+    Customers,
+    StaffMembers,
+    StaffAttendances,
+    Suppliers,
+    PurchaseOrders,
+    PurchaseOrderItems,
+    StockAudits,
+    Expenses,
+    CashDrawerLogs,
+    SyncTombstones,
+    Outlets,
+    StockTransfers,
+    DeliveryOrders,
+  ],
+)
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
@@ -305,41 +329,41 @@ class AppDatabase extends _$AppDatabase {
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
-        onCreate: (m) async {
-          await m.createAll();
-          await _seedData();
-          await _seedPhase2Data();
-          await _seedPhase3Data();
-          await _seedPhase4Data();
-        },
-        onUpgrade: (m, from, to) async {
-          if (from < 2) {
-            await m.createTable(tasks);
-            await m.createTable(customers);
-            await m.createTable(staffMembers);
-            await m.createTable(staffAttendances);
-            await _seedPhase2Data();
-          }
-          if (from < 3) {
-            await m.createTable(suppliers);
-            await m.createTable(purchaseOrders);
-            await m.createTable(purchaseOrderItems);
-            await m.createTable(stockAudits);
-            await m.createTable(expenses);
-            await m.createTable(cashDrawerLogs);
-            await _seedPhase3Data();
-          }
-          if (from < 4) {
-            await m.createTable(syncTombstones);
-          }
-          if (from < 5) {
-            await m.createTable(outlets);
-            await m.createTable(stockTransfers);
-            await m.createTable(deliveryOrders);
-            await _seedPhase4Data();
-          }
-        },
-      );
+    onCreate: (m) async {
+      await m.createAll();
+      await _seedData();
+      await _seedPhase2Data();
+      await _seedPhase3Data();
+      await _seedPhase4Data();
+    },
+    onUpgrade: (m, from, to) async {
+      if (from < 2) {
+        await m.createTable(tasks);
+        await m.createTable(customers);
+        await m.createTable(staffMembers);
+        await m.createTable(staffAttendances);
+        await _seedPhase2Data();
+      }
+      if (from < 3) {
+        await m.createTable(suppliers);
+        await m.createTable(purchaseOrders);
+        await m.createTable(purchaseOrderItems);
+        await m.createTable(stockAudits);
+        await m.createTable(expenses);
+        await m.createTable(cashDrawerLogs);
+        await _seedPhase3Data();
+      }
+      if (from < 4) {
+        await m.createTable(syncTombstones);
+      }
+      if (from < 5) {
+        await m.createTable(outlets);
+        await m.createTable(stockTransfers);
+        await m.createTable(deliveryOrders);
+        await _seedPhase4Data();
+      }
+    },
+  );
 
   static QueryExecutor _openConnection() {
     return driftDatabase(name: 'usaha_os');
@@ -388,32 +412,170 @@ class AppDatabase extends _$AppDatabase {
     final menuSeed = [
       (c: hotId, n: 'Kopi O', p: 2.50, d: 'Classic black coffee', s: 'bar'),
       (c: hotId, n: 'Teh Tarik', p: 3.00, d: 'Pulled milk tea', s: 'bar'),
-      (c: hotId, n: 'Kopi C', p: 3.50, d: 'Coffee with evaporated milk', s: 'bar'),
-      (c: hotId, n: 'Cappuccino', p: 8.00, d: 'Espresso with steamed milk foam', s: 'bar'),
-      (c: hotId, n: 'Latte', p: 8.50, d: 'Espresso with steamed milk', s: 'bar'),
-      (c: hotId, n: 'Americano', p: 7.00, d: 'Espresso with hot water', s: 'bar'),
-      (c: hotId, n: 'Milo Panas', p: 4.00, d: 'Hot chocolate malt drink', s: 'bar'),
+      (
+        c: hotId,
+        n: 'Kopi C',
+        p: 3.50,
+        d: 'Coffee with evaporated milk',
+        s: 'bar',
+      ),
+      (
+        c: hotId,
+        n: 'Cappuccino',
+        p: 8.00,
+        d: 'Espresso with steamed milk foam',
+        s: 'bar',
+      ),
+      (
+        c: hotId,
+        n: 'Latte',
+        p: 8.50,
+        d: 'Espresso with steamed milk',
+        s: 'bar',
+      ),
+      (
+        c: hotId,
+        n: 'Americano',
+        p: 7.00,
+        d: 'Espresso with hot water',
+        s: 'bar',
+      ),
+      (
+        c: hotId,
+        n: 'Milo Panas',
+        p: 4.00,
+        d: 'Hot chocolate malt drink',
+        s: 'bar',
+      ),
       (c: hotId, n: 'Horlicks', p: 4.50, d: 'Hot malt milk drink', s: 'bar'),
       (c: coldId, n: 'Iced Kopi O', p: 3.00, d: 'Iced black coffee', s: 'bar'),
-      (c: coldId, n: 'Iced Teh Tarik', p: 3.50, d: 'Iced pulled milk tea', s: 'bar'),
-      (c: coldId, n: 'Iced Latte', p: 9.00, d: 'Iced espresso with fresh milk', s: 'bar'),
-      (c: coldId, n: 'Milo Ais', p: 4.50, d: 'Iced Milo chocolate malt', s: 'bar'),
-      (c: coldId, n: 'Fresh Orange', p: 7.50, d: 'Freshly squeezed orange juice', s: 'bar'),
+      (
+        c: coldId,
+        n: 'Iced Teh Tarik',
+        p: 3.50,
+        d: 'Iced pulled milk tea',
+        s: 'bar',
+      ),
+      (
+        c: coldId,
+        n: 'Iced Latte',
+        p: 9.00,
+        d: 'Iced espresso with fresh milk',
+        s: 'bar',
+      ),
+      (
+        c: coldId,
+        n: 'Milo Ais',
+        p: 4.50,
+        d: 'Iced Milo chocolate malt',
+        s: 'bar',
+      ),
+      (
+        c: coldId,
+        n: 'Fresh Orange',
+        p: 7.50,
+        d: 'Freshly squeezed orange juice',
+        s: 'bar',
+      ),
       (c: coldId, n: 'Lemon Ais', p: 5.00, d: 'Iced lemon with soda', s: 'bar'),
-      (c: coldId, n: 'Bandung', p: 4.50, d: 'Rose syrup with evaporated milk', s: 'bar'),
-      (c: foodId, n: 'Nasi Lemak', p: 8.00, d: 'Coconut rice, sambal, egg & anchovies', s: 'kitchen'),
-      (c: foodId, n: 'Roti Bakar', p: 4.50, d: 'Toasted bread with butter & kaya', s: 'kitchen'),
-      (c: foodId, n: 'Mee Goreng', p: 9.50, d: 'Fried noodles Malaysian style', s: 'kitchen'),
-      (c: foodId, n: 'Half-Boiled Eggs', p: 2.50, d: '2 soft-boiled eggs', s: 'kitchen'),
-      (c: foodId, n: 'Sandwich', p: 6.50, d: 'Toasted club sandwich', s: 'kitchen'),
-      (c: foodId, n: 'Char Kway Teow', p: 10.00, d: 'Fried flat rice noodles', s: 'kitchen'),
-      (c: foodId, n: 'Nasi Goreng', p: 10.00, d: 'Malaysian fried rice', s: 'kitchen'),
-      (c: pastryId, n: 'Croissant', p: 5.50, d: 'Butter croissant', s: 'pastry'),
-      (c: pastryId, n: 'Banana Cake', p: 4.50, d: 'Homemade banana cake slice', s: 'pastry'),
-      (c: pastryId, n: 'Curry Puff', p: 2.50, d: 'Crispy curry puff', s: 'pastry'),
-      (c: pastryId, n: 'Kaya Puff', p: 2.50, d: 'Kaya coconut jam puff', s: 'pastry'),
-      (c: pastryId, n: 'Blueberry Muffin', p: 4.00, d: 'Fresh blueberry muffin', s: 'pastry'),
-      (c: pastryId, n: 'Egg Tart', p: 3.00, d: 'Portuguese-style egg tart', s: 'pastry'),
+      (
+        c: coldId,
+        n: 'Bandung',
+        p: 4.50,
+        d: 'Rose syrup with evaporated milk',
+        s: 'bar',
+      ),
+      (
+        c: foodId,
+        n: 'Nasi Lemak',
+        p: 8.00,
+        d: 'Coconut rice, sambal, egg & anchovies',
+        s: 'kitchen',
+      ),
+      (
+        c: foodId,
+        n: 'Roti Bakar',
+        p: 4.50,
+        d: 'Toasted bread with butter & kaya',
+        s: 'kitchen',
+      ),
+      (
+        c: foodId,
+        n: 'Mee Goreng',
+        p: 9.50,
+        d: 'Fried noodles Malaysian style',
+        s: 'kitchen',
+      ),
+      (
+        c: foodId,
+        n: 'Half-Boiled Eggs',
+        p: 2.50,
+        d: '2 soft-boiled eggs',
+        s: 'kitchen',
+      ),
+      (
+        c: foodId,
+        n: 'Sandwich',
+        p: 6.50,
+        d: 'Toasted club sandwich',
+        s: 'kitchen',
+      ),
+      (
+        c: foodId,
+        n: 'Char Kway Teow',
+        p: 10.00,
+        d: 'Fried flat rice noodles',
+        s: 'kitchen',
+      ),
+      (
+        c: foodId,
+        n: 'Nasi Goreng',
+        p: 10.00,
+        d: 'Malaysian fried rice',
+        s: 'kitchen',
+      ),
+      (
+        c: pastryId,
+        n: 'Croissant',
+        p: 5.50,
+        d: 'Butter croissant',
+        s: 'pastry',
+      ),
+      (
+        c: pastryId,
+        n: 'Banana Cake',
+        p: 4.50,
+        d: 'Homemade banana cake slice',
+        s: 'pastry',
+      ),
+      (
+        c: pastryId,
+        n: 'Curry Puff',
+        p: 2.50,
+        d: 'Crispy curry puff',
+        s: 'pastry',
+      ),
+      (
+        c: pastryId,
+        n: 'Kaya Puff',
+        p: 2.50,
+        d: 'Kaya coconut jam puff',
+        s: 'pastry',
+      ),
+      (
+        c: pastryId,
+        n: 'Blueberry Muffin',
+        p: 4.00,
+        d: 'Fresh blueberry muffin',
+        s: 'pastry',
+      ),
+      (
+        c: pastryId,
+        n: 'Egg Tart',
+        p: 3.00,
+        d: 'Portuguese-style egg tart',
+        s: 'pastry',
+      ),
     ];
 
     for (final item in menuSeed) {
@@ -464,18 +626,78 @@ class AppDatabase extends _$AppDatabase {
     final existingTasks = await select(tasks).get();
     if (existingTasks.isEmpty) {
       final taskSeeds = [
-        (t: 'Float Count Verification', d: 'Count cash float (RM200) in cash drawer', c: 'opening', p: 'high'),
-        (t: 'Espresso Machine Warmup & Flush', d: 'Turn on group heads & steam wand purge', c: 'opening', p: 'high'),
-        (t: 'Inspect Fridge & Chiller Temps', d: 'Ensure milk chiller is under 4°C', c: 'opening', p: 'medium'),
-        (t: 'Restock Milk, Cups & Lids', d: 'Check front counter stock levels', c: 'opening', p: 'medium'),
-        (t: 'Sanitize Workstations & Tables', d: 'Wipe all dining tables and POS counter', c: 'opening', p: 'low'),
-        (t: 'Deep Clean Steam Wand & Group Heads', d: 'Backflush espresso machine with Cafiza', c: 'closing', p: 'high'),
-        (t: 'Empty Coffee Puck Bin & Drip Tray', d: 'Wash and sanitize knock box', c: 'closing', p: 'medium'),
-        (t: 'Reconcile Cash Drawer & Print Daily Z-Report', d: 'Match cash total against system sales', c: 'closing', p: 'high'),
-        (t: 'Discard Expired Pastries & Clear Display', d: 'Log wastage in system', c: 'closing', p: 'medium'),
-        (t: 'Lock Doors & Turn Off Signage/AC', d: 'Ensure main breaker & lights are secured', c: 'closing', p: 'high'),
-        (t: 'Oat Milk delivery arriving at 10 AM', d: 'Supplier contacted, invoice ready on clipboard', c: 'handover', p: 'medium'),
-        (t: 'Grinder 2 calibrated for Dark Roast', d: 'Dose set to 18.5g extraction at 27s', c: 'handover', p: 'low'),
+        (
+          t: 'Float Count Verification',
+          d: 'Count cash float (RM200) in cash drawer',
+          c: 'opening',
+          p: 'high',
+        ),
+        (
+          t: 'Espresso Machine Warmup & Flush',
+          d: 'Turn on group heads & steam wand purge',
+          c: 'opening',
+          p: 'high',
+        ),
+        (
+          t: 'Inspect Fridge & Chiller Temps',
+          d: 'Ensure milk chiller is under 4°C',
+          c: 'opening',
+          p: 'medium',
+        ),
+        (
+          t: 'Restock Milk, Cups & Lids',
+          d: 'Check front counter stock levels',
+          c: 'opening',
+          p: 'medium',
+        ),
+        (
+          t: 'Sanitize Workstations & Tables',
+          d: 'Wipe all dining tables and POS counter',
+          c: 'opening',
+          p: 'low',
+        ),
+        (
+          t: 'Deep Clean Steam Wand & Group Heads',
+          d: 'Backflush espresso machine with Cafiza',
+          c: 'closing',
+          p: 'high',
+        ),
+        (
+          t: 'Empty Coffee Puck Bin & Drip Tray',
+          d: 'Wash and sanitize knock box',
+          c: 'closing',
+          p: 'medium',
+        ),
+        (
+          t: 'Reconcile Cash Drawer & Print Daily Z-Report',
+          d: 'Match cash total against system sales',
+          c: 'closing',
+          p: 'high',
+        ),
+        (
+          t: 'Discard Expired Pastries & Clear Display',
+          d: 'Log wastage in system',
+          c: 'closing',
+          p: 'medium',
+        ),
+        (
+          t: 'Lock Doors & Turn Off Signage/AC',
+          d: 'Ensure main breaker & lights are secured',
+          c: 'closing',
+          p: 'high',
+        ),
+        (
+          t: 'Oat Milk delivery arriving at 10 AM',
+          d: 'Supplier contacted, invoice ready on clipboard',
+          c: 'handover',
+          p: 'medium',
+        ),
+        (
+          t: 'Grinder 2 calibrated for Dark Roast',
+          d: 'Dose set to 18.5g extraction at 27s',
+          c: 'handover',
+          p: 'low',
+        ),
       ];
 
       for (final s in taskSeeds) {
@@ -495,9 +717,21 @@ class AppDatabase extends _$AppDatabase {
     final existingStaff = await select(staffMembers).get();
     if (existingStaff.isEmpty) {
       final staffSeeds = [
-        (n: 'Amirul Hakim', r: 'Shift Manager', p: '8888', ph: '012-3456789', hr: 16.0),
+        (
+          n: 'Amirul Hakim',
+          r: 'Shift Manager',
+          p: '8888',
+          ph: '012-3456789',
+          hr: 16.0,
+        ),
         (n: 'Nurul Huda', r: 'Barista', p: '1234', ph: '017-9876543', hr: 12.0),
-        (n: 'Mohd Faiz', r: 'Kitchen Staff', p: '2345', ph: '013-1122334', hr: 11.5),
+        (
+          n: 'Mohd Faiz',
+          r: 'Kitchen Staff',
+          p: '2345',
+          ph: '013-1122334',
+          hr: 11.5,
+        ),
         (n: 'Siti Sarah', r: 'Cashier', p: '3456', ph: '019-4455667', hr: 10.0),
       ];
 
@@ -519,10 +753,42 @@ class AppDatabase extends _$AppDatabase {
     final existingCustomers = await select(customers).get();
     if (existingCustomers.isEmpty) {
       final customerSeeds = [
-        (n: 'Dato Adam Haris', p: '012-2345678', e: 'adam@haris.my', pts: 420, t: 'Gold', s: 7, sp: 480.50),
-        (n: 'Farhan Azman', p: '019-8765432', e: 'farhan.a@gmail.com', pts: 150, t: 'Silver', s: 3, sp: 165.00),
-        (n: 'Aisyah Razak', p: '013-5566778', e: 'aisyah_r@yahoo.com', pts: 60, t: 'Bronze', s: 2, sp: 65.00),
-        (n: 'Khairul Anwar', p: '017-2233445', e: 'khairul@pos.com', pts: 890, t: 'Platinum', s: 8, sp: 1120.00),
+        (
+          n: 'Dato Adam Haris',
+          p: '012-2345678',
+          e: 'adam@haris.my',
+          pts: 420,
+          t: 'Gold',
+          s: 7,
+          sp: 480.50,
+        ),
+        (
+          n: 'Farhan Azman',
+          p: '019-8765432',
+          e: 'farhan.a@gmail.com',
+          pts: 150,
+          t: 'Silver',
+          s: 3,
+          sp: 165.00,
+        ),
+        (
+          n: 'Aisyah Razak',
+          p: '013-5566778',
+          e: 'aisyah_r@yahoo.com',
+          pts: 60,
+          t: 'Bronze',
+          s: 2,
+          sp: 65.00,
+        ),
+        (
+          n: 'Khairul Anwar',
+          p: '017-2233445',
+          e: 'khairul@pos.com',
+          pts: 890,
+          t: 'Platinum',
+          s: 8,
+          sp: 1120.00,
+        ),
       ];
 
       for (final c in customerSeeds) {
@@ -553,7 +819,9 @@ class AppDatabase extends _$AppDatabase {
           contactPerson: const Value('En. Zainal Abidin'),
           phone: const Value('03-78901234'),
           email: const Value('order@nusantararoastery.my'),
-          address: const Value('No. 12, Jalan Kilang 51/205, Petaling Jaya, Selangor'),
+          address: const Value(
+            'No. 12, Jalan Kilang 51/205, Petaling Jaya, Selangor',
+          ),
           paymentTerms: const Value('30_days'),
           category: const Value('Coffee Beans'),
           isActive: const Value(true),
@@ -662,7 +930,9 @@ class AppDatabase extends _$AppDatabase {
         OutletsCompanion.insert(
           name: 'Usaha Coffee Bangsar (HQ)',
           code: 'MY-KL-01',
-          address: const Value('14, Jalan Telawi 2, Bangsar, 59100 Kuala Lumpur'),
+          address: const Value(
+            '14, Jalan Telawi 2, Bangsar, 59100 Kuala Lumpur',
+          ),
           phone: const Value('03-2284 1234'),
           isPrimary: const Value(true),
           priceMultiplier: const Value(1.0),
@@ -673,7 +943,9 @@ class AppDatabase extends _$AppDatabase {
         OutletsCompanion.insert(
           name: 'Usaha Coffee Pavilion KL',
           code: 'MY-KL-02',
-          address: const Value('Lot 1.45, Pavilion KL, Bukit Bintang, 55100 Kuala Lumpur'),
+          address: const Value(
+            'Lot 1.45, Pavilion KL, Bukit Bintang, 55100 Kuala Lumpur',
+          ),
           phone: const Value('03-2148 5678'),
           isPrimary: const Value(false),
           priceMultiplier: const Value(1.10), // +10% mall pricing
@@ -684,7 +956,9 @@ class AppDatabase extends _$AppDatabase {
         OutletsCompanion.insert(
           name: 'Usaha Coffee Subang SS15',
           code: 'MY-SEL-03',
-          address: const Value('28, Jalan SS 15/4, 47500 Subang Jaya, Selangor'),
+          address: const Value(
+            '28, Jalan SS 15/4, 47500 Subang Jaya, Selangor',
+          ),
           phone: const Value('03-5632 9876'),
           isPrimary: const Value(false),
           priceMultiplier: const Value(1.0),
@@ -701,7 +975,9 @@ class AppDatabase extends _$AppDatabase {
           quantity: 5000.0, // 5kg
           status: const Value('in_transit'),
           requestedBy: const Value('Amirul Hakim'),
-          notes: const Value('Pemindahan stok biji kopi Arabica kecemasan dari Bangsar ke Subang SS15'),
+          notes: const Value(
+            'Pemindahan stok biji kopi Arabica kecemasan dari Bangsar ke Subang SS15',
+          ),
         ),
       );
     }
@@ -711,9 +987,9 @@ class AppDatabase extends _$AppDatabase {
   // Queries & Mutations
   // ─────────────────────────────────────────────────────────────────────────
 
-  Stream<List<Category>> watchAllCategories() =>
-      (select(categories)..orderBy([(c) => OrderingTerm.asc(c.sortOrder)]))
-          .watch();
+  Stream<List<Category>> watchAllCategories() => (select(
+    categories,
+  )..orderBy([(c) => OrderingTerm.asc(c.sortOrder)])).watch();
 
   Stream<List<Category>> watchCategories() => watchAllCategories();
 
@@ -726,16 +1002,15 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Stream<List<MenuItem>> watchMenuItemsByCategory(int categoryId) =>
-      (select(menuItems)
-            ..where((m) =>
-                m.categoryId.equals(categoryId) & m.isAvailable.equals(true)))
+      (select(menuItems)..where(
+            (m) => m.categoryId.equals(categoryId) & m.isAvailable.equals(true),
+          ))
           .watch();
 
   Stream<List<MenuItem>> watchAllMenuItems() =>
       (select(menuItems)..where((m) => m.isAvailable.equals(true))).watch();
 
-  Stream<List<Ingredient>> watchAllIngredients() =>
-      select(ingredients).watch();
+  Stream<List<Ingredient>> watchAllIngredients() => select(ingredients).watch();
 
   Stream<List<Ingredient>> watchIngredients() => watchAllIngredients();
 
@@ -745,13 +1020,15 @@ class AppDatabase extends _$AppDatabase {
       (select(ingredients)..where((i) => i.id.equals(id))).getSingleOrNull();
 
   Future<void> updateIngredientStock(int ingredientId, double newStock) =>
-      (update(ingredients)..where((i) => i.id.equals(ingredientId)))
-          .write(IngredientsCompanion(currentStock: Value(newStock)));
+      (update(ingredients)..where((i) => i.id.equals(ingredientId))).write(
+        IngredientsCompanion(currentStock: Value(newStock)),
+      );
 
   // ── Orders ─────────────────────────────────────────────────────────────────
 
-  Stream<List<Order>> watchAllOrders() =>
-      (select(orders)..orderBy([(o) => OrderingTerm.desc(o.createdAt)])).watch();
+  Stream<List<Order>> watchAllOrders() => (select(
+    orders,
+  )..orderBy([(o) => OrderingTerm.desc(o.createdAt)])).watch();
 
   Stream<List<Order>> watchTodayOrders() {
     final now = DateTime.now();
@@ -788,7 +1065,8 @@ class AppDatabase extends _$AppDatabase {
 
   Future<int> createOrder(OrdersCompanion order) => into(orders).insert(order);
 
-  Future<int> addOrderItem(OrderItemsCompanion item) => into(orderItems).insert(item);
+  Future<int> addOrderItem(OrderItemsCompanion item) =>
+      into(orderItems).insert(item);
 
   Future<int> insertOrder(
     OrdersCompanion order,
@@ -822,14 +1100,14 @@ class AppDatabase extends _$AppDatabase {
 
       final items = await getOrderItems(orderId);
       for (final item in items) {
-        final links = await (select(menuItemIngredients)
-              ..where((l) => l.menuItemId.equals(item.menuItemId)))
-            .get();
+        final links = await (select(
+          menuItemIngredients,
+        )..where((l) => l.menuItemId.equals(item.menuItemId))).get();
         for (final link in links) {
           final deduct = link.quantityRequired * item.quantity;
-          final ing = await (select(ingredients)
-                ..where((i) => i.id.equals(link.ingredientId)))
-              .getSingleOrNull();
+          final ing = await (select(
+            ingredients,
+          )..where((i) => i.id.equals(link.ingredientId))).getSingleOrNull();
           if (ing != null) {
             final newStock = (ing.currentStock - deduct).clamp(0.0, 99999.0);
             await (update(ingredients)..where((i) => i.id.equals(ing.id)))
@@ -853,10 +1131,13 @@ class AppDatabase extends _$AppDatabase {
   Future<Map<String, dynamic>> getTodaySummary() async {
     final all = await getTodayOrders();
     final completed = all.where((o) => o.status == 'completed').toList();
-    final double totalSales =
-        completed.fold(0.0, (sum, o) => sum + o.totalAmount);
-    final double avgTicket =
-        completed.isNotEmpty ? totalSales / completed.length : 0.0;
+    final double totalSales = completed.fold(
+      0.0,
+      (sum, o) => sum + o.totalAmount,
+    );
+    final double avgTicket = completed.isNotEmpty
+        ? totalSales / completed.length
+        : 0.0;
 
     final double cashSales = completed
         .where((o) => o.paymentMethod == 'cash')
@@ -884,8 +1165,9 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Future<Map<int, double>> getTodayHourlySales() async {
-    final completed = (await getTodayOrders())
-        .where((o) => o.status == 'completed');
+    final completed = (await getTodayOrders()).where(
+      (o) => o.status == 'completed',
+    );
     final Map<int, double> hourly = {};
     for (final o in completed) {
       final h = o.createdAt.hour;
@@ -906,8 +1188,7 @@ class AppDatabase extends _$AppDatabase {
     for (final id in completedIds) {
       final items = await getOrderItems(id);
       for (final item in items) {
-        counts[item.itemName] =
-            (counts[item.itemName] ?? 0) + item.quantity;
+        counts[item.itemName] = (counts[item.itemName] ?? 0) + item.quantity;
       }
     }
 
@@ -937,23 +1218,34 @@ class AppDatabase extends _$AppDatabase {
       (select(syncTombstones)..where((t) => t.isSynced.equals(false))).get();
 
   Future<void> markTombstonesSynced(List<int> ids) =>
-      (update(syncTombstones)..where((t) => t.id.isIn(ids)))
-          .write(const SyncTombstonesCompanion(isSynced: Value(true)));
+      (update(syncTombstones)..where((t) => t.id.isIn(ids))).write(
+        const SyncTombstonesCompanion(isSynced: Value(true)),
+      );
 
   Future<bool> isTombstoned(String tableName, String recordKey) async {
-    final item = await (select(syncTombstones)
-          ..where((t) => t.targetTable.equals(tableName) & t.recordKey.equals(recordKey)))
-        .getSingleOrNull();
+    final item =
+        await (select(syncTombstones)..where(
+              (t) =>
+                  t.targetTable.equals(tableName) &
+                  t.recordKey.equals(recordKey),
+            ))
+            .getSingleOrNull();
     return item != null;
   }
 
   Future<Set<String>> getActiveTombstoneKeys(String tableName) async {
-    final list = await (select(syncTombstones)..where((t) => t.targetTable.equals(tableName))).get();
+    final list = await (select(
+      syncTombstones,
+    )..where((t) => t.targetTable.equals(tableName))).get();
     return list.map((t) => t.recordKey).toSet();
   }
 
   Future<void> removeTombstone(String tableName, String recordKey) =>
-      (delete(syncTombstones)..where((t) => t.targetTable.equals(tableName) & t.recordKey.equals(recordKey))).go();
+      (delete(syncTombstones)..where(
+            (t) =>
+                t.targetTable.equals(tableName) & t.recordKey.equals(recordKey),
+          ))
+          .go();
 
   // ── Sync & Categories / Items Methods ──────────────────────────────────────
 
@@ -966,7 +1258,9 @@ class AppDatabase extends _$AppDatabase {
     final name = category.name.value;
     final existing = await getCategoryByName(name);
     if (existing != null) {
-      await (update(categories)..where((c) => c.id.equals(existing.id))).write(category);
+      await (update(
+        categories,
+      )..where((c) => c.id.equals(existing.id))).write(category);
       return existing.id;
     } else {
       return into(categories).insert(category);
@@ -974,7 +1268,9 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Future<void> deleteCategoryById(int id) async {
-    final cat = await (select(categories)..where((c) => c.id.equals(id))).getSingleOrNull();
+    final cat = await (select(
+      categories,
+    )..where((c) => c.id.equals(id))).getSingleOrNull();
     if (cat != null) {
       await recordTombstone('categories', cat.name);
     }
@@ -996,9 +1292,13 @@ class AppDatabase extends _$AppDatabase {
 
   Future<int> upsertMenuItem(MenuItemsCompanion item) async {
     final name = item.name.value;
-    final existing = await (select(menuItems)..where((m) => m.name.equals(name))).getSingleOrNull();
+    final existing = await (select(
+      menuItems,
+    )..where((m) => m.name.equals(name))).getSingleOrNull();
     if (existing != null) {
-      await (update(menuItems)..where((m) => m.id.equals(existing.id))).write(item);
+      await (update(
+        menuItems,
+      )..where((m) => m.id.equals(existing.id))).write(item);
       return existing.id;
     } else {
       return into(menuItems).insert(item);
@@ -1006,7 +1306,9 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Future<void> deleteMenuItemById(int id) async {
-    final item = await (select(menuItems)..where((m) => m.id.equals(id))).getSingleOrNull();
+    final item = await (select(
+      menuItems,
+    )..where((m) => m.id.equals(id))).getSingleOrNull();
     if (item != null) {
       await recordTombstone('menu_items', item.name);
     }
@@ -1026,9 +1328,13 @@ class AppDatabase extends _$AppDatabase {
 
   Future<void> upsertIngredient(IngredientsCompanion ing) async {
     final name = ing.name.value;
-    final existing = await (select(ingredients)..where((i) => i.name.equals(name))).getSingleOrNull();
+    final existing = await (select(
+      ingredients,
+    )..where((i) => i.name.equals(name))).getSingleOrNull();
     if (existing != null) {
-      await (update(ingredients)..where((i) => i.id.equals(existing.id))).write(ing);
+      await (update(
+        ingredients,
+      )..where((i) => i.id.equals(existing.id))).write(ing);
     } else {
       await into(ingredients).insert(ing);
     }
@@ -1040,7 +1346,9 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Future<void> deleteIngredientById(int id) async {
-    final ing = await (select(ingredients)..where((i) => i.id.equals(id))).getSingleOrNull();
+    final ing = await (select(
+      ingredients,
+    )..where((i) => i.id.equals(id))).getSingleOrNull();
     if (ing != null) {
       await recordTombstone('ingredients', ing.name);
     }
@@ -1050,8 +1358,9 @@ class AppDatabase extends _$AppDatabase {
   Future<void> reconcileIngredients(List<String> activeNames) =>
       (delete(ingredients)..where((i) => i.name.isNotIn(activeNames))).go();
 
-  Future<Order?> getOrderByOrderNumber(String orderNumber) =>
-      (select(orders)..where((o) => o.orderNumber.equals(orderNumber))).getSingleOrNull();
+  Future<Order?> getOrderByOrderNumber(String orderNumber) => (select(
+    orders,
+  )..where((o) => o.orderNumber.equals(orderNumber))).getSingleOrNull();
 
   Future<void> deleteOrderByOrderNumber(String orderNumber) async {
     final order = await getOrderByOrderNumber(orderNumber);
@@ -1070,7 +1379,10 @@ class AppDatabase extends _$AppDatabase {
     await (delete(orders)..where((o) => o.id.equals(orderId))).go();
   }
 
-  Future<void> deleteOrdersNotIn(List<String> validOrderNumbers, {DateTime? since}) async {
+  Future<void> deleteOrdersNotIn(
+    List<String> validOrderNumbers, {
+    DateTime? since,
+  }) async {
     final query = select(orders);
     if (since != null) {
       query.where((o) => o.createdAt.isBiggerOrEqualValue(since));
@@ -1092,13 +1404,19 @@ class AppDatabase extends _$AppDatabase {
     int localOrderId;
     if (existing != null) {
       localOrderId = existing.id;
-      await (update(orders)..where((o) => o.id.equals(localOrderId))).write(orderCompanion);
-      await (delete(orderItems)..where((i) => i.orderId.equals(localOrderId))).go();
+      await (update(
+        orders,
+      )..where((o) => o.id.equals(localOrderId))).write(orderCompanion);
+      await (delete(
+        orderItems,
+      )..where((i) => i.orderId.equals(localOrderId))).go();
     } else {
       localOrderId = await into(orders).insert(orderCompanion);
     }
     for (final item in itemCompanions) {
-      await into(orderItems).insert(item.copyWith(orderId: Value(localOrderId)));
+      await into(
+        orderItems,
+      ).insert(item.copyWith(orderId: Value(localOrderId)));
     }
   }
 
@@ -1110,7 +1428,10 @@ class AppDatabase extends _$AppDatabase {
   Stream<List<Task>> watchTasksByCategory(String category) =>
       (select(tasks)
             ..where((t) => t.category.equals(category))
-            ..orderBy([(t) => OrderingTerm.asc(t.priority), (t) => OrderingTerm.asc(t.title)]))
+            ..orderBy([
+              (t) => OrderingTerm.asc(t.priority),
+              (t) => OrderingTerm.asc(t.title),
+            ]))
           .watch();
 
   Future<List<Task>> getAllTasks() => select(tasks).get();
@@ -1135,7 +1456,9 @@ class AppDatabase extends _$AppDatabase {
       (update(tasks)..where((t) => t.id.equals(task.id.value))).write(task);
 
   Future<void> deleteTask(int taskId) async {
-    final task = await (select(tasks)..where((t) => t.id.equals(taskId))).getSingleOrNull();
+    final task = await (select(
+      tasks,
+    )..where((t) => t.id.equals(taskId))).getSingleOrNull();
     if (task != null) {
       await recordTombstone('tasks', task.title);
     }
@@ -1150,7 +1473,11 @@ class AppDatabase extends _$AppDatabase {
   Future<void> reconcileTasks(List<String> activeTitles) =>
       (delete(tasks)..where((t) => t.title.isNotIn(activeTitles))).go();
 
-  Future<void> toggleTaskStatus(int taskId, String newStatus, {String? completedBy}) {
+  Future<void> toggleTaskStatus(
+    int taskId,
+    String newStatus, {
+    String? completedBy,
+  }) {
     return (update(tasks)..where((t) => t.id.equals(taskId))).write(
       TasksCompanion(
         status: Value(newStatus),
@@ -1160,16 +1487,21 @@ class AppDatabase extends _$AppDatabase {
     );
   }
 
-  Future<void> updateTaskStatus(int taskId, String newStatus, {String? completedBy}) =>
-      toggleTaskStatus(taskId, newStatus, completedBy: completedBy);
+  Future<void> updateTaskStatus(
+    int taskId,
+    String newStatus, {
+    String? completedBy,
+  }) => toggleTaskStatus(taskId, newStatus, completedBy: completedBy);
 
-  Stream<List<Customer>> watchAllCustomers() =>
-      (select(customers)..orderBy([(c) => OrderingTerm.desc(c.totalSpent)])).watch();
+  Stream<List<Customer>> watchAllCustomers() => (select(
+    customers,
+  )..orderBy([(c) => OrderingTerm.desc(c.totalSpent)])).watch();
 
   Future<List<Customer>> getAllCustomers() => select(customers).get();
 
-  Future<Customer?> getCustomerByPhone(String phone) =>
-      (select(customers)..where((c) => c.phone.equals(phone))).getSingleOrNull();
+  Future<Customer?> getCustomerByPhone(String phone) => (select(
+    customers,
+  )..where((c) => c.phone.equals(phone))).getSingleOrNull();
 
   Future<int> insertCustomer(CustomersCompanion customer) =>
       into(customers).insert(customer);
@@ -1178,18 +1510,23 @@ class AppDatabase extends _$AppDatabase {
     final phone = customer.phone.value;
     final existing = await getCustomerByPhone(phone);
     if (existing != null) {
-      await (update(customers)..where((c) => c.id.equals(existing.id))).write(customer);
+      await (update(
+        customers,
+      )..where((c) => c.id.equals(existing.id))).write(customer);
       return existing.id;
     } else {
       return into(customers).insert(customer);
     }
   }
 
-  Future<void> updateCustomer(CustomersCompanion customer) =>
-      (update(customers)..where((c) => c.id.equals(customer.id.value))).write(customer);
+  Future<void> updateCustomer(CustomersCompanion customer) => (update(
+    customers,
+  )..where((c) => c.id.equals(customer.id.value))).write(customer);
 
   Future<void> deleteCustomer(int id) async {
-    final customer = await (select(customers)..where((c) => c.id.equals(id))).getSingleOrNull();
+    final customer = await (select(
+      customers,
+    )..where((c) => c.id.equals(id))).getSingleOrNull();
     if (customer != null) {
       await recordTombstone('customers', customer.phone);
     }
@@ -1205,7 +1542,9 @@ class AppDatabase extends _$AppDatabase {
       (delete(customers)..where((c) => c.phone.isNotIn(activePhones))).go();
 
   Future<bool> redeemCustomerStamps(int customerId) async {
-    final customer = await (select(customers)..where((c) => c.id.equals(customerId))).getSingleOrNull();
+    final customer = await (select(
+      customers,
+    )..where((c) => c.id.equals(customerId))).getSingleOrNull();
     if (customer == null || customer.stampsCount < 9) return false;
     await (update(customers)..where((c) => c.id.equals(customerId))).write(
       CustomersCompanion(
@@ -1216,8 +1555,13 @@ class AppDatabase extends _$AppDatabase {
     return true;
   }
 
-  Future<void> addCustomerPointsAndSpend(int customerId, double spentAmount) async {
-    final customer = await (select(customers)..where((c) => c.id.equals(customerId))).getSingleOrNull();
+  Future<void> addCustomerPointsAndSpend(
+    int customerId,
+    double spentAmount,
+  ) async {
+    final customer = await (select(
+      customers,
+    )..where((c) => c.id.equals(customerId))).getSingleOrNull();
     if (customer == null) return;
     final newPoints = customer.points + spentAmount.floor();
     final newTotalSpent = customer.totalSpent + spentAmount;
@@ -1243,13 +1587,16 @@ class AppDatabase extends _$AppDatabase {
     );
   }
 
-  Stream<List<StaffMember>> watchAllStaff() =>
-      (select(staffMembers)..orderBy([(s) => OrderingTerm.asc(s.name)])).watch();
+  Stream<List<StaffMember>> watchAllStaff() => (select(
+    staffMembers,
+  )..orderBy([(s) => OrderingTerm.asc(s.name)])).watch();
 
   Future<List<StaffMember>> getAllStaff() => select(staffMembers).get();
 
   Future<StaffMember?> getStaffByPin(String pin) =>
-      (select(staffMembers)..where((s) => s.pinCode.equals(pin) & s.isActive.equals(true))).getSingleOrNull();
+      (select(staffMembers)
+            ..where((s) => s.pinCode.equals(pin) & s.isActive.equals(true)))
+          .getSingleOrNull();
 
   Future<StaffMember?> verifyStaffPin(String pin) => getStaffByPin(pin);
 
@@ -1261,20 +1608,27 @@ class AppDatabase extends _$AppDatabase {
 
   Future<int> upsertStaff(StaffMembersCompanion staff) async {
     final pin = staff.pinCode.value;
-    final existing = await (select(staffMembers)..where((s) => s.pinCode.equals(pin))).getSingleOrNull();
+    final existing = await (select(
+      staffMembers,
+    )..where((s) => s.pinCode.equals(pin))).getSingleOrNull();
     if (existing != null) {
-      await (update(staffMembers)..where((s) => s.id.equals(existing.id))).write(staff);
+      await (update(
+        staffMembers,
+      )..where((s) => s.id.equals(existing.id))).write(staff);
       return existing.id;
     } else {
       return into(staffMembers).insert(staff);
     }
   }
 
-  Future<void> updateStaff(StaffMembersCompanion staff) =>
-      (update(staffMembers)..where((s) => s.id.equals(staff.id.value))).write(staff);
+  Future<void> updateStaff(StaffMembersCompanion staff) => (update(
+    staffMembers,
+  )..where((s) => s.id.equals(staff.id.value))).write(staff);
 
   Future<void> deleteStaff(int id) async {
-    final staff = await (select(staffMembers)..where((s) => s.id.equals(id))).getSingleOrNull();
+    final staff = await (select(
+      staffMembers,
+    )..where((s) => s.id.equals(id))).getSingleOrNull();
     if (staff != null) {
       await recordTombstone('staff_members', staff.pinCode);
     }
@@ -1291,7 +1645,8 @@ class AppDatabase extends _$AppDatabase {
 
   Stream<List<StaffAttendance>> watchTodayAttendance() {
     final now = DateTime.now();
-    final todayStr = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+    final todayStr =
+        '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
     return (select(staffAttendances)
           ..where((a) => a.date.equals(todayStr))
           ..orderBy([(a) => OrderingTerm.desc(a.clockInTime)]))
@@ -1300,15 +1655,21 @@ class AppDatabase extends _$AppDatabase {
 
   Future<StaffAttendance?> getActiveAttendance(int staffId) {
     final now = DateTime.now();
-    final todayStr = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
-    return (select(staffAttendances)
-          ..where((a) => a.staffId.equals(staffId) & a.date.equals(todayStr) & a.clockOutTime.isNull()))
+    final todayStr =
+        '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+    return (select(staffAttendances)..where(
+          (a) =>
+              a.staffId.equals(staffId) &
+              a.date.equals(todayStr) &
+              a.clockOutTime.isNull(),
+        ))
         .getSingleOrNull();
   }
 
   Future<int> clockInStaff(int staffId, String staffName, {String? notes}) {
     final now = DateTime.now();
-    final todayStr = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+    final todayStr =
+        '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
     return into(staffAttendances).insert(
       StaffAttendancesCompanion.insert(
         staffId: staffId,
@@ -1321,12 +1682,16 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Future<void> clockOutStaff(int attendanceId) async {
-    final attendance = await (select(staffAttendances)..where((a) => a.id.equals(attendanceId))).getSingleOrNull();
+    final attendance = await (select(
+      staffAttendances,
+    )..where((a) => a.id.equals(attendanceId))).getSingleOrNull();
     if (attendance == null) return;
     final now = DateTime.now();
     final duration = now.difference(attendance.clockInTime).inMinutes;
 
-    await (update(staffAttendances)..where((a) => a.id.equals(attendanceId))).write(
+    await (update(
+      staffAttendances,
+    )..where((a) => a.id.equals(attendanceId))).write(
       StaffAttendancesCompanion(
         clockOutTime: Value(now),
         totalMinutes: Value(duration),
@@ -1374,18 +1739,23 @@ class AppDatabase extends _$AppDatabase {
     final name = supplier.name.value;
     final existing = await getSupplierByName(name);
     if (existing != null) {
-      await (update(suppliers)..where((s) => s.id.equals(existing.id))).write(supplier);
+      await (update(
+        suppliers,
+      )..where((s) => s.id.equals(existing.id))).write(supplier);
       return existing.id;
     } else {
       return into(suppliers).insert(supplier);
     }
   }
 
-  Future<void> updateSupplier(SuppliersCompanion supplier) =>
-      (update(suppliers)..where((s) => s.id.equals(supplier.id.value))).write(supplier);
+  Future<void> updateSupplier(SuppliersCompanion supplier) => (update(
+    suppliers,
+  )..where((s) => s.id.equals(supplier.id.value))).write(supplier);
 
   Future<void> deleteSupplier(int id) async {
-    final sup = await (select(suppliers)..where((s) => s.id.equals(id))).getSingleOrNull();
+    final sup = await (select(
+      suppliers,
+    )..where((s) => s.id.equals(id))).getSingleOrNull();
     if (sup != null) {
       await recordTombstone('suppliers', sup.name);
     }
@@ -1402,11 +1772,13 @@ class AppDatabase extends _$AppDatabase {
 
   // ── Purchase Orders & Items ───────────────────────────────────────────────
 
-  Stream<List<PurchaseOrder>> watchAllPurchaseOrders() =>
-      (select(purchaseOrders)..orderBy([(p) => OrderingTerm.desc(p.orderDate)])).watch();
+  Stream<List<PurchaseOrder>> watchAllPurchaseOrders() => (select(
+    purchaseOrders,
+  )..orderBy([(p) => OrderingTerm.desc(p.orderDate)])).watch();
 
-  Future<List<PurchaseOrder>> getAllPurchaseOrders() =>
-      (select(purchaseOrders)..orderBy([(p) => OrderingTerm.desc(p.orderDate)])).get();
+  Future<List<PurchaseOrder>> getAllPurchaseOrders() => (select(
+    purchaseOrders,
+  )..orderBy([(p) => OrderingTerm.desc(p.orderDate)])).get();
 
   Future<PurchaseOrder?> getPurchaseOrderById(int id) =>
       (select(purchaseOrders)..where((p) => p.id.equals(id))).getSingleOrNull();
@@ -1453,7 +1825,9 @@ class AppDatabase extends _$AppDatabase {
           final newStock = ing.currentStock + item.quantityOrdered;
           await updateIngredientStock(ing.id, newStock);
         }
-        await (update(purchaseOrderItems)..where((i) => i.id.equals(item.id))).write(
+        await (update(
+          purchaseOrderItems,
+        )..where((i) => i.id.equals(item.id))).write(
           PurchaseOrderItemsCompanion(
             quantityReceived: Value(item.quantityOrdered),
           ),
@@ -1464,11 +1838,13 @@ class AppDatabase extends _$AppDatabase {
 
   // ── Stock Audits (Stock Take) ──────────────────────────────────────────────
 
-  Stream<List<StockAudit>> watchAllStockAudits() =>
-      (select(stockAudits)..orderBy([(a) => OrderingTerm.desc(a.auditedAt)])).watch();
+  Stream<List<StockAudit>> watchAllStockAudits() => (select(
+    stockAudits,
+  )..orderBy([(a) => OrderingTerm.desc(a.auditedAt)])).watch();
 
-  Future<List<StockAudit>> getAllStockAudits() =>
-      (select(stockAudits)..orderBy([(a) => OrderingTerm.desc(a.auditedAt)])).get();
+  Future<List<StockAudit>> getAllStockAudits() => (select(
+    stockAudits,
+  )..orderBy([(a) => OrderingTerm.desc(a.auditedAt)])).get();
 
   /// Insert a stock audit and optionally adjust the ingredient's current stock immediately.
   Future<int> insertStockAudit(
@@ -1488,8 +1864,9 @@ class AppDatabase extends _$AppDatabase {
 
   // ── Expenses & Petty Cash ──────────────────────────────────────────────────
 
-  Stream<List<Expense>> watchAllExpenses() =>
-      (select(expenses)..orderBy([(e) => OrderingTerm.desc(e.expenseDate)])).watch();
+  Stream<List<Expense>> watchAllExpenses() => (select(
+    expenses,
+  )..orderBy([(e) => OrderingTerm.desc(e.expenseDate)])).watch();
 
   Stream<List<Expense>> watchTodayExpenses() {
     final now = DateTime.now();
@@ -1537,8 +1914,9 @@ class AppDatabase extends _$AppDatabase {
 
   // ── Cash Drawer Logs ───────────────────────────────────────────────────────
 
-  Stream<List<CashDrawerLog>> watchCashDrawerLogs() =>
-      (select(cashDrawerLogs)..orderBy([(l) => OrderingTerm.desc(l.createdAt)])).watch();
+  Stream<List<CashDrawerLog>> watchCashDrawerLogs() => (select(
+    cashDrawerLogs,
+  )..orderBy([(l) => OrderingTerm.desc(l.createdAt)])).watch();
 
   Future<int> insertCashDrawerLog(CashDrawerLogsCompanion log) =>
       into(cashDrawerLogs).insert(log);
@@ -1546,9 +1924,9 @@ class AppDatabase extends _$AppDatabase {
   Future<double> getTodayCashDrawerBalance() async {
     final now = DateTime.now();
     final startOfDay = DateTime(now.year, now.month, now.day);
-    final logs = await (select(cashDrawerLogs)
-          ..where((l) => l.createdAt.isBiggerOrEqualValue(startOfDay)))
-        .get();
+    final logs = await (select(
+      cashDrawerLogs,
+    )..where((l) => l.createdAt.isBiggerOrEqualValue(startOfDay))).get();
 
     double balance = 0.0;
     for (final l in logs) {
@@ -1561,7 +1939,9 @@ class AppDatabase extends _$AppDatabase {
 
     // Add cash sales today
     final ordersToday = await getTodayOrders();
-    final cashOrders = ordersToday.where((o) => o.status == 'completed' && o.paymentMethod == 'cash');
+    final cashOrders = ordersToday.where(
+      (o) => o.status == 'completed' && o.paymentMethod == 'cash',
+    );
     for (final o in cashOrders) {
       balance += o.totalAmount;
     }
@@ -1579,20 +1959,27 @@ class AppDatabase extends _$AppDatabase {
   // ── Phase 4: Outlets Management ────────────────────────────────────────────
 
   Stream<List<Outlet>> watchAllOutlets() =>
-      (select(outlets)..orderBy([(o) => OrderingTerm.desc(o.isPrimary), (o) => OrderingTerm.asc(o.name)])).watch();
+      (select(outlets)..orderBy([
+            (o) => OrderingTerm.desc(o.isPrimary),
+            (o) => OrderingTerm.asc(o.name),
+          ]))
+          .watch();
 
   Future<List<Outlet>> getAllOutlets() => select(outlets).get();
 
   Future<Outlet?> getOutletById(int id) =>
       (select(outlets)..where((o) => o.id.equals(id))).getSingleOrNull();
 
-  Future<Outlet?> getPrimaryOutlet() =>
-      (select(outlets)..where((o) => o.isPrimary.equals(true))).getSingleOrNull();
+  Future<Outlet?> getPrimaryOutlet() => (select(
+    outlets,
+  )..where((o) => o.isPrimary.equals(true))).getSingleOrNull();
 
-  Future<int> insertOutlet(OutletsCompanion outlet) => into(outlets).insert(outlet);
+  Future<int> insertOutlet(OutletsCompanion outlet) =>
+      into(outlets).insert(outlet);
 
-  Future<void> updateOutlet(OutletsCompanion outlet) =>
-      (update(outlets)..where((o) => o.id.equals(outlet.id.value))).write(outlet);
+  Future<void> updateOutlet(OutletsCompanion outlet) => (update(
+    outlets,
+  )..where((o) => o.id.equals(outlet.id.value))).write(outlet);
 
   Future<void> deleteOutlet(int id) async {
     await recordTombstone('outlets', id.toString());
@@ -1601,8 +1988,9 @@ class AppDatabase extends _$AppDatabase {
 
   // ── Phase 4: Stock Transfers ───────────────────────────────────────────────
 
-  Stream<List<StockTransfer>> watchAllStockTransfers() =>
-      (select(stockTransfers)..orderBy([(t) => OrderingTerm.desc(t.transferDate)])).watch();
+  Stream<List<StockTransfer>> watchAllStockTransfers() => (select(
+    stockTransfers,
+  )..orderBy([(t) => OrderingTerm.desc(t.transferDate)])).watch();
 
   Future<int> insertStockTransfer(StockTransfersCompanion transfer) =>
       into(stockTransfers).insert(transfer);
@@ -1614,8 +2002,9 @@ class AppDatabase extends _$AppDatabase {
 
   // ── Phase 4: Delivery Orders (GrabFood, Foodpanda, ShopeeFood) ──────────────
 
-  Stream<List<DeliveryOrder>> watchAllDeliveryOrders() =>
-      (select(deliveryOrders)..orderBy([(d) => OrderingTerm.desc(d.id)])).watch();
+  Stream<List<DeliveryOrder>> watchAllDeliveryOrders() => (select(
+    deliveryOrders,
+  )..orderBy([(d) => OrderingTerm.desc(d.id)])).watch();
 
   Future<int> insertDeliveryOrder(DeliveryOrdersCompanion deliveryOrder) =>
       into(deliveryOrders).insert(deliveryOrder);
@@ -1626,11 +2015,15 @@ class AppDatabase extends _$AppDatabase {
     String? riderName,
     String? riderPhone,
   }) {
-    return (update(deliveryOrders)..where((d) => d.id.equals(deliveryOrderId))).write(
+    return (update(
+      deliveryOrders,
+    )..where((d) => d.id.equals(deliveryOrderId))).write(
       DeliveryOrdersCompanion(
         pickupStatus: Value(newStatus),
         riderName: riderName != null ? Value(riderName) : const Value.absent(),
-        riderPhone: riderPhone != null ? Value(riderPhone) : const Value.absent(),
+        riderPhone: riderPhone != null
+            ? Value(riderPhone)
+            : const Value.absent(),
       ),
     );
   }
@@ -1647,8 +2040,8 @@ class AppDatabase extends _$AppDatabase {
     final prefix = channel == 'grabfood'
         ? 'GF'
         : channel == 'foodpanda'
-            ? 'FP'
-            : 'SF';
+        ? 'FP'
+        : 'SF';
     final platformOrderId = '$prefix-$randomSuffix';
     final orderNumber = 'DEL-$prefix-$randomSuffix';
 
@@ -1662,8 +2055,8 @@ class AppDatabase extends _$AppDatabase {
     final double commissionRate = channel == 'grabfood'
         ? 0.30
         : channel == 'foodpanda'
-            ? 0.28
-            : 0.25;
+        ? 0.28
+        : 0.25;
 
     final commissionAmount = subtotal * commissionRate;
     final netPayout = subtotal - commissionAmount;
@@ -1704,14 +2097,14 @@ class AppDatabase extends _$AppDatabase {
         );
 
         // Deduct inventory
-        final links = await (select(menuItemIngredients)
-              ..where((l) => l.menuItemId.equals(menuItemId)))
-            .get();
+        final links = await (select(
+          menuItemIngredients,
+        )..where((l) => l.menuItemId.equals(menuItemId))).get();
         for (final link in links) {
           final deduct = link.quantityRequired * qty;
-          final ing = await (select(ingredients)
-                ..where((i) => i.id.equals(link.ingredientId)))
-              .getSingleOrNull();
+          final ing = await (select(
+            ingredients,
+          )..where((i) => i.id.equals(link.ingredientId))).getSingleOrNull();
           if (ing != null) {
             final newStock = (ing.currentStock - deduct).clamp(0.0, 99999.0);
             await (update(ingredients)..where((i) => i.id.equals(ing.id)))
@@ -1721,7 +2114,12 @@ class AppDatabase extends _$AppDatabase {
       }
 
       // 3. Create Delivery Order Record
-      final riderNames = ['Farhan (Rider)', 'Faizal Motor', 'Rizal Grab', 'Danial Panda'];
+      final riderNames = [
+        'Farhan (Rider)',
+        'Faizal Motor',
+        'Rizal Grab',
+        'Danial Panda',
+      ];
       final assignedRider = riderNames[now.second % riderNames.length];
 
       await into(deliveryOrders).insert(
@@ -1733,7 +2131,9 @@ class AppDatabase extends _$AppDatabase {
           commissionAmount: Value(commissionAmount),
           netPayout: Value(netPayout),
           riderName: Value(assignedRider),
-          riderPhone: Value('017-${(now.millisecond * 7).toString().padLeft(7, '0')}'),
+          riderPhone: Value(
+            '017-${(now.millisecond * 7).toString().padLeft(7, '0')}',
+          ),
           pickupStatus: const Value('driver_assigned'),
           estimatedPickupTime: Value(now.add(const Duration(minutes: 18))),
         ),
@@ -1768,7 +2168,9 @@ class AppDatabase extends _$AppDatabase {
 
       final sellingPrice = item.basePrice;
       final grossProfit = sellingPrice - totalCogs;
-      final marginPercent = sellingPrice > 0 ? (grossProfit / sellingPrice) * 100 : 0.0;
+      final marginPercent = sellingPrice > 0
+          ? (grossProfit / sellingPrice) * 100
+          : 0.0;
 
       analysis.add({
         'id': item.id,
@@ -1782,7 +2184,10 @@ class AppDatabase extends _$AppDatabase {
       });
     }
 
-    analysis.sort((a, b) => (b['grossProfit'] as double).compareTo(a['grossProfit'] as double));
+    analysis.sort(
+      (a, b) =>
+          (b['grossProfit'] as double).compareTo(a['grossProfit'] as double),
+    );
     return analysis;
   }
 
@@ -1798,7 +2203,9 @@ class AppDatabase extends _$AppDatabase {
     }
 
     for (final o in today) {
-      if (o.status == 'completed' || o.status == 'pending' || o.status == 'preparing') {
+      if (o.status == 'completed' ||
+          o.status == 'pending' ||
+          o.status == 'preparing') {
         final h = o.createdAt.hour;
         orderCounts[h] = (orderCounts[h] ?? 0) + 1;
         salesAmounts[h] = (salesAmounts[h] ?? 0.0) + o.totalAmount;
@@ -1820,15 +2227,21 @@ class AppDatabase extends _$AppDatabase {
   /// Staff performance leaderboard (sales volume, ticket count, avg ticket)
   Future<List<Map<String, dynamic>>> getStaffLeaderboard() async {
     final staffList = await select(staffMembers).get();
-    final today = (await getTodayOrders()).where((o) => o.status == 'completed').toList();
+    final today = (await getTodayOrders())
+        .where((o) => o.status == 'completed')
+        .toList();
 
     final List<Map<String, dynamic>> result = [];
     for (int i = 0; i < staffList.length; i++) {
       final s = staffList[i];
       // Distribute realistic attribution across active staff
-      final assignedOrders = today.where((o) => o.id % staffList.length == i).toList();
+      final assignedOrders = today
+          .where((o) => o.id % staffList.length == i)
+          .toList();
       final sales = assignedOrders.fold(0.0, (sum, o) => sum + o.totalAmount);
-      final avgTicket = assignedOrders.isNotEmpty ? sales / assignedOrders.length : 0.0;
+      final avgTicket = assignedOrders.isNotEmpty
+          ? sales / assignedOrders.length
+          : 0.0;
 
       result.add({
         'id': s.id,
@@ -1840,20 +2253,33 @@ class AppDatabase extends _$AppDatabase {
       });
     }
 
-    result.sort((a, b) => (b['totalSales'] as double).compareTo(a['totalSales'] as double));
+    result.sort(
+      (a, b) =>
+          (b['totalSales'] as double).compareTo(a['totalSales'] as double),
+    );
     return result;
   }
 
   /// Consolidated Profit & Loss (P&L) Summary
-  Future<Map<String, dynamic>> getProfitAndLossSummary({DateTime? startDate, DateTime? endDate}) async {
+  Future<Map<String, dynamic>> getProfitAndLossSummary({
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
     final allOrders = await select(orders).get();
     final allExpenses = await select(expenses).get();
     final cogsList = await getItemCogsAnalysis();
 
-    final cogsMap = {for (var c in cogsList) c['id'] as int: c['cogs'] as double};
+    final cogsMap = {
+      for (var c in cogsList) c['id'] as int: c['cogs'] as double,
+    };
 
-    final completedOrders = allOrders.where((o) => o.status == 'completed').toList();
-    final grossRevenue = completedOrders.fold(0.0, (sum, o) => sum + o.totalAmount);
+    final completedOrders = allOrders
+        .where((o) => o.status == 'completed')
+        .toList();
+    final grossRevenue = completedOrders.fold(
+      0.0,
+      (sum, o) => sum + o.totalAmount,
+    );
     final voidedOrders = allOrders.where((o) => o.status == 'voided').toList();
     final voidLoss = voidedOrders.fold(0.0, (sum, o) => sum + o.totalAmount);
 
@@ -1872,7 +2298,9 @@ class AppDatabase extends _$AppDatabase {
     final grossProfit = netSales - totalCogs;
     final totalOpExpenses = allExpenses.fold(0.0, (sum, e) => sum + e.amount);
     final netProfit = grossProfit - totalOpExpenses;
-    final grossMarginPercent = netSales > 0 ? (grossProfit / netSales) * 100 : 0.0;
+    final grossMarginPercent = netSales > 0
+        ? (grossProfit / netSales) * 100
+        : 0.0;
     final netMarginPercent = netSales > 0 ? (netProfit / netSales) * 100 : 0.0;
 
     return {

@@ -25,4 +25,3 @@ class CurrencyFormatter {
     return double.tryParse(cleaned) ?? 0.0;
   }
 }
-

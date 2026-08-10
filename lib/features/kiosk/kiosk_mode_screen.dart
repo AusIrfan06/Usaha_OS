@@ -49,7 +49,9 @@ class _KioskModeScreenState extends State<KioskModeScreen>
       builder: (ctx) {
         final pinController = TextEditingController();
         return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
           title: const Text('Keluar Mod Kiosk'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -198,13 +200,14 @@ class _KioskModeScreenState extends State<KioskModeScreen>
                           backgroundColor: AppTheme.primaryCoffee,
                           foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 56, vertical: 22),
+                            horizontal: 56,
+                            vertical: 22,
+                          ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),
                           elevation: 6,
-                          shadowColor:
-                              AppTheme.primaryCoffee.withOpacity(0.4),
+                          shadowColor: AppTheme.primaryCoffee.withOpacity(0.4),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
