@@ -1,3 +1,4 @@
+import 'package:hugeicons/hugeicons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:drift/drift.dart' as drift;
@@ -36,7 +37,7 @@ class _SuppliersPoScreenState extends ConsumerState<SuppliersPoScreen>
       appBar: AppBar(
         title: const Row(
           children: [
-            Icon(Icons.local_shipping_outlined, color: AppColors.primary),
+            HugeIcon(icon: HugeIcons.strokeRoundedTruckDelivery, color: AppColors.primary),
             SizedBox(width: 10),
             Text(
               'Pembekal & Pesanan Belian (PO)',
@@ -52,8 +53,8 @@ class _SuppliersPoScreenState extends ConsumerState<SuppliersPoScreen>
           labelColor: AppColors.primary,
           unselectedLabelColor: AppColors.textMuted,
           tabs: const [
-            Tab(icon: Icon(Icons.receipt_long), text: 'Pesanan Belian (PO)'),
-            Tab(icon: Icon(Icons.storefront), text: 'Direktori Pembekal'),
+            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedInvoice01), text: 'Pesanan Belian (PO)'),
+            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle), text: 'Direktori Pembekal'),
           ],
         ),
       ),
@@ -109,7 +110,7 @@ class _PurchaseOrdersTab extends ConsumerWidget {
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                     ),
-                    icon: const Icon(Icons.add_shopping_cart, size: 18),
+                    icon: HugeIcon(icon: HugeIcons.strokeRoundedAdd01, size: 18),
                     label: const Text('Cipta PO Baharu'),
                     onPressed: () => _showCreatePoDialog(context, ref),
                   ),
@@ -125,7 +126,7 @@ class _PurchaseOrdersTab extends ConsumerWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.assignment_outlined, size: 64, color: AppColors.textMuted.withOpacity(0.5)),
+                          HugeIcon(icon: HugeIcons.strokeRoundedCircle, size: 64, color: AppColors.textMuted.withOpacity(0.5)),
                           const SizedBox(height: 12),
                           const Text(
                             'Tiada pesanan belian aktif',
@@ -134,7 +135,7 @@ class _PurchaseOrdersTab extends ConsumerWidget {
                           const SizedBox(height: 8),
                           TextButton.icon(
                             onPressed: () => _showCreatePoDialog(context, ref),
-                            icon: const Icon(Icons.add),
+                            icon: HugeIcon(icon: HugeIcons.strokeRoundedAdd01),
                             label: const Text('Cipta PO Pertama'),
                           ),
                         ],
@@ -274,7 +275,7 @@ class _PoCard extends ConsumerWidget {
             // Date & Notes
             Row(
               children: [
-                Icon(Icons.calendar_today, size: 14, color: AppColors.textMuted),
+                HugeIcon(icon: HugeIcons.strokeRoundedCircle, size: 14, color: AppColors.textMuted),
                 const SizedBox(width: 6),
                 Text(
                   'Tarikh Pesanan: ${df.format(po.orderDate)}',
@@ -282,7 +283,7 @@ class _PoCard extends ConsumerWidget {
                 ),
                 if (po.expectedDate != null) ...[
                   const SizedBox(width: 16),
-                  Icon(Icons.local_shipping, size: 14, color: Colors.amber),
+                  HugeIcon(icon: HugeIcons.strokeRoundedTruckDelivery, size: 14, color: Colors.amber),
                   const SizedBox(width: 6),
                   Text(
                     'Jangkaan: ${DateFormat('dd MMM').format(po.expectedDate!)}',
@@ -361,7 +362,7 @@ class _PoCard extends ConsumerWidget {
                       foregroundColor: Colors.orange,
                       side: const BorderSide(color: Colors.orange),
                     ),
-                    icon: const Icon(Icons.send, size: 16),
+                    icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle, size: 16),
                     label: const Text('Hantar Pesanan'),
                     onPressed: () {
                       ref.read(databaseProvider).updatePurchaseOrderStatus(po.id, 'ordered');
@@ -376,14 +377,14 @@ class _PoCard extends ConsumerWidget {
                       backgroundColor: Colors.green.shade700,
                       foregroundColor: Colors.white,
                     ),
-                    icon: const Icon(Icons.inventory, size: 16),
+                    icon: HugeIcon(icon: HugeIcons.strokeRoundedPackage, size: 16),
                     label: const Text('Terima Barang (Auto-Stock)'),
                     onPressed: () => _confirmReceiveGoods(context, ref, po),
                   ),
                 if (po.status == 'received')
                   const Row(
                     children: [
-                      Icon(Icons.check_circle, color: Colors.green, size: 16),
+                      HugeIcon(icon: HugeIcons.strokeRoundedCheckmarkBadge01, color: Colors.green, size: 16),
                       SizedBox(width: 4),
                       Text(
                         'Stok Telah Ditambah',
@@ -483,7 +484,7 @@ class _CreatePoDialogState extends ConsumerState<_CreatePoDialog> {
           children: [
             Row(
               children: [
-                const Icon(Icons.add_shopping_cart, color: AppColors.primary),
+                HugeIcon(icon: HugeIcons.strokeRoundedAdd01, color: AppColors.primary),
                 const SizedBox(width: 10),
                 const Text(
                   'Cipta Pesanan Belian (PO)',
@@ -491,7 +492,7 @@ class _CreatePoDialogState extends ConsumerState<_CreatePoDialog> {
                 ),
                 const Spacer(),
                 IconButton(
-                  icon: const Icon(Icons.close, color: AppColors.textMuted),
+                  icon: HugeIcon(icon: HugeIcons.strokeRoundedCancel01, color: AppColors.textMuted),
                   onPressed: () => Navigator.pop(context),
                 ),
               ],
@@ -544,7 +545,7 @@ class _CreatePoDialogState extends ConsumerState<_CreatePoDialog> {
                             ));
                           });
                         },
-                  icon: const Icon(Icons.add, size: 16),
+                  icon: HugeIcon(icon: HugeIcons.strokeRoundedAdd01, size: 16),
                   label: const Text('Tambah Ramuan'),
                 ),
               ],
@@ -634,7 +635,7 @@ class _CreatePoDialogState extends ConsumerState<_CreatePoDialog> {
                           style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 12),
                         ),
                         IconButton(
-                          icon: const Icon(Icons.delete_outline, color: Colors.red, size: 18),
+                          icon: HugeIcon(icon: HugeIcons.strokeRoundedDelete01, color: Colors.red, size: 18),
                           onPressed: () {
                             setState(() => _items.removeAt(idx));
                           },
@@ -772,7 +773,7 @@ class _SuppliersTab extends ConsumerWidget {
                       backgroundColor: AppColors.primary,
                       foregroundColor: Colors.white,
                     ),
-                    icon: const Icon(Icons.person_add, size: 18),
+                    icon: HugeIcon(icon: HugeIcons.strokeRoundedAdd01, size: 18),
                     label: const Text('Tambah Pembekal'),
                     onPressed: () => _showAddSupplierDialog(context, ref),
                   ),
@@ -797,7 +798,7 @@ class _SuppliersTab extends ConsumerWidget {
                           child: ListTile(
                             leading: CircleAvatar(
                               backgroundColor: AppColors.primary.withOpacity(0.2),
-                              child: const Icon(Icons.business, color: AppColors.primary),
+                              child: HugeIcon(icon: HugeIcons.strokeRoundedStore01, color: AppColors.primary),
                             ),
                             title: Text(
                               s.name,
@@ -810,13 +811,13 @@ class _SuppliersTab extends ConsumerWidget {
                                 Row(
                                   children: [
                                     if (s.contactPerson != null) ...[
-                                      Icon(Icons.person, size: 13, color: AppColors.textMuted),
+                                      HugeIcon(icon: HugeIcons.strokeRoundedUser, size: 13, color: AppColors.textMuted),
                                       const SizedBox(width: 4),
                                       Text(s.contactPerson!, style: const TextStyle(color: AppColors.textMuted, fontSize: 12)),
                                       const SizedBox(width: 12),
                                     ],
                                     if (s.phone != null) ...[
-                                      Icon(Icons.phone, size: 13, color: AppColors.textMuted),
+                                      HugeIcon(icon: HugeIcons.strokeRoundedCall, size: 13, color: AppColors.textMuted),
                                       const SizedBox(width: 4),
                                       Text(s.phone!, style: const TextStyle(color: AppColors.textMuted, fontSize: 12)),
                                     ],

@@ -147,18 +147,18 @@ class _AppShell extends StatelessWidget {
     _Dest(HugeIcons.strokeRoundedHome01, HugeIcons.strokeRoundedHome01, 'Dashboard', '/'),
     _Dest(HugeIcons.strokeRoundedShoppingCart01, HugeIcons.strokeRoundedShoppingCart01, 'POS', '/pos'),
     _Dest(HugeIcons.strokeRoundedRestaurant01, HugeIcons.strokeRoundedRestaurant01, 'KDS', '/kds'),
-    _Dest(Icons.assignment_turned_in_outlined, Icons.assignment_turned_in_rounded, 'Tugasan', '/tasks'),
-    _Dest(Icons.card_membership_outlined, Icons.card_membership_rounded, 'Loyalty', '/loyalty'),
-    _Dest(Icons.badge_outlined, Icons.badge_rounded, 'Staf', '/staff'),
-    _Dest(Icons.local_shipping_outlined, Icons.local_shipping_rounded, 'Pembekal & PO', '/suppliers'),
-    _Dest(Icons.inventory_outlined, Icons.inventory_rounded, 'Stock Take', '/stock-take'),
-    _Dest(Icons.account_balance_wallet_outlined, Icons.account_balance_wallet_rounded, 'Perbelanjaan', '/expenses'),
-    _Dest(Icons.storefront_outlined, Icons.storefront_rounded, 'Multi-Outlet', '/outlets'),
-    _Dest(Icons.delivery_dining_outlined, Icons.delivery_dining_rounded, 'Delivery Hub', '/delivery'),
-    _Dest(Icons.insights_outlined, Icons.insights_rounded, 'Analitik Lanjutan', '/analytics'),
-    _Dest(Icons.receipt_long_outlined, Icons.receipt_long_rounded, 'Pesanan', '/orders'),
-    _Dest(Icons.inventory_2_outlined, Icons.inventory_2_rounded, 'Inventori', '/inventory'),
-    _Dest(Icons.bar_chart_outlined, Icons.bar_chart_rounded, 'Laporan', '/reports'),
+    _Dest(HugeIcons.strokeRoundedCircle, HugeIcons.strokeRoundedCircle, 'Tugasan', '/tasks'),
+    _Dest(HugeIcons.strokeRoundedCircle, HugeIcons.strokeRoundedCircle, 'Loyalty', '/loyalty'),
+    _Dest(HugeIcons.strokeRoundedCircle, HugeIcons.strokeRoundedBadge, 'Staf', '/staff'),
+    _Dest(HugeIcons.strokeRoundedTruckDelivery, HugeIcons.strokeRoundedTruckDelivery, 'Pembekal & PO', '/suppliers'),
+    _Dest(HugeIcons.strokeRoundedPackage, HugeIcons.strokeRoundedPackage, 'Stock Take', '/stock-take'),
+    _Dest(HugeIcons.strokeRoundedBank, HugeIcons.strokeRoundedBank, 'Perbelanjaan', '/expenses'),
+    _Dest(HugeIcons.strokeRoundedCircle, HugeIcons.strokeRoundedCircle, 'Multi-Outlet', '/outlets'),
+    _Dest(HugeIcons.strokeRoundedCircle, HugeIcons.strokeRoundedCircle, 'Delivery Hub', '/delivery'),
+    _Dest(HugeIcons.strokeRoundedCircle, HugeIcons.strokeRoundedCircle, 'Analitik Lanjutan', '/analytics'),
+    _Dest(HugeIcons.strokeRoundedInvoice01, HugeIcons.strokeRoundedInvoice01, 'Pesanan', '/orders'),
+    _Dest(HugeIcons.strokeRoundedPackage, HugeIcons.strokeRoundedPackage, 'Inventori', '/inventory'),
+    _Dest(HugeIcons.strokeRoundedCircle, HugeIcons.strokeRoundedBarChart, 'Laporan', '/reports'),
     _Dest(HugeIcons.strokeRoundedSettings02, HugeIcons.strokeRoundedSettings02, 'Tetapan', '/settings'),
   ];
 
@@ -207,16 +207,16 @@ class _AppShell extends StatelessWidget {
             return NavigationDestination(
               icon: isHuge
                   ? HugeIcon(icon: d.icon as List<List<dynamic>>, size: 24, color: AppTheme.mutedText)
-                  : Icon(d.icon as IconData, color: AppTheme.mutedText),
+                  : HugeIcon(icon: d.icon as dynamic, color: AppTheme.mutedText),
               selectedIcon: isHuge
                   ? HugeIcon(icon: d.activeIcon as List<List<dynamic>>, size: 24, color: AppTheme.primaryCoffee)
-                  : Icon(d.activeIcon as IconData, color: AppTheme.primaryCoffee),
+                  : HugeIcon(icon: d.activeIcon as dynamic, color: AppTheme.primaryCoffee),
               label: d.label,
             );
           }),
           const NavigationDestination(
-            icon: Icon(Icons.more_horiz_rounded),
-            selectedIcon: Icon(Icons.apps_rounded),
+            icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle),
+            selectedIcon: HugeIcon(icon: HugeIcons.strokeRoundedCircle),
             label: 'Lain-lain',
           ),
         ],
@@ -275,7 +275,7 @@ class _AppShell extends StatelessWidget {
                       children: [
                         isHuge
                             ? HugeIcon(icon: d.activeIcon as List<List<dynamic>>, color: iconColor, size: 26)
-                            : Icon(d.activeIcon as IconData, color: iconColor, size: 26),
+                            : HugeIcon(icon: d.activeIcon as dynamic, color: iconColor, size: 26),
                         const SizedBox(height: 6),
                         Text(
                           d.label,
@@ -325,7 +325,7 @@ class _AppShell extends StatelessWidget {
                             color: AppTheme.primaryCoffee,
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: const Icon(Icons.coffee,
+                          child: HugeIcon(icon: HugeIcons.strokeRoundedCoffee01,
                               color: Colors.white, size: 22),
                         ),
                         if (extended) ...[
@@ -344,10 +344,10 @@ class _AppShell extends StatelessWidget {
                     return NavigationRailDestination(
                       icon: isHuge
                           ? HugeIcon(icon: d.icon as List<List<dynamic>>, size: 24, color: AppTheme.mutedText)
-                          : Icon(d.icon as IconData, color: AppTheme.mutedText),
+                          : HugeIcon(icon: d.icon as dynamic, color: AppTheme.mutedText),
                       selectedIcon: isHuge
                           ? HugeIcon(icon: d.activeIcon as List<List<dynamic>>, size: 24, color: AppTheme.primaryCoffee)
-                          : Icon(d.activeIcon as IconData, color: AppTheme.primaryCoffee),
+                          : HugeIcon(icon: d.activeIcon as dynamic, color: AppTheme.primaryCoffee),
                       label: Text(d.label),
                     );
                   }).toList(),

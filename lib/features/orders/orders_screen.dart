@@ -1,3 +1,4 @@
+import 'package:hugeicons/hugeicons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -90,7 +91,7 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
 
                 if (filtered.isEmpty) {
                   return const EmptyState(
-                    icon: Icons.receipt_long_outlined,
+                    icon: HugeIcons.strokeRoundedInvoice01,
                     title: 'No orders',
                     subtitle: 'No orders match the selected filter',
                   );
@@ -173,7 +174,7 @@ class _OrderCard extends ConsumerWidget {
           // Meta row
           Row(
             children: [
-              const Icon(Icons.schedule_outlined,
+              HugeIcon(icon: HugeIcons.strokeRoundedCircle,
                   size: 14, color: AppTheme.mutedText),
               const SizedBox(width: 4),
               Text(timeStr,
@@ -181,7 +182,7 @@ class _OrderCard extends ConsumerWidget {
                       ?.copyWith(color: AppTheme.mutedText)),
               if (order.status == 'completed') ...[
                 const SizedBox(width: 16),
-                const Icon(Icons.payments_outlined,
+                HugeIcon(icon: HugeIcons.strokeRoundedCircle,
                     size: 14, color: AppTheme.mutedText),
                 const SizedBox(width: 4),
                 Text(payLabel,
@@ -220,7 +221,7 @@ class _OrderCard extends ConsumerWidget {
                   final db = ref.read(databaseProvider);
                   await db.voidOrder(order.id);
                 },
-                icon: const Icon(Icons.remove_circle_outline,
+                icon: HugeIcon(icon: HugeIcons.strokeRoundedRemoveCircle,
                     size: 16, color: AppTheme.dangerRed),
                 label: const Text('Void Order',
                     style: TextStyle(

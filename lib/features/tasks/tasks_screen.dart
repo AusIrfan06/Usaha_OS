@@ -1,3 +1,4 @@
+import 'package:hugeicons/hugeicons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -43,7 +44,7 @@ class _TasksScreenState extends ConsumerState<TasksScreen>
                 color: AppTheme.primaryCoffee.withOpacity(0.15),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Icon(Icons.assignment_turned_in_rounded,
+              child: HugeIcon(icon: HugeIcons.strokeRoundedCircle,
                   color: AppTheme.primaryCoffee, size: 22),
             ),
             const SizedBox(width: 12),
@@ -66,15 +67,15 @@ class _TasksScreenState extends ConsumerState<TasksScreen>
           controller: _tabController,
           isScrollable: true,
           tabs: const [
-            Tab(icon: Icon(Icons.wb_sunny_outlined, size: 18), text: 'Buka Kedai (Opening)'),
-            Tab(icon: Icon(Icons.nightlight_round_outlined, size: 18), text: 'Tutup Kedai (Closing)'),
-            Tab(icon: Icon(Icons.note_alt_outlined, size: 18), text: 'Serahan Syif (Handover)'),
-            Tab(icon: Icon(Icons.view_kanban_outlined, size: 18), text: 'Papan Tugasan (All Tasks)'),
+            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedSun01, size: 18), text: 'Buka Kedai (Opening)'),
+            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedMoon01, size: 18), text: 'Tutup Kedai (Closing)'),
+            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle, size: 18), text: 'Serahan Syif (Handover)'),
+            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle, size: 18), text: 'Papan Tugasan (All Tasks)'),
           ],
         ),
         actions: [
           FilledButton.icon(
-            icon: const Icon(Icons.add, size: 18),
+            icon: HugeIcon(icon: HugeIcons.strokeRoundedAdd01, size: 18),
             label: const Text('Tambah Tugasan'),
             style: FilledButton.styleFrom(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -114,7 +115,7 @@ class _TasksScreenState extends ConsumerState<TasksScreen>
           return AlertDialog(
             title: const Row(
               children: [
-                Icon(Icons.add_task_rounded, color: AppTheme.primaryCoffee),
+                HugeIcon(icon: HugeIcons.strokeRoundedAdd01, color: AppTheme.primaryCoffee),
                 SizedBox(width: 8),
                 Text('Tambah Tugasan Baru'),
               ],
@@ -238,8 +239,8 @@ class _ChecklistTabView extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  category == 'opening' ? Icons.wb_sunny_outlined : Icons.nightlight_round_outlined,
+                HugeIcon(icon: 
+                  category == 'opening' ? HugeIcons.strokeRoundedSun01 : HugeIcons.strokeRoundedMoon01,
                   size: 56,
                   color: AppTheme.mutedText,
                 ),
@@ -280,8 +281,8 @@ class _ChecklistTabView extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            Icon(
-                              isAllDone ? Icons.verified_rounded : Icons.pending_actions_rounded,
+                            HugeIcon(icon: 
+                              isAllDone ? HugeIcons.strokeRoundedCircle : HugeIcons.strokeRoundedCircle,
                               color: isAllDone ? AppTheme.successGreen : AppTheme.primaryCoffee,
                             ),
                             const SizedBox(width: 8),
@@ -387,7 +388,7 @@ class _ChecklistTabView extends StatelessWidget {
                         children: [
                           _buildPriorityBadge(task.priority),
                           IconButton(
-                            icon: const Icon(Icons.delete_outline_rounded, size: 18, color: Colors.grey),
+                            icon: HugeIcon(icon: HugeIcons.strokeRoundedDelete01, size: 18, color: Colors.grey),
                             onPressed: () async {
                               await db.deleteTask(task.id);
                             },
@@ -486,8 +487,8 @@ class _HandoverNotesTabView extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            Icon(
-                              isAcknowledged ? Icons.mark_chat_read_rounded : Icons.speaker_notes_rounded,
+                            HugeIcon(icon: 
+                              isAcknowledged ? HugeIcons.strokeRoundedCircle : HugeIcons.strokeRoundedCircle,
                               color: isAcknowledged ? AppTheme.mutedText : AppTheme.primaryCoffee,
                             ),
                             const SizedBox(width: 8),
@@ -528,7 +529,7 @@ class _HandoverNotesTabView extends StatelessWidget {
                         ),
                         if (!isAcknowledged)
                           FilledButton.icon(
-                            icon: const Icon(Icons.check, size: 16),
+                            icon: HugeIcon(icon: HugeIcons.strokeRoundedCheckmarkBadge01, size: 16),
                             label: const Text('Terima Nota (Acknowledge)'),
                             style: FilledButton.styleFrom(
                               backgroundColor: AppTheme.primaryCoffee,
@@ -667,7 +668,7 @@ class _KanbanTasksTabView extends StatelessWidget {
                   child: Text(task.category.toUpperCase(), style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: AppTheme.darkEspresso)),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.delete_outline, size: 16, color: Colors.grey),
+                  icon: HugeIcon(icon: HugeIcons.strokeRoundedDelete01, size: 16, color: Colors.grey),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                   onPressed: () => db.deleteTask(task.id),
@@ -685,7 +686,7 @@ class _KanbanTasksTabView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 OutlinedButton.icon(
-                  icon: const Icon(Icons.arrow_forward_rounded, size: 14),
+                  icon: HugeIcon(icon: HugeIcons.strokeRoundedArrowRight01, size: 14),
                   label: Text(actionLabel, style: const TextStyle(fontSize: 12)),
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),

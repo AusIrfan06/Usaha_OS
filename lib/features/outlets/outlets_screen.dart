@@ -1,3 +1,4 @@
+import 'package:hugeicons/hugeicons.dart';
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -51,8 +52,8 @@ class _OutletsScreenState extends ConsumerState<OutletsScreen>
           unselectedLabelColor: AppTheme.mutedText,
           indicatorColor: AppTheme.primaryCoffee,
           tabs: const [
-            Tab(icon: Icon(Icons.storefront_outlined), text: 'Senarai Cawangan'),
-            Tab(icon: Icon(Icons.swap_horiz_outlined), text: 'Pemindahan Stok (Transfer)'),
+            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle), text: 'Senarai Cawangan'),
+            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle), text: 'Pemindahan Stok (Transfer)'),
           ],
         ),
       ),
@@ -81,7 +82,7 @@ class _OutletsScreenState extends ConsumerState<OutletsScreen>
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: AppTheme.primaryCoffee,
         foregroundColor: Colors.white,
-        icon: Icon(_tabController.index == 0 ? Icons.add_business : Icons.move_to_inbox),
+        icon: HugeIcon(icon: _tabController.index == 0 ? HugeIcons.strokeRoundedAdd01 : HugeIcons.strokeRoundedCircle),
         label: Text(_tabController.index == 0 ? 'Tambah Cawangan' : 'Pindah Stok'),
         onPressed: () {
           if (_tabController.index == 0) {
@@ -135,7 +136,7 @@ class _OutletsScreenState extends ConsumerState<OutletsScreen>
                   color: Colors.white.withOpacity(0.15),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.store, color: Colors.white, size: 28),
+                child: HugeIcon(icon: HugeIcons.strokeRoundedStore01, color: Colors.white, size: 28),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -177,7 +178,7 @@ class _OutletsScreenState extends ConsumerState<OutletsScreen>
                 child: const Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.check_circle, color: Colors.white, size: 14),
+                    HugeIcon(icon: HugeIcons.strokeRoundedCheckmarkBadge01, color: Colors.white, size: 14),
                     SizedBox(width: 4),
                     Text(
                       'Aktif',
@@ -218,8 +219,8 @@ class _OutletsScreenState extends ConsumerState<OutletsScreen>
                           : Colors.grey.withOpacity(0.12),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Icon(
-                      outlet.isPrimary ? Icons.account_balance : Icons.storefront,
+                    child: HugeIcon(icon: 
+                      outlet.isPrimary ? HugeIcons.strokeRoundedBank : HugeIcons.strokeRoundedCircle,
                       color: outlet.isPrimary ? AppTheme.primaryCoffee : AppTheme.darkEspresso,
                     ),
                   ),
@@ -376,7 +377,7 @@ class _OutletsScreenState extends ConsumerState<OutletsScreen>
                           ],
                         ),
                       ),
-                      const Icon(Icons.arrow_forward, color: AppTheme.primaryCoffee, size: 20),
+                      HugeIcon(icon: HugeIcons.strokeRoundedArrowRight01, color: AppTheme.primaryCoffee, size: 20),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
@@ -424,7 +425,7 @@ class _OutletsScreenState extends ConsumerState<OutletsScreen>
                             backgroundColor: AppTheme.successGreen,
                             foregroundColor: Colors.white,
                           ),
-                          icon: const Icon(Icons.check, size: 16),
+                          icon: HugeIcon(icon: HugeIcons.strokeRoundedCheckmarkBadge01, size: 16),
                           label: const Text('Sahkan Penerimaan'),
                           onPressed: () {
                             ref.read(databaseProvider).updateStockTransferStatus(trf.id, 'received');

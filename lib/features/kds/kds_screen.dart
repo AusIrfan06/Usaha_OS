@@ -1,3 +1,4 @@
+import 'package:hugeicons/hugeicons.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -49,7 +50,7 @@ class _KdsScreenState extends ConsumerState<KdsScreen> {
                 color: AppTheme.primaryCoffee.withOpacity(0.15),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Icon(Icons.soup_kitchen_rounded,
+              child: HugeIcon(icon: HugeIcons.strokeRoundedCircle,
                   color: AppTheme.primaryCoffee, size: 22),
             ),
             const SizedBox(width: 12),
@@ -74,19 +75,19 @@ class _KdsScreenState extends ConsumerState<KdsScreen> {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                _buildStationFilter('all', 'Semua (All)', Icons.dashboard_customize_outlined),
+                _buildStationFilter('all', 'Semua (All)', HugeIcons.strokeRoundedDashboardSquare01),
                 const SizedBox(width: 6),
-                _buildStationFilter('bar', 'Barista / Minuman', Icons.local_cafe_outlined),
+                _buildStationFilter('bar', 'Barista / Minuman', HugeIcons.strokeRoundedCircle),
                 const SizedBox(width: 6),
-                _buildStationFilter('kitchen', 'Dapur / Makanan', Icons.restaurant_outlined),
+                _buildStationFilter('kitchen', 'Dapur / Makanan', HugeIcons.strokeRoundedCircle),
                 const SizedBox(width: 6),
-                _buildStationFilter('pastry', 'Pastri', Icons.bakery_dining_outlined),
+                _buildStationFilter('pastry', 'Pastri', HugeIcons.strokeRoundedCircle),
                 const SizedBox(width: 12),
               ],
             ),
           ),
           IconButton(
-            icon: const Icon(Icons.history_rounded),
+            icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle),
             tooltip: 'Pesanan Selesai (Recall)',
             onPressed: () => _showRecallModal(context, db),
           ),
@@ -112,7 +113,7 @@ class _KdsScreenState extends ConsumerState<KdsScreen> {
                       color: AppTheme.primaryCoffee.withOpacity(0.1),
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.check_circle_outline_rounded,
+                    child: HugeIcon(icon: HugeIcons.strokeRoundedCheckmarkBadge01,
                         size: 64, color: AppTheme.primaryCoffee),
                   ),
                   const SizedBox(height: 16),
@@ -178,14 +179,14 @@ class _KdsScreenState extends ConsumerState<KdsScreen> {
     );
   }
 
-  Widget _buildStationFilter(String key, String label, IconData icon) {
+  Widget _buildStationFilter(String key, String label, dynamic icon) {
     final isSelected = _selectedStation == key;
     return ChoiceChip(
       selected: isSelected,
       label: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 16, color: isSelected ? Colors.white : AppTheme.darkEspresso),
+          HugeIcon(icon: icon, size: 16, color: isSelected ? Colors.white : AppTheme.darkEspresso),
           const SizedBox(width: 6),
           Text(label),
         ],
@@ -221,21 +222,21 @@ class _KdsScreenState extends ConsumerState<KdsScreen> {
             label: 'Menunggu (Pending)',
             count: pendingCount,
             color: const Color(0xFFE65100),
-            icon: Icons.hourglass_top_rounded,
+            icon: HugeIcons.strokeRoundedCircle,
           ),
           const SizedBox(width: 12),
           _buildMetricPill(
             label: 'Sedang Disediakan',
             count: inProgCount,
             color: const Color(0xFF1565C0),
-            icon: Icons.soup_kitchen_rounded,
+            icon: HugeIcons.strokeRoundedCircle,
           ),
           const SizedBox(width: 12),
           _buildMetricPill(
             label: 'Sedia Dihidang',
             count: readyCount,
             color: AppTheme.successGreen,
-            icon: Icons.room_service_rounded,
+            icon: HugeIcons.strokeRoundedCircle,
           ),
           const Spacer(),
           Text(
@@ -251,7 +252,7 @@ class _KdsScreenState extends ConsumerState<KdsScreen> {
     required String label,
     required int count,
     required Color color,
-    required IconData icon,
+    required dynamic icon,
   }) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -262,7 +263,7 @@ class _KdsScreenState extends ConsumerState<KdsScreen> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 16, color: color),
+          HugeIcon(icon: icon, size: 16, color: color),
           const SizedBox(width: 6),
           Text(
             '$label: ',
@@ -309,7 +310,7 @@ class _KdsScreenState extends ConsumerState<KdsScreen> {
                   children: [
                     const Row(
                       children: [
-                        Icon(Icons.history_rounded, color: AppTheme.primaryCoffee),
+                        HugeIcon(icon: HugeIcons.strokeRoundedCircle, color: AppTheme.primaryCoffee),
                         SizedBox(width: 8),
                         Text(
                           'Pesanan Selesai / Dihidang (Recall)',
@@ -318,7 +319,7 @@ class _KdsScreenState extends ConsumerState<KdsScreen> {
                       ],
                     ),
                     IconButton(
-                      icon: const Icon(Icons.close),
+                      icon: HugeIcon(icon: HugeIcons.strokeRoundedCancel01),
                       onPressed: () => Navigator.pop(ctx),
                     ),
                   ],
@@ -344,7 +345,7 @@ class _KdsScreenState extends ConsumerState<KdsScreen> {
                           final o = doneOrders[i];
                           return Card(
                             child: ListTile(
-                              leading: const Icon(Icons.check_circle, color: AppTheme.successGreen),
+                              leading: HugeIcon(icon: HugeIcons.strokeRoundedCheckmarkBadge01, color: AppTheme.successGreen),
                               title: Text(
                                 '${o.orderNumber} • ${o.orderType.toUpperCase()}',
                                 style: const TextStyle(fontWeight: FontWeight.w700),
@@ -353,7 +354,7 @@ class _KdsScreenState extends ConsumerState<KdsScreen> {
                                 'Masa: ${DateFormat('hh:mm a').format(o.createdAt)} • Jumlah: RM ${o.totalAmount.toStringAsFixed(2)}',
                               ),
                               trailing: OutlinedButton.icon(
-                                icon: const Icon(Icons.undo_rounded, size: 16),
+                                icon: HugeIcon(icon: HugeIcons.strokeRoundedUndo, size: 16),
                                 label: const Text('Recall ke KDS'),
                                 onPressed: () async {
                                   await db.updateOrderStatus(o.id, 'in_progress');
@@ -469,10 +470,10 @@ class _KdsTicketCard extends StatelessWidget {
                     ),
                     Row(
                       children: [
-                        Icon(
+                        HugeIcon(icon: 
                           order.orderType == 'dine_in'
-                              ? Icons.table_restaurant_outlined
-                              : Icons.takeout_dining_outlined,
+                              ? HugeIcons.strokeRoundedCircle
+                              : HugeIcons.strokeRoundedCircle,
                           size: 14,
                           color: AppTheme.primaryCoffee,
                         ),
@@ -502,7 +503,7 @@ class _KdsTicketCard extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.timer_outlined, size: 14, color: timerColor),
+                      HugeIcon(icon: HugeIcons.strokeRoundedTimer01, size: 14, color: timerColor),
                       const SizedBox(width: 4),
                       Text(
                         timerString,
@@ -616,7 +617,7 @@ class _KdsTicketCard extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.note_alt_outlined, size: 14, color: Color(0xFFF57F17)),
+                  HugeIcon(icon: HugeIcons.strokeRoundedCircle, size: 14, color: Color(0xFFF57F17)),
                   const SizedBox(width: 6),
                   Expanded(
                     child: Text(
@@ -643,7 +644,7 @@ class _KdsTicketCard extends StatelessWidget {
   Widget _buildActionButton(BuildContext context) {
     if (order.status == 'pending') {
       return FilledButton.icon(
-        icon: const Icon(Icons.play_arrow_rounded, size: 18),
+        icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle, size: 18),
         label: const Text('MULA SEDIAKAN (START)'),
         style: FilledButton.styleFrom(
           backgroundColor: const Color(0xFF1565C0),
@@ -656,7 +657,7 @@ class _KdsTicketCard extends StatelessWidget {
       );
     } else if (order.status == 'in_progress') {
       return FilledButton.icon(
-        icon: const Icon(Icons.done_all_rounded, size: 18),
+        icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle, size: 18),
         label: const Text('TANDAKAN SIAP (READY)'),
         style: FilledButton.styleFrom(
           backgroundColor: AppTheme.successGreen,
@@ -670,7 +671,7 @@ class _KdsTicketCard extends StatelessWidget {
     } else {
       // ready
       return FilledButton.icon(
-        icon: const Icon(Icons.check_circle_rounded, size: 18),
+        icon: HugeIcon(icon: HugeIcons.strokeRoundedCheckmarkBadge01, size: 18),
         label: const Text('SELESAI / HIDANG (BUMP)'),
         style: FilledButton.styleFrom(
           backgroundColor: AppTheme.darkEspresso,

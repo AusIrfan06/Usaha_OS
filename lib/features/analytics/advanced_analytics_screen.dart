@@ -1,3 +1,4 @@
+import 'package:hugeicons/hugeicons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/providers.dart';
@@ -49,10 +50,10 @@ class _AdvancedAnalyticsScreenState extends ConsumerState<AdvancedAnalyticsScree
           unselectedLabelColor: AppTheme.mutedText,
           indicatorColor: AppTheme.primaryCoffee,
           tabs: const [
-            Tab(icon: Icon(Icons.pie_chart_outline), text: 'COGS & Margin Item'),
-            Tab(icon: Icon(Icons.show_chart), text: 'Peta Waktu Puncak (Heatmap)'),
-            Tab(icon: Icon(Icons.leaderboard_outlined), text: 'Prestasi Staf'),
-            Tab(icon: Icon(Icons.account_balance_wallet_outlined), text: 'Penyata Untung Rugi (P&L)'),
+            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedPieChart01), text: 'COGS & Margin Item'),
+            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle), text: 'Peta Waktu Puncak (Heatmap)'),
+            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle), text: 'Prestasi Staf'),
+            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedBank), text: 'Penyata Untung Rugi (P&L)'),
           ],
         ),
       ),
@@ -93,7 +94,7 @@ class _AdvancedAnalyticsScreenState extends ConsumerState<AdvancedAnalyticsScree
               ),
               child: const Row(
                 children: [
-                  Icon(Icons.insights, color: AppTheme.primaryCoffee),
+                  HugeIcon(icon: HugeIcons.strokeRoundedCircle, color: AppTheme.primaryCoffee),
                   SizedBox(width: 12),
                   Expanded(
                     child: Text(
@@ -470,7 +471,7 @@ class _AdvancedAnalyticsScreenState extends ConsumerState<AdvancedAnalyticsScree
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
-              icon: const Icon(Icons.picture_as_pdf),
+              icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle),
               label: const Text('Eksport Laporan P&L untuk Akauntan', style: TextStyle(fontWeight: FontWeight.bold)),
               onPressed: () {
                 ScaffoldMessenger.of(context).showSnackBar(

@@ -74,7 +74,7 @@ class DashboardScreen extends ConsumerWidget {
                 Padding(
                   padding: const EdgeInsets.only(right: 16),
                   child: IconButton(
-                    icon: const Icon(Icons.settings_outlined),
+                    icon: HugeIcon(icon: HugeIcons.strokeRoundedSettings01),
                     color: AppTheme.darkEspresso,
                     onPressed: () => context.go('/settings'),
                     tooltip: 'Tetapan',
@@ -198,7 +198,7 @@ class DashboardScreen extends ConsumerWidget {
                       data: (orders) {
                         if (orders.isEmpty) {
                           return const EmptyState(
-                            icon: Icons.receipt_long_outlined,
+                            icon: HugeIcons.strokeRoundedInvoice01,
                             title: 'Belum ada pesanan hari ini',
                             subtitle: 'Buka skrin POS untuk mula terima pesanan',
                           );
@@ -303,11 +303,11 @@ class DashboardScreen extends ConsumerWidget {
                         color: item.color.withOpacity(0.12),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: item.icon is IconData 
-                          ? Icon(item.icon as IconData, size: 18, color: item.color)
+                      child: item.icon is dynamic 
+                          ? HugeIcon(icon: item.icon as dynamic, size: 18, color: item.color)
                           : HugeIcon(icon: item.icon, size: 18, color: item.color),
                     ),
-                    const Icon(Icons.arrow_forward_ios_rounded, size: 12, color: AppTheme.mutedText),
+                    HugeIcon(icon: HugeIcons.strokeRoundedArrowRight01, size: 12, color: AppTheme.mutedText),
                   ],
                 ),
                 Column(
@@ -363,7 +363,7 @@ class DashboardScreen extends ConsumerWidget {
         title: 'Audit Varians Stok',
         value: 'Kiraan Fizikal',
         subtitle: 'Stock Take & Pelarasan',
-        icon: Icons.inventory_rounded,
+        icon: HugeIcons.strokeRoundedPackage,
         color: const Color(0xFFD84315),
         route: '/stock-take',
       ),
@@ -416,11 +416,11 @@ class DashboardScreen extends ConsumerWidget {
                         color: item.color.withOpacity(0.12),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: item.icon is IconData 
-                          ? Icon(item.icon as IconData, size: 18, color: item.color)
+                      child: item.icon is dynamic 
+                          ? HugeIcon(icon: item.icon as dynamic, size: 18, color: item.color)
                           : HugeIcon(icon: item.icon, size: 18, color: item.color),
                     ),
-                    const Icon(Icons.arrow_forward_ios_rounded, size: 12, color: AppTheme.mutedText),
+                    HugeIcon(icon: HugeIcons.strokeRoundedArrowRight01, size: 12, color: AppTheme.mutedText),
                   ],
                 ),
                 Column(
@@ -530,11 +530,11 @@ class DashboardScreen extends ConsumerWidget {
                         color: item.color.withOpacity(0.12),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: item.icon is IconData 
-                          ? Icon(item.icon as IconData, size: 18, color: item.color)
+                      child: item.icon is dynamic 
+                          ? HugeIcon(icon: item.icon as dynamic, size: 18, color: item.color)
                           : HugeIcon(icon: item.icon, size: 18, color: item.color),
                     ),
-                    const Icon(Icons.arrow_forward_ios_rounded, size: 12, color: AppTheme.mutedText),
+                    HugeIcon(icon: HugeIcons.strokeRoundedArrowRight01, size: 12, color: AppTheme.mutedText),
                   ],
                 ),
                 Column(
@@ -626,11 +626,11 @@ class DashboardScreen extends ConsumerWidget {
                         color: item.color.withOpacity(0.12),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: item.icon is IconData 
-                          ? Icon(item.icon as IconData, size: 18, color: item.color)
+                      child: item.icon is dynamic 
+                          ? HugeIcon(icon: item.icon as dynamic, size: 18, color: item.color)
                           : HugeIcon(icon: item.icon, size: 18, color: item.color),
                     ),
-                    const Icon(Icons.arrow_forward_ios_rounded, size: 12, color: AppTheme.mutedText),
+                    HugeIcon(icon: HugeIcons.strokeRoundedArrowRight01, size: 12, color: AppTheme.mutedText),
                   ],
                 ),
                 Column(
@@ -700,7 +700,7 @@ class DashboardScreen extends ConsumerWidget {
                 ),
                 child: const Row(
                   children: [
-                    Icon(Icons.trending_up, size: 14, color: Colors.white),
+                    HugeIcon(icon: HugeIcons.strokeRoundedCircle, size: 14, color: Colors.white),
                     SizedBox(width: 4),
                     Text(
                       'JUALAN HARI INI',
@@ -740,17 +740,17 @@ class DashboardScreen extends ConsumerWidget {
             children: [
               _paymentPill(
                 'Tunai: ${CurrencyFormatter.format(summary['cashSales'])}',
-                Icons.money,
+                HugeIcons.strokeRoundedMoney01,
               ),
               const SizedBox(width: 8),
               _paymentPill(
                 'QR: ${CurrencyFormatter.format(summary['duitNowSales'])}',
-                Icons.qr_code_2,
+                HugeIcons.strokeRoundedCircle,
               ),
               const SizedBox(width: 8),
               _paymentPill(
                 'Kad: ${CurrencyFormatter.format(summary['cardSales'])}',
-                Icons.credit_card,
+                HugeIcons.strokeRoundedCreditCard,
               ),
             ],
           ),
@@ -759,7 +759,7 @@ class DashboardScreen extends ConsumerWidget {
     );
   }
 
-  Widget _paymentPill(String label, IconData icon) {
+  Widget _paymentPill(String label, dynamic icon) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
@@ -769,7 +769,7 @@ class DashboardScreen extends ConsumerWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 12, color: Colors.white70),
+          HugeIcon(icon: icon, size: 12, color: Colors.white70),
           const SizedBox(width: 4),
           Text(
             label,
@@ -805,7 +805,7 @@ class DashboardScreen extends ConsumerWidget {
         child: StatCard(
           label: 'Jumlah Pesanan',
           value: '${summary['orderCount'] ?? 0}',
-          icon: Icons.receipt_long_outlined,
+          icon: HugeIcons.strokeRoundedInvoice01,
           iconColor: AppTheme.primaryCoffee,
         ),
       ),
@@ -814,7 +814,7 @@ class DashboardScreen extends ConsumerWidget {
         child: StatCard(
           label: 'Purata Tiket',
           value: CurrencyFormatter.format(summary['avgOrderValue'] ?? summary['avgTicket']),
-          icon: Icons.analytics_outlined,
+          icon: HugeIcons.strokeRoundedChartHistogram,
           iconColor: AppTheme.duitNowBlue,
         ),
       ),
@@ -823,7 +823,7 @@ class DashboardScreen extends ConsumerWidget {
         child: StatCard(
           label: 'Siap',
           value: '${summary['completedOrders'] ?? 0}',
-          icon: Icons.check_circle_outline,
+          icon: HugeIcons.strokeRoundedCheckmarkBadge01,
           iconColor: AppTheme.successGreen,
         ),
       ),
@@ -832,7 +832,7 @@ class DashboardScreen extends ConsumerWidget {
         child: StatCard(
           label: 'Batal (Void)',
           value: '${summary['voidCount'] ?? 0}',
-          icon: Icons.remove_circle_outline,
+          icon: HugeIcons.strokeRoundedRemoveCircle,
           iconColor: AppTheme.dangerRed,
         ),
       ),
@@ -854,7 +854,7 @@ class DashboardScreen extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
         children: [
-          const Icon(Icons.warning_amber_rounded,
+          HugeIcon(icon: HugeIcons.strokeRoundedAlert01,
               color: AppTheme.warningAmber, size: 22),
           const SizedBox(width: 12),
           Expanded(
@@ -891,49 +891,49 @@ class DashboardScreen extends ConsumerWidget {
   Widget _quickActions(BuildContext context, bool isTablet) {
     final actions = [
       (
-        icon: Icons.point_of_sale_rounded,
+        icon: HugeIcons.strokeRoundedRegister,
         label: 'Pesanan POS',
         color: AppTheme.primaryCoffee,
         route: '/pos'
       ),
       (
-        icon: Icons.soup_kitchen_rounded,
+        icon: HugeIcons.strokeRoundedCircle,
         label: 'Dapur KDS',
         color: const Color(0xFF1565C0),
         route: '/kds'
       ),
       (
-        icon: Icons.assignment_turned_in_rounded,
+        icon: HugeIcons.strokeRoundedCircle,
         label: 'Tugasan & Syif',
         color: const Color(0xFFE65100),
         route: '/tasks'
       ),
       (
-        icon: Icons.card_membership_rounded,
+        icon: HugeIcons.strokeRoundedCircle,
         label: 'CRM & Loyalty',
         color: const Color(0xFF6A1B9A),
         route: '/loyalty'
       ),
       (
-        icon: Icons.local_shipping_rounded,
+        icon: HugeIcons.strokeRoundedTruckDelivery,
         label: 'Pembekal & PO',
         color: const Color(0xFF00897B),
         route: '/suppliers'
       ),
       (
-        icon: Icons.inventory_rounded,
+        icon: HugeIcons.strokeRoundedPackage,
         label: 'Stock Take',
         color: const Color(0xFFD84315),
         route: '/stock-take'
       ),
       (
-        icon: Icons.account_balance_wallet_rounded,
+        icon: HugeIcons.strokeRoundedBank,
         label: 'Perbelanjaan',
         color: const Color(0xFFC2185B),
         route: '/expenses'
       ),
       (
-        icon: Icons.bar_chart_rounded,
+        icon: HugeIcons.strokeRoundedBarChart,
         label: 'Laporan Jualan',
         color: const Color(0xFF455A64),
         route: '/reports'
@@ -962,7 +962,7 @@ class DashboardScreen extends ConsumerWidget {
                         color: a.color.withOpacity(0.12),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Icon(a.icon, color: a.color, size: 20),
+                      child: HugeIcon(icon: a.icon, color: a.color, size: 20),
                     ),
                     Text(a.label,
                         style: const TextStyle(
@@ -992,7 +992,7 @@ class DashboardScreen extends ConsumerWidget {
                 color: AppTheme.primaryCoffee.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Icon(Icons.receipt_outlined,
+              child: HugeIcon(icon: HugeIcons.strokeRoundedCircle,
                   size: 18, color: AppTheme.primaryCoffee),
             ),
             const SizedBox(width: 12),

@@ -1,3 +1,4 @@
+import 'package:hugeicons/hugeicons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:drift/drift.dart' as drift;
@@ -36,7 +37,7 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
       appBar: AppBar(
         title: const Row(
           children: [
-            Icon(Icons.account_balance_wallet_outlined, color: AppColors.primary),
+            HugeIcon(icon: HugeIcons.strokeRoundedBank, color: AppColors.primary),
             SizedBox(width: 10),
             Text(
               'Perbelanjaan & Tunai Runcit (Petty Cash)',
@@ -52,8 +53,8 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
           labelColor: AppColors.primary,
           unselectedLabelColor: AppColors.textMuted,
           tabs: const [
-            Tab(icon: Icon(Icons.receipt_outlined), text: 'Log Perbelanjaan'),
-            Tab(icon: Icon(Icons.point_of_sale), text: 'Imbangan Laci Tunai (Cash Drawer)'),
+            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle), text: 'Log Perbelanjaan'),
+            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedRegister), text: 'Imbangan Laci Tunai (Cash Drawer)'),
           ],
         ),
       ),
@@ -105,7 +106,7 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 ),
-                icon: const Icon(Icons.add_circle_outline, size: 18),
+                icon: HugeIcon(icon: HugeIcons.strokeRoundedAddCircle, size: 18),
                 label: const Text('Rekod Perbelanjaan'),
                 onPressed: () => _showAddExpenseDialog(context),
               ),
@@ -125,13 +126,13 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.receipt_long_outlined, size: 64, color: AppColors.textMuted.withOpacity(0.5)),
+                      HugeIcon(icon: HugeIcons.strokeRoundedInvoice01, size: 64, color: AppColors.textMuted.withOpacity(0.5)),
                       const SizedBox(height: 12),
                       const Text('Tiada rekod perbelanjaan', style: TextStyle(color: AppColors.textMuted, fontSize: 16)),
                       const SizedBox(height: 8),
                       TextButton.icon(
                         onPressed: () => _showAddExpenseDialog(context),
-                        icon: const Icon(Icons.add),
+                        icon: HugeIcon(icon: HugeIcons.strokeRoundedAdd01),
                         label: const Text('Rekod Sekarang'),
                       ),
                     ],
@@ -158,7 +159,7 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
                     child: ListTile(
                       leading: CircleAvatar(
                         backgroundColor: catColor.withOpacity(0.2),
-                        child: Icon(Icons.money_off, color: catColor),
+                        child: HugeIcon(icon: HugeIcons.strokeRoundedMoney01, color: catColor),
                       ),
                       title: Row(
                         children: [
@@ -206,7 +207,7 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
                             ),
                           ),
                           IconButton(
-                            icon: const Icon(Icons.delete_outline, color: Colors.white30, size: 20),
+                            icon: HugeIcon(icon: HugeIcons.strokeRoundedDelete01, color: Colors.white30, size: 20),
                             onPressed: () {
                               ref.read(databaseProvider).deleteExpense(e.id);
                             },
@@ -384,7 +385,7 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
               const CircleAvatar(
                 radius: 30,
                 backgroundColor: AppColors.primary,
-                child: Icon(Icons.point_of_sale, size: 32, color: Colors.white),
+                child: HugeIcon(icon: HugeIcons.strokeRoundedRegister, size: 32, color: Colors.white),
               ),
               const SizedBox(width: 16),
               Column(
@@ -414,7 +415,7 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
                   backgroundColor: AppColors.primary,
                   foregroundColor: Colors.white,
                 ),
-                icon: const Icon(Icons.swap_horiz),
+                icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle),
                 label: const Text('Tindakan Tunai (In / Out)'),
                 onPressed: () => _showCashActionDialog(context),
               ),
@@ -457,8 +458,8 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
                     margin: const EdgeInsets.only(bottom: 8),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     child: ListTile(
-                      leading: Icon(
-                        isPositive ? Icons.arrow_downward : Icons.arrow_upward,
+                      leading: HugeIcon(icon: 
+                        isPositive ? HugeIcons.strokeRoundedCircle : HugeIcons.strokeRoundedCircle,
                         color: isPositive ? Colors.green : Colors.orange,
                       ),
                       title: Text(

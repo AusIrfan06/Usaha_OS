@@ -1,3 +1,4 @@
+import 'package:hugeicons/hugeicons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:drift/drift.dart' as drift;
@@ -38,7 +39,7 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
       appBar: AppBar(
         title: const Row(
           children: [
-            Icon(Icons.inventory_outlined, color: AppColors.primary),
+            HugeIcon(icon: HugeIcons.strokeRoundedPackage, color: AppColors.primary),
             SizedBox(width: 10),
             Text(
               'Audit Stok Fizikal & Varians (Stock Take)',
@@ -54,8 +55,8 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
           labelColor: AppColors.primary,
           unselectedLabelColor: AppColors.textMuted,
           tabs: const [
-            Tab(icon: Icon(Icons.edit_note), text: 'Kiraan Stok Semasa'),
-            Tab(icon: Icon(Icons.history), text: 'Log Audit & Varians'),
+            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedEdit01), text: 'Kiraan Stok Semasa'),
+            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle), text: 'Log Audit & Varians'),
           ],
         ),
       ),
@@ -117,21 +118,21 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
                     title: 'Jumlah Item',
                     value: '${ingredients.length}',
                     color: Colors.blue,
-                    icon: Icons.category,
+                    icon: HugeIcons.strokeRoundedCircle,
                   ),
                   const SizedBox(width: 12),
                   _buildKpiCard(
                     title: 'Item Ada Varians',
                     value: '$itemsWithVariance',
                     color: itemsWithVariance > 0 ? Colors.orange : Colors.green,
-                    icon: Icons.difference,
+                    icon: HugeIcons.strokeRoundedCircle,
                   ),
                   const SizedBox(width: 12),
                   _buildKpiCard(
                     title: 'Nilai Varians Bersih',
                     value: 'RM ${totalVarianceValue.toStringAsFixed(2)}',
                     color: totalVarianceValue < 0 ? Colors.red : (totalVarianceValue > 0 ? Colors.green : Colors.white),
-                    icon: Icons.monetization_on,
+                    icon: HugeIcons.strokeRoundedCircle,
                   ),
                   const Spacer(),
                   ElevatedButton.icon(
@@ -140,7 +141,7 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
                     ),
-                    icon: const Icon(Icons.check_circle_outline),
+                    icon: HugeIcon(icon: HugeIcons.strokeRoundedCheckmarkBadge01),
                     label: const Text('Selaraskan Semua Stok', style: TextStyle(fontWeight: FontWeight.bold)),
                     onPressed: () => _commitAllAudits(ingredients),
                   ),
@@ -210,7 +211,7 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
                             child: Row(
                               children: [
                                 IconButton(
-                                  icon: const Icon(Icons.remove_circle_outline, color: Colors.red),
+                                  icon: HugeIcon(icon: HugeIcons.strokeRoundedRemoveCircle, color: Colors.red),
                                   onPressed: () {
                                     setState(() {
                                       final current = _physicalCounts[ing.id] ?? ing.currentStock;
@@ -242,7 +243,7 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
                                   ),
                                 ),
                                 IconButton(
-                                  icon: const Icon(Icons.add_circle_outline, color: Colors.green),
+                                  icon: HugeIcon(icon: HugeIcons.strokeRoundedAddCircle, color: Colors.green),
                                   onPressed: () {
                                     setState(() {
                                       final current = _physicalCounts[ing.id] ?? ing.currentStock;
@@ -341,7 +342,7 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
     required String title,
     required String value,
     required Color color,
-    required IconData icon,
+    required dynamic icon,
   }) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -352,7 +353,7 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
       ),
       child: Row(
         children: [
-          Icon(icon, color: color, size: 24),
+          HugeIcon(icon: icon, color: color, size: 24),
           const SizedBox(width: 10),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -486,8 +487,8 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
               child: ListTile(
                 leading: CircleAvatar(
                   backgroundColor: isLoss ? Colors.red.withOpacity(0.2) : Colors.green.withOpacity(0.2),
-                  child: Icon(
-                    isLoss ? Icons.trending_down : Icons.trending_up,
+                  child: HugeIcon(icon: 
+                    isLoss ? HugeIcons.strokeRoundedCircle : HugeIcons.strokeRoundedCircle,
                     color: isLoss ? Colors.red : Colors.green,
                   ),
                 ),

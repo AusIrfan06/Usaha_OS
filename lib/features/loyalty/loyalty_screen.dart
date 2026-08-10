@@ -1,3 +1,4 @@
+import 'package:hugeicons/hugeicons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -37,7 +38,7 @@ class _LoyaltyScreenState extends ConsumerState<LoyaltyScreen> {
                 color: AppTheme.primaryCoffee.withOpacity(0.15),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Icon(Icons.card_membership_rounded,
+              child: HugeIcon(icon: HugeIcons.strokeRoundedCircle,
                   color: AppTheme.primaryCoffee, size: 22),
             ),
             const SizedBox(width: 12),
@@ -58,7 +59,7 @@ class _LoyaltyScreenState extends ConsumerState<LoyaltyScreen> {
         ),
         actions: [
           FilledButton.icon(
-            icon: const Icon(Icons.person_add_alt_1_rounded, size: 18),
+            icon: HugeIcon(icon: HugeIcons.strokeRoundedAdd01, size: 18),
             label: const Text('Daftar Ahli Baru'),
             onPressed: () => _showAddCustomerDialog(context, db),
           ),
@@ -81,10 +82,10 @@ class _LoyaltyScreenState extends ConsumerState<LoyaltyScreen> {
                     controller: _searchCtrl,
                     decoration: InputDecoration(
                       hintText: 'Cari nama atau nombor telefon ahli (Cth: 0123456789)...',
-                      prefixIcon: const Icon(Icons.search_rounded),
+                      prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedSearch01),
                       suffixIcon: _searchQuery.isNotEmpty
                           ? IconButton(
-                              icon: const Icon(Icons.clear_rounded),
+                              icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle),
                               onPressed: () {
                                 _searchCtrl.clear();
                                 setState(() => _searchQuery = '');
@@ -116,7 +117,7 @@ class _LoyaltyScreenState extends ConsumerState<LoyaltyScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.people_outline_rounded, size: 64, color: AppTheme.mutedText.withOpacity(0.6)),
+                        HugeIcon(icon: HugeIcons.strokeRoundedUserGroup, size: 64, color: AppTheme.mutedText.withOpacity(0.6)),
                         const SizedBox(height: 16),
                         Text(
                           _searchQuery.isEmpty
@@ -127,7 +128,7 @@ class _LoyaltyScreenState extends ConsumerState<LoyaltyScreen> {
                         const SizedBox(height: 8),
                         if (_searchQuery.isEmpty)
                           FilledButton.icon(
-                            icon: const Icon(Icons.add),
+                            icon: HugeIcon(icon: HugeIcons.strokeRoundedAdd01),
                             label: const Text('Daftar Ahli Pertama'),
                             onPressed: () => _showAddCustomerDialog(context, db),
                           ),
@@ -188,7 +189,7 @@ class _LoyaltyScreenState extends ConsumerState<LoyaltyScreen> {
       builder: (ctx) => AlertDialog(
         title: const Row(
           children: [
-            Icon(Icons.person_add_alt_1_rounded, color: AppTheme.primaryCoffee),
+            HugeIcon(icon: HugeIcons.strokeRoundedAdd01, color: AppTheme.primaryCoffee),
             SizedBox(width: 8),
             Text('Daftar Ahli Baru'),
           ],
@@ -249,7 +250,7 @@ class _LoyaltyScreenState extends ConsumerState<LoyaltyScreen> {
       builder: (ctx) => AlertDialog(
         title: Row(
           children: [
-            const Icon(Icons.edit_note_rounded, color: AppTheme.primaryCoffee),
+            HugeIcon(icon: HugeIcons.strokeRoundedEdit01, color: AppTheme.primaryCoffee),
             const SizedBox(width: 8),
             Text('Kemas Kini: ${customer.name}'),
           ],
@@ -368,7 +369,7 @@ class _CustomerLoyaltyCard extends StatelessWidget {
                     const SizedBox(height: 2),
                     Row(
                       children: [
-                        const Icon(Icons.phone_iphone_rounded, size: 14, color: AppTheme.mutedText),
+                        HugeIcon(icon: HugeIcons.strokeRoundedCall, size: 14, color: AppTheme.mutedText),
                         const SizedBox(width: 4),
                         Text(customer.phone, style: const TextStyle(fontSize: 12, color: AppTheme.mutedText)),
                       ],
@@ -384,7 +385,7 @@ class _CustomerLoyaltyCard extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.workspace_premium_rounded, size: 14, color: Colors.white),
+                      HugeIcon(icon: HugeIcons.strokeRoundedCircle, size: 14, color: Colors.white),
                       const SizedBox(width: 4),
                       Text(
                         customer.tier.toUpperCase(),
@@ -456,7 +457,7 @@ class _CustomerLoyaltyCard extends StatelessWidget {
                   children: [
                     const Row(
                       children: [
-                        Icon(Icons.local_cafe_rounded, size: 14, color: AppTheme.primaryCoffee),
+                        HugeIcon(icon: HugeIcons.strokeRoundedCircle, size: 14, color: AppTheme.primaryCoffee),
                         SizedBox(width: 4),
                         Text('Kad Cop Kopi Percuma', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700)),
                       ],
@@ -490,9 +491,9 @@ class _CustomerLoyaltyCard extends StatelessWidget {
                       ),
                       child: Center(
                         child: isStamped
-                            ? const Icon(Icons.check, size: 14, color: Colors.white)
+                            ? HugeIcon(icon: HugeIcons.strokeRoundedCheckmarkBadge01, size: 14, color: Colors.white)
                             : isLast
-                                ? const Icon(Icons.card_giftcard_rounded, size: 12, color: Color(0xFFE65100))
+                                ? HugeIcon(icon: HugeIcons.strokeRoundedCircle, size: 12, color: Color(0xFFE65100))
                                 : Text(
                                     '${idx + 1}',
                                     style: const TextStyle(fontSize: 9, color: AppTheme.mutedText, fontWeight: FontWeight.w700),
@@ -512,7 +513,7 @@ class _CustomerLoyaltyCard extends StatelessWidget {
               children: [
                 if (customer.stampsCount >= 10)
                   FilledButton.icon(
-                    icon: const Icon(Icons.redeem_rounded, size: 16),
+                    icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle, size: 16),
                     label: const Text('Tebus Kopi Percuma!'),
                     style: FilledButton.styleFrom(
                       backgroundColor: AppTheme.successGreen,
@@ -538,7 +539,7 @@ class _CustomerLoyaltyCard extends StatelessWidget {
                     style: const TextStyle(fontSize: 11, color: AppTheme.mutedText),
                   ),
                 IconButton(
-                  icon: const Icon(Icons.settings_outlined, size: 18, color: AppTheme.mutedText),
+                  icon: HugeIcon(icon: HugeIcons.strokeRoundedSettings01, size: 18, color: AppTheme.mutedText),
                   onPressed: onEdit,
                 ),
               ],

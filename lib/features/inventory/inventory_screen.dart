@@ -1,3 +1,4 @@
+import 'package:hugeicons/hugeicons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/providers.dart';
@@ -40,7 +41,7 @@ class _InventoryScreenState extends ConsumerState<InventoryScreen> {
                           color: AppTheme.warningAmber,
                           fontWeight: FontWeight.w700,
                           fontSize: 12)),
-                  avatar: const Icon(Icons.warning_amber_rounded,
+                  avatar: HugeIcon(icon: HugeIcons.strokeRoundedAlert01,
                       color: AppTheme.warningAmber, size: 14),
                   side: BorderSide.none,
                 ),
@@ -58,7 +59,7 @@ class _InventoryScreenState extends ConsumerState<InventoryScreen> {
             child: TextField(
               decoration: const InputDecoration(
                 hintText: 'Search ingredients…',
-                prefixIcon: Icon(Icons.search, size: 20),
+                prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedSearch01, size: 20),
               ),
               onChanged: (v) => setState(() => _search = v),
             ),
@@ -81,7 +82,7 @@ class _InventoryScreenState extends ConsumerState<InventoryScreen> {
 
                 if (filtered.isEmpty) {
                   return const EmptyState(
-                    icon: Icons.inventory_2_outlined,
+                    icon: HugeIcons.strokeRoundedPackage,
                     title: 'No ingredients found',
                     subtitle: 'Try a different search term',
                   );
@@ -212,14 +213,14 @@ class _IngredientCard extends ConsumerWidget {
                       ?.copyWith(color: AppTheme.mutedText)),
               const Spacer(),
               _adjustButton(
-                  icon: Icons.remove,
+                  icon: HugeIcons.strokeRoundedRemove01,
                   delta: -1,
                   db: db,
                   ingredient: ingredient,
                   ref: ref),
               const SizedBox(width: 8),
               _adjustButton(
-                  icon: Icons.remove,
+                  icon: HugeIcons.strokeRoundedRemove01,
                   label: '-10',
                   delta: -10,
                   db: db,
@@ -227,7 +228,7 @@ class _IngredientCard extends ConsumerWidget {
                   ref: ref),
               const SizedBox(width: 8),
               _adjustButton(
-                  icon: Icons.add,
+                  icon: HugeIcons.strokeRoundedAdd01,
                   label: '+10',
                   delta: 10,
                   db: db,
@@ -235,7 +236,7 @@ class _IngredientCard extends ConsumerWidget {
                   ref: ref),
               const SizedBox(width: 8),
               _adjustButton(
-                  icon: Icons.add,
+                  icon: HugeIcons.strokeRoundedAdd01,
                   label: '+100',
                   delta: 100,
                   db: db,
@@ -249,7 +250,7 @@ class _IngredientCard extends ConsumerWidget {
   }
 
   Widget _adjustButton({
-    required IconData icon,
+    required dynamic icon,
     String? label,
     required double delta,
     required db,

@@ -1,3 +1,4 @@
+import 'package:hugeicons/hugeicons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -28,7 +29,7 @@ class ReportsScreen extends ConsumerWidget {
                       fontSize: 12, fontWeight: FontWeight.w600)),
               backgroundColor: AppTheme.primaryCoffee.withOpacity(0.12),
               side: BorderSide.none,
-              avatar: const Icon(Icons.calendar_today,
+              avatar: HugeIcon(icon: HugeIcons.strokeRoundedCircle,
                   size: 14, color: AppTheme.primaryCoffee),
             ),
           ),
@@ -73,7 +74,7 @@ class ReportsScreen extends ConsumerWidget {
                       ? const SizedBox(
                           height: 180,
                           child: EmptyState(
-                            icon: Icons.bar_chart_outlined,
+                            icon: HugeIcons.strokeRoundedCircle,
                             title: 'No sales yet',
                             subtitle: 'Hourly chart will appear as orders come in',
                           ),
@@ -94,7 +95,7 @@ class ReportsScreen extends ConsumerWidget {
                         child: Padding(
                           padding: EdgeInsets.all(20),
                           child: EmptyState(
-                            icon: Icons.star_outline,
+                            icon: HugeIcons.strokeRoundedStar,
                             title: 'No data yet',
                             subtitle: 'Complete some orders to see top items',
                           ),
@@ -156,7 +157,7 @@ class ReportsScreen extends ConsumerWidget {
               child: StatCard(
                 label: 'Orders',
                 value: '${s['orderCount']}',
-                icon: Icons.receipt_long_outlined,
+                icon: HugeIcons.strokeRoundedInvoice01,
                 iconColor: AppTheme.primaryCoffee,
               ),
             ),
@@ -165,7 +166,7 @@ class ReportsScreen extends ConsumerWidget {
               child: StatCard(
                 label: 'Avg Ticket',
                 value: CurrencyFormatter.format(s['avgTicket'] as double),
-                icon: Icons.bar_chart,
+                icon: HugeIcons.strokeRoundedBarChart,
                 iconColor: AppTheme.successGreen,
               ),
             ),
@@ -211,7 +212,7 @@ class ReportsScreen extends ConsumerWidget {
           child: StatCard(
             label: 'Orders',
             value: '${s['orderCount']}',
-            icon: Icons.receipt_long_outlined,
+            icon: HugeIcons.strokeRoundedInvoice01,
             iconColor: AppTheme.primaryCoffee,
           ),
         ),
@@ -220,7 +221,7 @@ class ReportsScreen extends ConsumerWidget {
           child: StatCard(
             label: 'Avg Ticket',
             value: CurrencyFormatter.format(s['avgTicket'] as double),
-            icon: Icons.bar_chart,
+            icon: HugeIcons.strokeRoundedBarChart,
             iconColor: AppTheme.successGreen,
           ),
         ),
@@ -229,7 +230,7 @@ class ReportsScreen extends ConsumerWidget {
           child: StatCard(
             label: 'Voids',
             value: '${s['voidCount']}',
-            icon: Icons.remove_circle_outline,
+            icon: HugeIcons.strokeRoundedRemoveCircle,
             iconColor: AppTheme.dangerRed,
           ),
         ),

@@ -1,3 +1,4 @@
+import 'package:hugeicons/hugeicons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -101,7 +102,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
               ],
             ),
             leading: IconButton(
-              icon: const Icon(Icons.arrow_back),
+              icon: HugeIcon(icon: HugeIcons.strokeRoundedArrowLeft01),
               onPressed: () => context.pop(),
             ),
           ),
@@ -235,15 +236,15 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
         controller: _tabController,
         tabs: const [
           Tab(
-            icon: Icon(Icons.money, size: 18),
+            icon: HugeIcon(icon: HugeIcons.strokeRoundedMoney01, size: 18),
             text: 'Cash',
           ),
           Tab(
-            icon: Icon(Icons.qr_code_scanner, size: 18),
+            icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle, size: 18),
             text: 'DuitNow QR',
           ),
           Tab(
-            icon: Icon(Icons.credit_card, size: 18),
+            icon: HugeIcon(icon: HugeIcons.strokeRoundedCreditCard, size: 18),
             text: 'Card',
           ),
         ],
@@ -379,7 +380,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
                       child: CircularProgressIndicator(
                           strokeWidth: 2,
                           color: Colors.white))
-                  : const Icon(Icons.check_circle_outline),
+                  : HugeIcon(icon: HugeIcons.strokeRoundedCheckmarkBadge01),
               label: Text(
                 _processing
                     ? 'Processing…'
@@ -447,7 +448,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
         ),
         child: Center(
           child: isBackspace
-              ? const Icon(Icons.backspace_outlined,
+              ? HugeIcon(icon: HugeIcons.strokeRoundedCircle,
                   color: AppTheme.dangerRed, size: 20)
               : Text(key,
                   style: const TextStyle(
@@ -494,7 +495,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
                     color: AppTheme.duitNowBlue,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Icon(Icons.qr_code_2,
+                  child: HugeIcon(icon: HugeIcons.strokeRoundedCircle,
                       color: Colors.white, size: 28),
                 ),
                 const SizedBox(height: 12),
@@ -518,7 +519,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
                     color: const Color(0xFFF5F5F5),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Icon(Icons.qr_code,
+                  child: HugeIcon(icon: HugeIcons.strokeRoundedQrCode01,
                       size: 120, color: Color(0xFF003399)),
                 ),
                 const SizedBox(height: 16),
@@ -549,7 +550,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
                       height: 18,
                       child: CircularProgressIndicator(
                           strokeWidth: 2, color: Colors.white))
-                  : const Icon(Icons.check_circle_outline),
+                  : HugeIcon(icon: HugeIcons.strokeRoundedCheckmarkBadge01),
               label: Text(
                 _processing ? 'Processing…' : 'Mark as Paid',
                 style: const TextStyle(
@@ -580,7 +581,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
             ),
             child: Column(
               children: [
-                const Icon(Icons.credit_card,
+                HugeIcon(icon: HugeIcons.strokeRoundedCreditCard,
                     size: 48, color: AppTheme.mutedText),
                 const SizedBox(height: 12),
                 const Text('Card / Terminal',
@@ -620,7 +621,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
                       height: 18,
                       child: CircularProgressIndicator(
                           strokeWidth: 2, color: Colors.white))
-                  : const Icon(Icons.check_circle_outline),
+                  : HugeIcon(icon: HugeIcons.strokeRoundedCheckmarkBadge01),
               label: Text(
                 _processing ? 'Processing…' : 'Mark as Paid',
                 style: const TextStyle(

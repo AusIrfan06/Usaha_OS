@@ -1,3 +1,4 @@
+import 'package:hugeicons/hugeicons.dart';
 import 'dart:math';
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
@@ -74,7 +75,7 @@ class _PosPhoneLayout extends ConsumerWidget {
               onPressed: () => _showCartSheet(context, ref),
               backgroundColor: AppTheme.primaryCoffee,
               foregroundColor: Colors.white,
-              icon: const Icon(Icons.shopping_cart_outlined),
+              icon: HugeIcon(icon: HugeIcons.strokeRoundedShoppingCart01),
               label: Text(
                 '$itemCount item${itemCount == 1 ? '' : 's'} — '
                 '${CurrencyFormatter.format(cartNotifier.subtotal)}',
@@ -174,7 +175,7 @@ class _MenuArea extends ConsumerWidget {
             data: (items) {
               if (items.isEmpty) {
                 return const EmptyState(
-                  icon: Icons.restaurant_menu_outlined,
+                  icon: HugeIcons.strokeRoundedCircle,
                   title: 'No items',
                   subtitle: 'Select another category',
                 );
@@ -388,7 +389,7 @@ class _MenuItemCard extends ConsumerWidget {
                                     borderRadius:
                                         BorderRadius.circular(6),
                                   ),
-                                  child: const Icon(Icons.remove,
+                                  child: HugeIcon(icon: HugeIcons.strokeRoundedRemove01,
                                       size: 14,
                                       color: AppTheme.primaryCoffee),
                                 ),
@@ -412,7 +413,7 @@ class _MenuItemCard extends ConsumerWidget {
                                     borderRadius:
                                         BorderRadius.circular(6),
                                   ),
-                                  child: const Icon(Icons.add,
+                                  child: HugeIcon(icon: HugeIcons.strokeRoundedAdd01,
                                       size: 14, color: Colors.white),
                                 ),
                               ),
@@ -426,7 +427,7 @@ class _MenuItemCard extends ConsumerWidget {
                               color: AppTheme.primaryCoffee,
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child: const Icon(Icons.add,
+                            child: HugeIcon(icon: HugeIcons.strokeRoundedAdd01,
                                 size: 16, color: Colors.white),
                           ),
                       ],
@@ -489,7 +490,7 @@ class _CartPanelState extends ConsumerState<_CartPanel> {
                     TextButton.icon(
                       onPressed: () =>
                           ref.read(cartProvider.notifier).clear(),
-                      icon: const Icon(Icons.delete_outline,
+                      icon: HugeIcon(icon: HugeIcons.strokeRoundedDelete01,
                           size: 16, color: AppTheme.dangerRed),
                       label: const Text('Clear',
                           style: TextStyle(
@@ -505,7 +506,7 @@ class _CartPanelState extends ConsumerState<_CartPanel> {
                 children: [
                   _TypeChip(
                     label: 'Takeaway',
-                    icon: Icons.shopping_bag_outlined,
+                    icon: HugeIcons.strokeRoundedCircle,
                     selected: orderType == AppConstants.takeaway,
                     onTap: () => ref
                         .read(orderTypeProvider.notifier)
@@ -514,7 +515,7 @@ class _CartPanelState extends ConsumerState<_CartPanel> {
                   const SizedBox(width: 8),
                   _TypeChip(
                     label: 'Dine-in',
-                    icon: Icons.restaurant_outlined,
+                    icon: HugeIcons.strokeRoundedCircle,
                     selected: orderType == AppConstants.dineIn,
                     onTap: () => ref
                         .read(orderTypeProvider.notifier)
@@ -530,7 +531,7 @@ class _CartPanelState extends ConsumerState<_CartPanel> {
         Expanded(
           child: cart.isEmpty
               ? const EmptyState(
-                  icon: Icons.shopping_cart_outlined,
+                  icon: HugeIcons.strokeRoundedShoppingCart01,
                   title: 'Cart is empty',
                   subtitle: 'Tap menu items to add them here',
                 )
@@ -615,7 +616,7 @@ class _CartPanelState extends ConsumerState<_CartPanel> {
                   onPressed: cart.isEmpty
                       ? null
                       : () => _charge(context, ref, total),
-                  icon: const Icon(Icons.point_of_sale_rounded,
+                  icon: HugeIcon(icon: HugeIcons.strokeRoundedRegister,
                       size: 20),
                   label: Text(
                     'Charge ${CurrencyFormatter.format(total)}',
@@ -683,7 +684,7 @@ class _CartPanelState extends ConsumerState<_CartPanel> {
 
 class _TypeChip extends StatelessWidget {
   final String label;
-  final IconData icon;
+  final dynamic icon;
   final bool selected;
   final VoidCallback onTap;
 
@@ -715,7 +716,7 @@ class _TypeChip extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon,
+            HugeIcon(icon: icon,
                 size: 14,
                 color: selected
                     ? AppTheme.primaryCoffee
@@ -760,7 +761,7 @@ class _CartItemRow extends ConsumerWidget {
                     color: AppTheme.surfaceVariant,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(Icons.remove,
+                  child: HugeIcon(icon: HugeIcons.strokeRoundedRemove01,
                       size: 14, color: AppTheme.primaryCoffee),
                 ),
               ),
@@ -780,7 +781,7 @@ class _CartItemRow extends ConsumerWidget {
                     color: AppTheme.primaryCoffee,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(Icons.add,
+                  child: HugeIcon(icon: HugeIcons.strokeRoundedAdd01,
                       size: 14, color: Colors.white),
                 ),
               ),

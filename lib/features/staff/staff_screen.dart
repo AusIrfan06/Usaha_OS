@@ -1,3 +1,4 @@
+import 'package:hugeicons/hugeicons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -45,7 +46,7 @@ class _StaffScreenState extends ConsumerState<StaffScreen>
                 color: AppTheme.primaryCoffee.withOpacity(0.15),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Icon(Icons.badge_rounded,
+              child: HugeIcon(icon: HugeIcons.strokeRoundedBadge,
                   color: AppTheme.primaryCoffee, size: 22),
             ),
             const SizedBox(width: 12),
@@ -67,13 +68,13 @@ class _StaffScreenState extends ConsumerState<StaffScreen>
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
-            Tab(icon: Icon(Icons.access_time_rounded, size: 18), text: 'Kehadiran Hari Ini (Live Shift)'),
-            Tab(icon: Icon(Icons.people_alt_rounded, size: 18), text: 'Senarai Staf (Directory)'),
+            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedClock01, size: 18), text: 'Kehadiran Hari Ini (Live Shift)'),
+            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedUserGroup, size: 18), text: 'Senarai Staf (Directory)'),
           ],
         ),
         actions: [
           FilledButton.icon(
-            icon: const Icon(Icons.punch_clock_rounded, size: 18),
+            icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle, size: 18),
             label: const Text('Clock In / Out PIN'),
             style: FilledButton.styleFrom(
               backgroundColor: AppTheme.primaryCoffee,
@@ -82,7 +83,7 @@ class _StaffScreenState extends ConsumerState<StaffScreen>
           ),
           const SizedBox(width: 8),
           OutlinedButton.icon(
-            icon: const Icon(Icons.person_add_rounded, size: 18),
+            icon: HugeIcon(icon: HugeIcons.strokeRoundedAdd01, size: 18),
             label: const Text('Tambah Staf'),
             onPressed: () => _showAddStaffDialog(context, db),
           ),
@@ -109,7 +110,7 @@ class _StaffScreenState extends ConsumerState<StaffScreen>
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             title: const Column(
               children: [
-                Icon(Icons.lock_clock_rounded, size: 36, color: AppTheme.primaryCoffee),
+                HugeIcon(icon: HugeIcons.strokeRoundedCircle, size: 36, color: AppTheme.primaryCoffee),
                 SizedBox(height: 8),
                 Text('Clock-In / Clock-Out PIN', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18)),
                 Text('Masukkan 4-digit PIN staf anda', style: TextStyle(fontSize: 12, color: AppTheme.mutedText)),
@@ -219,7 +220,7 @@ class _StaffScreenState extends ConsumerState<StaffScreen>
           return AlertDialog(
             title: const Row(
               children: [
-                Icon(Icons.person_add_alt_1_rounded, color: AppTheme.primaryCoffee),
+                HugeIcon(icon: HugeIcons.strokeRoundedAdd01, color: AppTheme.primaryCoffee),
                 SizedBox(width: 8),
                 Text('Tambah Staf Baru'),
               ],
@@ -310,7 +311,7 @@ class _StaffScreenState extends ConsumerState<StaffScreen>
           return AlertDialog(
             title: Row(
               children: [
-                const Icon(Icons.badge_rounded, color: AppTheme.primaryCoffee),
+                HugeIcon(icon: HugeIcons.strokeRoundedBadge, color: AppTheme.primaryCoffee),
                 const SizedBox(width: 8),
                 Text('Kemas Kini: ${staff.name}'),
               ],
@@ -420,7 +421,7 @@ class _TodayAttendanceView extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.hourglass_empty_rounded, size: 56, color: AppTheme.mutedText),
+                HugeIcon(icon: HugeIcons.strokeRoundedCircle, size: 56, color: AppTheme.mutedText),
                 SizedBox(height: 12),
                 Text(
                   'Belum ada staf yang clock-in hari ini.',
@@ -456,7 +457,7 @@ class _TodayAttendanceView extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        const Icon(Icons.work_outline_rounded, color: AppTheme.primaryCoffee),
+                        HugeIcon(icon: HugeIcons.strokeRoundedWork, color: AppTheme.primaryCoffee),
                         const SizedBox(width: 10),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -503,8 +504,8 @@ class _TodayAttendanceView extends StatelessWidget {
                       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       leading: CircleAvatar(
                         backgroundColor: isOnDuty ? AppTheme.successGreen : AppTheme.surfaceVariant,
-                        child: Icon(
-                          isOnDuty ? Icons.person_rounded : Icons.person_outline_rounded,
+                        child: HugeIcon(icon: 
+                          isOnDuty ? HugeIcons.strokeRoundedUser : HugeIcons.strokeRoundedUser,
                           color: isOnDuty ? Colors.white : AppTheme.darkEspresso,
                         ),
                       ),
@@ -551,7 +552,7 @@ class _TodayAttendanceView extends StatelessWidget {
                               },
                               child: const Text('Clock Out'),
                             )
-                          : const Icon(Icons.check_circle_outline, color: AppTheme.successGreen),
+                          : HugeIcon(icon: HugeIcons.strokeRoundedCheckmarkBadge01, color: AppTheme.successGreen),
                     ),
                   );
                 },
@@ -594,7 +595,7 @@ class _StaffDirectoryView extends StatelessWidget {
               child: ListTile(
                 leading: CircleAvatar(
                   backgroundColor: AppTheme.primaryCoffee.withOpacity(0.15),
-                  child: const Icon(Icons.badge_outlined, color: AppTheme.primaryCoffee),
+                  child: HugeIcon(icon: HugeIcons.strokeRoundedCircle, color: AppTheme.primaryCoffee),
                 ),
                 title: Text(s.name, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15)),
                 subtitle: Text(
@@ -602,7 +603,7 @@ class _StaffDirectoryView extends StatelessWidget {
                   style: const TextStyle(fontSize: 12),
                 ),
                 trailing: IconButton(
-                  icon: const Icon(Icons.edit_outlined, color: AppTheme.mutedText),
+                  icon: HugeIcon(icon: HugeIcons.strokeRoundedEdit01, color: AppTheme.mutedText),
                   onPressed: () => onEdit(s),
                 ),
               ),

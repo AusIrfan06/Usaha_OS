@@ -110,14 +110,14 @@ class OrderTypeBadge extends StatelessWidget {
     final (label, icon, color) = switch (orderType) {
       'dine_in' => ('Dine-in', HugeIcons.strokeRoundedRestaurant01, const Color(0xFF6A1B9A)),
       'takeaway' => ('Takeaway', HugeIcons.strokeRoundedShoppingBag01, AppTheme.primaryCoffee),
-      'delivery' => ('Delivery', Icons.delivery_dining, AppTheme.duitNowBlue),
+      'delivery' => ('Delivery', HugeIcons.strokeRoundedCircle, AppTheme.duitNowBlue),
       _ => ('?', HugeIcons.strokeRoundedHelpCircle, Colors.grey),
     };
 
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        icon is IconData ? Icon(icon, size: 14, color: color) : HugeIcon(icon: icon as dynamic, size: 14, color: color),
+        icon is dynamic ? HugeIcon(icon: icon, size: 14, color: color) : HugeIcon(icon: icon as dynamic, size: 14, color: color),
         const SizedBox(width: 4),
         Text(label,
             style: TextStyle(
@@ -168,7 +168,7 @@ class StatCard extends StatelessWidget {
             child: Center(
               child: icon is List<List<dynamic>> 
                   ? HugeIcon(icon: icon as List<List<dynamic>>, color: iconColor, size: 20)
-                  : Icon(icon as IconData, color: iconColor, size: 20),
+                  : HugeIcon(icon: icon as dynamic, color: iconColor, size: 20),
             ),
           ),
           const SizedBox(height: 14),
@@ -240,8 +240,8 @@ class EmptyState extends StatelessWidget {
               color: AppTheme.mutedText.withOpacity(0.08),
               shape: BoxShape.circle,
             ),
-            child: icon is IconData
-                ? Icon(icon as IconData, size: 48, color: AppTheme.mutedText.withOpacity(0.7))
+            child: icon is dynamic
+                ? HugeIcon(icon: icon as dynamic, size: 48, color: AppTheme.mutedText.withOpacity(0.7))
                 : HugeIcon(icon: icon, size: 48, color: AppTheme.mutedText.withOpacity(0.7)),
           ),
           const SizedBox(height: 16),

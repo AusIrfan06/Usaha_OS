@@ -1,3 +1,4 @@
+import 'package:hugeicons/hugeicons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -53,12 +54,12 @@ class _ReceiptScreenState extends ConsumerState<ReceiptScreen> {
         backgroundColor: const Color(0xFFF0EBE3),
         title: const Text('Receipt'),
         leading: IconButton(
-          icon: const Icon(Icons.close),
+          icon: HugeIcon(icon: HugeIcons.strokeRoundedCancel01),
           onPressed: () => context.go('/pos'),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.share_outlined),
+            icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle),
             tooltip: 'Share',
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -70,7 +71,7 @@ class _ReceiptScreenState extends ConsumerState<ReceiptScreen> {
           Padding(
             padding: const EdgeInsets.only(right: 8),
             child: IconButton(
-              icon: const Icon(Icons.print_outlined),
+              icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle),
               tooltip: 'Print',
               onPressed: () {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -101,7 +102,7 @@ class _ReceiptScreenState extends ConsumerState<ReceiptScreen> {
                   Expanded(
                     child: OutlinedButton.icon(
                       onPressed: () => context.go('/orders'),
-                      icon: const Icon(Icons.receipt_long_outlined,
+                      icon: HugeIcon(icon: HugeIcons.strokeRoundedInvoice01,
                           size: 18),
                       label: const Text('All Orders'),
                     ),
@@ -110,7 +111,7 @@ class _ReceiptScreenState extends ConsumerState<ReceiptScreen> {
                   Expanded(
                     child: FilledButton.icon(
                       onPressed: () => context.go('/pos'),
-                      icon: const Icon(Icons.add, size: 18),
+                      icon: HugeIcon(icon: HugeIcons.strokeRoundedAdd01, size: 18),
                       label: const Text('New Order'),
                     ),
                   ),
@@ -157,7 +158,7 @@ class _ReceiptScreenState extends ConsumerState<ReceiptScreen> {
               children: [
                 const SizedBox(height: 8),
                 // Header
-                const Icon(Icons.coffee,
+                HugeIcon(icon: HugeIcons.strokeRoundedCoffee01,
                     color: AppTheme.primaryCoffee, size: 32),
                 const SizedBox(height: 8),
                 Text('USAHA OS',
