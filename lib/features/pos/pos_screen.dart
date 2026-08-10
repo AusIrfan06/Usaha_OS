@@ -175,7 +175,7 @@ class _MenuArea extends ConsumerWidget {
             data: (items) {
               if (items.isEmpty) {
                 return const EmptyState(
-                  icon: HugeIcons.strokeRoundedCircle,
+                  icon: HugeIcons.strokeRoundedShoppingCart01,
                   title: 'No items',
                   subtitle: 'Select another category',
                 );
@@ -506,7 +506,7 @@ class _CartPanelState extends ConsumerState<_CartPanel> {
                 children: [
                   _TypeChip(
                     label: 'Takeaway',
-                    icon: HugeIcons.strokeRoundedCircle,
+                    icon: HugeIcons.strokeRoundedShoppingBag01,
                     selected: orderType == AppConstants.takeaway,
                     onTap: () => ref
                         .read(orderTypeProvider.notifier)
@@ -515,7 +515,7 @@ class _CartPanelState extends ConsumerState<_CartPanel> {
                   const SizedBox(width: 8),
                   _TypeChip(
                     label: 'Dine-in',
-                    icon: HugeIcons.strokeRoundedCircle,
+                    icon: HugeIcons.strokeRoundedRestaurant01,
                     selected: orderType == AppConstants.dineIn,
                     onTap: () => ref
                         .read(orderTypeProvider.notifier)

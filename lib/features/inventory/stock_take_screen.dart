@@ -56,7 +56,7 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
           unselectedLabelColor: AppColors.textMuted,
           tabs: const [
             Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedEdit01), text: 'Kiraan Stok Semasa'),
-            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle), text: 'Log Audit & Varians'),
+            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedSquare), text: 'Log Audit & Varians'),
           ],
         ),
       ),
@@ -118,21 +118,21 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
                     title: 'Jumlah Item',
                     value: '${ingredients.length}',
                     color: Colors.blue,
-                    icon: HugeIcons.strokeRoundedCircle,
+                    icon: HugeIcons.strokeRoundedSquare,
                   ),
                   const SizedBox(width: 12),
                   _buildKpiCard(
                     title: 'Item Ada Varians',
                     value: '$itemsWithVariance',
                     color: itemsWithVariance > 0 ? Colors.orange : Colors.green,
-                    icon: HugeIcons.strokeRoundedCircle,
+                    icon: HugeIcons.strokeRoundedSquare,
                   ),
                   const SizedBox(width: 12),
                   _buildKpiCard(
                     title: 'Nilai Varians Bersih',
                     value: 'RM ${totalVarianceValue.toStringAsFixed(2)}',
                     color: totalVarianceValue < 0 ? Colors.red : (totalVarianceValue > 0 ? Colors.green : Colors.white),
-                    icon: HugeIcons.strokeRoundedCircle,
+                    icon: HugeIcons.strokeRoundedSquare,
                   ),
                   const Spacer(),
                   ElevatedButton.icon(
@@ -211,7 +211,7 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
                             child: Row(
                               children: [
                                 IconButton(
-                                  icon: HugeIcon(icon: HugeIcons.strokeRoundedRemoveCircle, color: Colors.red),
+                                  icon: HugeIcon(icon: HugeIcons.strokeRoundedRemove01, color: Colors.red),
                                   onPressed: () {
                                     setState(() {
                                       final current = _physicalCounts[ing.id] ?? ing.currentStock;
@@ -243,7 +243,7 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
                                   ),
                                 ),
                                 IconButton(
-                                  icon: HugeIcon(icon: HugeIcons.strokeRoundedAddCircle, color: Colors.green),
+                                  icon: HugeIcon(icon: HugeIcons.strokeRoundedAdd01, color: Colors.green),
                                   onPressed: () {
                                     setState(() {
                                       final current = _physicalCounts[ing.id] ?? ing.currentStock;
@@ -488,7 +488,7 @@ class _StockTakeScreenState extends ConsumerState<StockTakeScreen>
                 leading: CircleAvatar(
                   backgroundColor: isLoss ? Colors.red.withOpacity(0.2) : Colors.green.withOpacity(0.2),
                   child: HugeIcon(icon: 
-                    isLoss ? HugeIcons.strokeRoundedCircle : HugeIcons.strokeRoundedCircle,
+                    isLoss ? HugeIcons.strokeRoundedSquare : HugeIcons.strokeRoundedSquare,
                     color: isLoss ? Colors.red : Colors.green,
                   ),
                 ),

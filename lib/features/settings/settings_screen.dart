@@ -97,7 +97,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         padding: const EdgeInsets.all(16),
         children: [
           // ── Outlet Info ───────────────────────────────────────────
-          _sectionHeader('Maklumat Premis / Kafe', HugeIcons.strokeRoundedCircle),
+          _sectionHeader('Maklumat Premis / Kafe', HugeIcons.strokeRoundedStore01),
           const SizedBox(height: 12),
           UCard(
             child: Column(
@@ -106,14 +106,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   controller: _nameCtrl,
                   label: 'Nama Premis / Kafe',
                   hint: 'contoh: Usaha Cafe & Roastery',
-                  icon: HugeIcons.strokeRoundedCircle,
+                  icon: HugeIcons.strokeRoundedStore01,
                 ),
                 _divider(),
                 _settingsField(
                   controller: _addressCtrl,
                   label: 'Alamat Penuh Premis',
                   hint: 'contoh: No. 12, Jalan SS2/64, Petaling Jaya',
-                  icon: HugeIcons.strokeRoundedCircle,
+                  icon: HugeIcons.strokeRoundedLocation01,
                 ),
                 _divider(),
                 _settingsField(
@@ -128,7 +128,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   controller: _ssmCtrl,
                   label: 'No. Pendaftaran Perniagaan (SSM)',
                   hint: 'contoh: 202301098765 (1523456-X)',
-                  icon: HugeIcons.strokeRoundedCircle,
+                  icon: HugeIcons.strokeRoundedCall,
                 ),
               ],
             ),
@@ -190,7 +190,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     controller: _sstNoCtrl,
                     label: 'No. Pendaftaran SST Jabatan Kastam (MySST)',
                     hint: 'contoh: W10-2308-32000000',
-                    icon: HugeIcons.strokeRoundedCircle,
+                    icon: HugeIcons.strokeRoundedPrinter,
                   ),
                   _divider(),
                   Padding(
@@ -212,7 +212,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         ),
                         const Spacer(),
                         OutlinedButton.icon(
-                          icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle, size: 16),
+                          icon: HugeIcon(icon: HugeIcons.strokeRoundedBluetooth, size: 16),
                           label: const Text('Penyata SST-02'),
                           onPressed: () => _showSst02Summary(context),
                         ),
@@ -235,7 +235,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   padding: const EdgeInsets.all(14),
                   child: Row(
                     children: [
-                      HugeIcon(icon: HugeIcons.strokeRoundedCircle, color: Colors.blue, size: 22),
+                      HugeIcon(icon: HugeIcons.strokeRoundedSearch01, color: Colors.blue, size: 22),
                       const SizedBox(width: 14),
                       const Expanded(
                         child: Column(
@@ -273,7 +273,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           const SizedBox(height: 24),
 
           // ── Cloud & Sync ──────────────────────────────────────────
-          _sectionHeader('Awan & Sinkronisasi (Supabase)', HugeIcons.strokeRoundedCircle),
+          _sectionHeader('Awan & Sinkronisasi (Supabase)', HugeIcons.strokeRoundedCloudServer),
           const SizedBox(height: 12),
           UCard(
             child: Column(
@@ -282,7 +282,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   padding: const EdgeInsets.all(16),
                   child: Row(
                     children: [
-                      HugeIcon(icon: HugeIcons.strokeRoundedCircle, size: 22, color: AppTheme.successGreen),
+                      HugeIcon(icon: HugeIcons.strokeRoundedCloudUpload, size: 22, color: AppTheme.successGreen),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Column(
@@ -362,7 +362,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 _infoTile(
                   title: 'Pangkalan Data Setempat (Drift SQLite)',
                   subtitle: 'Offline-first — sentiasa berfungsi walaupun tiada internet',
-                  icon: HugeIcons.strokeRoundedCircle,
+                  icon: HugeIcons.strokeRoundedDatabase,
                   statusColor: AppTheme.successGreen,
                   statusLabel: 'Online',
                 ),
@@ -380,7 +380,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 _infoTile(
                   title: AppConstants.appName,
                   subtitle: 'Malaysia Cafe POS & Operations Suite v${AppConstants.version}',
-                  icon: HugeIcons.strokeRoundedCircle,
+                  icon: HugeIcons.strokeRoundedSettings02,
                   statusColor: AppTheme.primaryCoffee,
                   statusLabel: '',
                 ),

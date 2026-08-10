@@ -700,7 +700,7 @@ class DashboardScreen extends ConsumerWidget {
                 ),
                 child: const Row(
                   children: [
-                    HugeIcon(icon: HugeIcons.strokeRoundedCircle, size: 14, color: Colors.white),
+                    HugeIcon(icon: HugeIcons.strokeRoundedSquare, size: 14, color: Colors.white),
                     SizedBox(width: 4),
                     Text(
                       'JUALAN HARI INI',
@@ -745,7 +745,7 @@ class DashboardScreen extends ConsumerWidget {
               const SizedBox(width: 8),
               _paymentPill(
                 'QR: ${CurrencyFormatter.format(summary['duitNowSales'])}',
-                HugeIcons.strokeRoundedCircle,
+                HugeIcons.strokeRoundedSquare,
               ),
               const SizedBox(width: 8),
               _paymentPill(
@@ -832,7 +832,7 @@ class DashboardScreen extends ConsumerWidget {
         child: StatCard(
           label: 'Batal (Void)',
           value: '${summary['voidCount'] ?? 0}',
-          icon: HugeIcons.strokeRoundedRemoveCircle,
+          icon: HugeIcons.strokeRoundedRemove01,
           iconColor: AppTheme.dangerRed,
         ),
       ),
@@ -897,19 +897,19 @@ class DashboardScreen extends ConsumerWidget {
         route: '/pos'
       ),
       (
-        icon: HugeIcons.strokeRoundedCircle,
+        icon: HugeIcons.strokeRoundedSquare,
         label: 'Dapur KDS',
         color: const Color(0xFF1565C0),
         route: '/kds'
       ),
       (
-        icon: HugeIcons.strokeRoundedCircle,
+        icon: HugeIcons.strokeRoundedSquare,
         label: 'Tugasan & Syif',
         color: const Color(0xFFE65100),
         route: '/tasks'
       ),
       (
-        icon: HugeIcons.strokeRoundedCircle,
+        icon: HugeIcons.strokeRoundedSquare,
         label: 'CRM & Loyalty',
         color: const Color(0xFF6A1B9A),
         route: '/loyalty'
@@ -992,7 +992,7 @@ class DashboardScreen extends ConsumerWidget {
                 color: AppTheme.primaryCoffee.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: HugeIcon(icon: HugeIcons.strokeRoundedCircle,
+              child: HugeIcon(icon: HugeIcons.strokeRoundedSquare,
                   size: 18, color: AppTheme.primaryCoffee),
             ),
             const SizedBox(width: 12),

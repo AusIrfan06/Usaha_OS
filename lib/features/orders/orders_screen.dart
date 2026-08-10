@@ -174,7 +174,7 @@ class _OrderCard extends ConsumerWidget {
           // Meta row
           Row(
             children: [
-              HugeIcon(icon: HugeIcons.strokeRoundedCircle,
+              HugeIcon(icon: HugeIcons.strokeRoundedClock01,
                   size: 14, color: AppTheme.mutedText),
               const SizedBox(width: 4),
               Text(timeStr,
@@ -182,7 +182,7 @@ class _OrderCard extends ConsumerWidget {
                       ?.copyWith(color: AppTheme.mutedText)),
               if (order.status == 'completed') ...[
                 const SizedBox(width: 16),
-                HugeIcon(icon: HugeIcons.strokeRoundedCircle,
+                HugeIcon(icon: HugeIcons.strokeRoundedWallet01,
                     size: 14, color: AppTheme.mutedText),
                 const SizedBox(width: 4),
                 Text(payLabel,
@@ -221,7 +221,7 @@ class _OrderCard extends ConsumerWidget {
                   final db = ref.read(databaseProvider);
                   await db.voidOrder(order.id);
                 },
-                icon: HugeIcon(icon: HugeIcons.strokeRoundedRemoveCircle,
+                icon: HugeIcon(icon: HugeIcons.strokeRoundedRemove01,
                     size: 16, color: AppTheme.dangerRed),
                 label: const Text('Void Order',
                     style: TextStyle(

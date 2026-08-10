@@ -74,7 +74,7 @@ class _StaffScreenState extends ConsumerState<StaffScreen>
         ),
         actions: [
           FilledButton.icon(
-            icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle, size: 18),
+            icon: HugeIcon(icon: HugeIcons.strokeRoundedUserGroup, size: 18),
             label: const Text('Clock In / Out PIN'),
             style: FilledButton.styleFrom(
               backgroundColor: AppTheme.primaryCoffee,
@@ -110,7 +110,7 @@ class _StaffScreenState extends ConsumerState<StaffScreen>
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             title: const Column(
               children: [
-                HugeIcon(icon: HugeIcons.strokeRoundedCircle, size: 36, color: AppTheme.primaryCoffee),
+                HugeIcon(icon: HugeIcons.strokeRoundedUser, size: 36, color: AppTheme.primaryCoffee),
                 SizedBox(height: 8),
                 Text('Clock-In / Clock-Out PIN', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18)),
                 Text('Masukkan 4-digit PIN staf anda', style: TextStyle(fontSize: 12, color: AppTheme.mutedText)),
@@ -421,7 +421,7 @@ class _TodayAttendanceView extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                HugeIcon(icon: HugeIcons.strokeRoundedCircle, size: 56, color: AppTheme.mutedText),
+                HugeIcon(icon: HugeIcons.strokeRoundedUserAdd01, size: 56, color: AppTheme.mutedText),
                 SizedBox(height: 12),
                 Text(
                   'Belum ada staf yang clock-in hari ini.',
@@ -595,7 +595,7 @@ class _StaffDirectoryView extends StatelessWidget {
               child: ListTile(
                 leading: CircleAvatar(
                   backgroundColor: AppTheme.primaryCoffee.withOpacity(0.15),
-                  child: HugeIcon(icon: HugeIcons.strokeRoundedCircle, color: AppTheme.primaryCoffee),
+                  child: HugeIcon(icon: HugeIcons.strokeRoundedUser, color: AppTheme.primaryCoffee),
                 ),
                 title: Text(s.name, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15)),
                 subtitle: Text(

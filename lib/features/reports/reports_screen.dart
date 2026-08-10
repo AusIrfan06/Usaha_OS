@@ -29,7 +29,7 @@ class ReportsScreen extends ConsumerWidget {
                       fontSize: 12, fontWeight: FontWeight.w600)),
               backgroundColor: AppTheme.primaryCoffee.withOpacity(0.12),
               side: BorderSide.none,
-              avatar: HugeIcon(icon: HugeIcons.strokeRoundedCircle,
+              avatar: HugeIcon(icon: HugeIcons.strokeRoundedDashboardSquare01,
                   size: 14, color: AppTheme.primaryCoffee),
             ),
           ),
@@ -74,7 +74,7 @@ class ReportsScreen extends ConsumerWidget {
                       ? const SizedBox(
                           height: 180,
                           child: EmptyState(
-                            icon: HugeIcons.strokeRoundedCircle,
+                            icon: HugeIcons.strokeRoundedFile02,
                             title: 'No sales yet',
                             subtitle: 'Hourly chart will appear as orders come in',
                           ),
@@ -230,7 +230,7 @@ class ReportsScreen extends ConsumerWidget {
           child: StatCard(
             label: 'Voids',
             value: '${s['voidCount']}',
-            icon: HugeIcons.strokeRoundedRemoveCircle,
+            icon: HugeIcons.strokeRoundedRemove01,
             iconColor: AppTheme.dangerRed,
           ),
         ),

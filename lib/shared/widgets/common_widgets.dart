@@ -110,8 +110,8 @@ class OrderTypeBadge extends StatelessWidget {
     final (label, icon, color) = switch (orderType) {
       'dine_in' => ('Dine-in', HugeIcons.strokeRoundedRestaurant01, const Color(0xFF6A1B9A)),
       'takeaway' => ('Takeaway', HugeIcons.strokeRoundedShoppingBag01, AppTheme.primaryCoffee),
-      'delivery' => ('Delivery', HugeIcons.strokeRoundedCircle, AppTheme.duitNowBlue),
-      _ => ('?', HugeIcons.strokeRoundedHelpCircle, Colors.grey),
+      'delivery' => ('Delivery', HugeIcons.strokeRoundedTruckDelivery, AppTheme.duitNowBlue),
+      _ => ('?', HugeIcons.strokeRoundedSquare, Colors.grey),
     };
 
     return Row(

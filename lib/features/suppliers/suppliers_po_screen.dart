@@ -54,7 +54,7 @@ class _SuppliersPoScreenState extends ConsumerState<SuppliersPoScreen>
           unselectedLabelColor: AppColors.textMuted,
           tabs: const [
             Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedInvoice01), text: 'Pesanan Belian (PO)'),
-            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle), text: 'Direktori Pembekal'),
+            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedAddressBook), text: 'Direktori Pembekal'),
           ],
         ),
       ),
@@ -126,7 +126,7 @@ class _PurchaseOrdersTab extends ConsumerWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          HugeIcon(icon: HugeIcons.strokeRoundedCircle, size: 64, color: AppColors.textMuted.withOpacity(0.5)),
+                          HugeIcon(icon: HugeIcons.strokeRoundedInvoice01, size: 64, color: AppColors.textMuted.withOpacity(0.5)),
                           const SizedBox(height: 12),
                           const Text(
                             'Tiada pesanan belian aktif',
@@ -275,7 +275,7 @@ class _PoCard extends ConsumerWidget {
             // Date & Notes
             Row(
               children: [
-                HugeIcon(icon: HugeIcons.strokeRoundedCircle, size: 14, color: AppColors.textMuted),
+                HugeIcon(icon: HugeIcons.strokeRoundedBuilding04, size: 14, color: AppColors.textMuted),
                 const SizedBox(width: 6),
                 Text(
                   'Tarikh Pesanan: ${df.format(po.orderDate)}',
@@ -362,7 +362,7 @@ class _PoCard extends ConsumerWidget {
                       foregroundColor: Colors.orange,
                       side: const BorderSide(color: Colors.orange),
                     ),
-                    icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle, size: 16),
+                    icon: HugeIcon(icon: HugeIcons.strokeRoundedStore01, size: 16),
                     label: const Text('Hantar Pesanan'),
                     onPressed: () {
                       ref.read(databaseProvider).updatePurchaseOrderStatus(po.id, 'ordered');

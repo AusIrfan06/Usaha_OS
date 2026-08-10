@@ -44,7 +44,7 @@ class _TasksScreenState extends ConsumerState<TasksScreen>
                 color: AppTheme.primaryCoffee.withOpacity(0.15),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: HugeIcon(icon: HugeIcons.strokeRoundedCircle,
+              child: HugeIcon(icon: HugeIcons.strokeRoundedTask01,
                   color: AppTheme.primaryCoffee, size: 22),
             ),
             const SizedBox(width: 12),
@@ -69,8 +69,8 @@ class _TasksScreenState extends ConsumerState<TasksScreen>
           tabs: const [
             Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedSun01, size: 18), text: 'Buka Kedai (Opening)'),
             Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedMoon01, size: 18), text: 'Tutup Kedai (Closing)'),
-            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle, size: 18), text: 'Serahan Syif (Handover)'),
-            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle, size: 18), text: 'Papan Tugasan (All Tasks)'),
+            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedUserSwitch, size: 18), text: 'Serahan Syif (Handover)'),
+            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedTask01, size: 18), text: 'Papan Tugasan (All Tasks)'),
           ],
         ),
         actions: [
@@ -282,7 +282,7 @@ class _ChecklistTabView extends StatelessWidget {
                         Row(
                           children: [
                             HugeIcon(icon: 
-                              isAllDone ? HugeIcons.strokeRoundedCircle : HugeIcons.strokeRoundedCircle,
+                              isAllDone ? HugeIcons.strokeRoundedCheckmarkBadge01 : HugeIcons.strokeRoundedCheckmarkBadge01,
                               color: isAllDone ? AppTheme.successGreen : AppTheme.primaryCoffee,
                             ),
                             const SizedBox(width: 8),
@@ -488,7 +488,7 @@ class _HandoverNotesTabView extends StatelessWidget {
                         Row(
                           children: [
                             HugeIcon(icon: 
-                              isAcknowledged ? HugeIcons.strokeRoundedCircle : HugeIcons.strokeRoundedCircle,
+                              isAcknowledged ? HugeIcons.strokeRoundedSquare : HugeIcons.strokeRoundedSquare,
                               color: isAcknowledged ? AppTheme.mutedText : AppTheme.primaryCoffee,
                             ),
                             const SizedBox(width: 8),

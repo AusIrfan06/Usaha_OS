@@ -32,7 +32,7 @@ class KioskModeScreen extends StatelessWidget {
             ),
             child: const Row(
               children: [
-                HugeIcon(icon: HugeIcons.strokeRoundedCheckmarkCircle01, color: AppTheme.successGreen, size: 16),
+                HugeIcon(icon: HugeIcons.strokeRoundedCheckmarkBadge01, color: AppTheme.successGreen, size: 16),
                 SizedBox(width: 4),
                 Text('Kiosk Aktif', style: TextStyle(color: AppTheme.successGreen, fontWeight: FontWeight.bold, fontSize: 12)),
               ],

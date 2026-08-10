@@ -59,7 +59,7 @@ class _ReceiptScreenState extends ConsumerState<ReceiptScreen> {
         ),
         actions: [
           IconButton(
-            icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle),
+            icon: HugeIcon(icon: HugeIcons.strokeRoundedShare01),
             tooltip: 'Share',
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -71,7 +71,7 @@ class _ReceiptScreenState extends ConsumerState<ReceiptScreen> {
           Padding(
             padding: const EdgeInsets.only(right: 8),
             child: IconButton(
-              icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle),
+              icon: HugeIcon(icon: HugeIcons.strokeRoundedPrinter),
               tooltip: 'Print',
               onPressed: () {
                 ScaffoldMessenger.of(context).showSnackBar(

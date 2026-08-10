@@ -52,8 +52,8 @@ class _OutletsScreenState extends ConsumerState<OutletsScreen>
           unselectedLabelColor: AppTheme.mutedText,
           indicatorColor: AppTheme.primaryCoffee,
           tabs: const [
-            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle), text: 'Senarai Cawangan'),
-            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle), text: 'Pemindahan Stok (Transfer)'),
+            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedStore01), text: 'Senarai Cawangan'),
+            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedPackage), text: 'Pemindahan Stok (Transfer)'),
           ],
         ),
       ),
@@ -82,7 +82,7 @@ class _OutletsScreenState extends ConsumerState<OutletsScreen>
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: AppTheme.primaryCoffee,
         foregroundColor: Colors.white,
-        icon: HugeIcon(icon: _tabController.index == 0 ? HugeIcons.strokeRoundedAdd01 : HugeIcons.strokeRoundedCircle),
+        icon: HugeIcon(icon: _tabController.index == 0 ? HugeIcons.strokeRoundedAdd01 : HugeIcons.strokeRoundedPackage),
         label: Text(_tabController.index == 0 ? 'Tambah Cawangan' : 'Pindah Stok'),
         onPressed: () {
           if (_tabController.index == 0) {
@@ -220,7 +220,7 @@ class _OutletsScreenState extends ConsumerState<OutletsScreen>
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: HugeIcon(icon: 
-                      outlet.isPrimary ? HugeIcons.strokeRoundedBank : HugeIcons.strokeRoundedCircle,
+                      outlet.isPrimary ? HugeIcons.strokeRoundedBank : HugeIcons.strokeRoundedStore01,
                       color: outlet.isPrimary ? AppTheme.primaryCoffee : AppTheme.darkEspresso,
                     ),
                   ),

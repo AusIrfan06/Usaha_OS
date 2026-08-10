@@ -51,8 +51,8 @@ class _AdvancedAnalyticsScreenState extends ConsumerState<AdvancedAnalyticsScree
           indicatorColor: AppTheme.primaryCoffee,
           tabs: const [
             Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedPieChart01), text: 'COGS & Margin Item'),
-            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle), text: 'Peta Waktu Puncak (Heatmap)'),
-            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle), text: 'Prestasi Staf'),
+            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedSquare), text: 'Peta Waktu Puncak (Heatmap)'),
+            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedSquare), text: 'Prestasi Staf'),
             Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedBank), text: 'Penyata Untung Rugi (P&L)'),
           ],
         ),
@@ -94,7 +94,7 @@ class _AdvancedAnalyticsScreenState extends ConsumerState<AdvancedAnalyticsScree
               ),
               child: const Row(
                 children: [
-                  HugeIcon(icon: HugeIcons.strokeRoundedCircle, color: AppTheme.primaryCoffee),
+                  HugeIcon(icon: HugeIcons.strokeRoundedSquare, color: AppTheme.primaryCoffee),
                   SizedBox(width: 12),
                   Expanded(
                     child: Text(
@@ -471,7 +471,7 @@ class _AdvancedAnalyticsScreenState extends ConsumerState<AdvancedAnalyticsScree
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
-              icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle),
+              icon: HugeIcon(icon: HugeIcons.strokeRoundedSquare),
               label: const Text('Eksport Laporan P&L untuk Akauntan', style: TextStyle(fontWeight: FontWeight.bold)),
               onPressed: () {
                 ScaffoldMessenger.of(context).showSnackBar(

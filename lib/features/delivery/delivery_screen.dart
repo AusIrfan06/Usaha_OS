@@ -33,7 +33,7 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
         surfaceTintColor: Colors.transparent,
         actions: [
           IconButton(
-            icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle, color: Colors.orange, size: 28),
+            icon: HugeIcon(icon: HugeIcons.strokeRoundedTruckDelivery, color: Colors.orange, size: 28),
             tooltip: 'Simulasi Webhook Pesanan Masuk',
             onPressed: () => _showWebhookSimulatorDialog(context),
           ),
@@ -77,13 +77,13 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    _buildPlatformChip('all', 'Semua Saluran', HugeIcons.strokeRoundedCircle, Colors.grey.shade800),
+                    _buildPlatformChip('all', 'Semua Saluran', HugeIcons.strokeRoundedDashboardSquare01, Colors.grey.shade800),
                     const SizedBox(width: 8),
-                    _buildPlatformChip('grabfood', 'GrabFood (30%)', HugeIcons.strokeRoundedCircle, const Color(0xFF00B14F)),
+                    _buildPlatformChip('grabfood', 'GrabFood (30%)', HugeIcons.strokeRoundedStore01, const Color(0xFF00B14F)),
                     const SizedBox(width: 8),
-                    _buildPlatformChip('foodpanda', 'Foodpanda (28%)', HugeIcons.strokeRoundedCircle, const Color(0xFFD70F64)),
+                    _buildPlatformChip('foodpanda', 'Foodpanda (28%)', HugeIcons.strokeRoundedStore01, const Color(0xFFD70F64)),
                     const SizedBox(width: 8),
-                    _buildPlatformChip('shopeefood', 'ShopeeFood (25%)', HugeIcons.strokeRoundedCircle, const Color(0xFFEE4D2D)),
+                    _buildPlatformChip('shopeefood', 'ShopeeFood (25%)', HugeIcons.strokeRoundedStore01, const Color(0xFFEE4D2D)),
                   ],
                 ),
               ),
@@ -95,7 +95,7 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
                   alignment: Alignment.center,
                   child: Column(
                     children: [
-                      HugeIcon(icon: HugeIcons.strokeRoundedCircle, size: 64, color: AppTheme.mutedText.withOpacity(0.5)),
+                      HugeIcon(icon: HugeIcons.strokeRoundedShoppingCart01, size: 64, color: AppTheme.mutedText.withOpacity(0.5)),
                       const SizedBox(height: 12),
                       const Text(
                         'Tiada pesanan penghantaran aktif',
@@ -103,7 +103,7 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
                       ),
                       const SizedBox(height: 8),
                       ElevatedButton.icon(
-                        icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle, size: 18),
+                        icon: HugeIcon(icon: HugeIcons.strokeRoundedComputerVideoCall, size: 18),
                         label: const Text('Uji Simulasi Pesanan Masuk'),
                         style: ElevatedButton.styleFrom(backgroundColor: AppTheme.primaryCoffee, foregroundColor: Colors.white),
                         onPressed: () => _showWebhookSimulatorDialog(context),
@@ -123,7 +123,7 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: AppTheme.primaryCoffee,
         foregroundColor: Colors.white,
-        icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle),
+        icon: HugeIcon(icon: HugeIcons.strokeRoundedCloudServer),
         label: const Text('Webhook Simulator'),
         onPressed: () => _showWebhookSimulatorDialog(context),
       ),
@@ -223,16 +223,16 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
   Widget _buildDeliveryOrderCard(BuildContext context, DeliveryOrder del, Order? order) {
     Color brandColor = const Color(0xFF00B14F); // Grab
     String brandName = 'GrabFood';
-    dynamic brandIcon = HugeIcons.strokeRoundedCircle;
+    dynamic brandIcon = HugeIcons.strokeRoundedStore01;
 
     if (del.channel.toLowerCase() == 'foodpanda') {
       brandColor = const Color(0xFFD70F64);
       brandName = 'Foodpanda';
-      brandIcon = HugeIcons.strokeRoundedCircle;
+      brandIcon = HugeIcons.strokeRoundedStore01;
     } else if (del.channel.toLowerCase() == 'shopeefood') {
       brandColor = const Color(0xFFEE4D2D);
       brandName = 'ShopeeFood';
-      brandIcon = HugeIcons.strokeRoundedCircle;
+      brandIcon = HugeIcons.strokeRoundedStore01;
     }
 
     Color pickupColor = Colors.orange;
@@ -407,7 +407,7 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
       builder: (ctx) => AlertDialog(
         title: const Row(
           children: [
-            HugeIcon(icon: HugeIcons.strokeRoundedCircle, color: Colors.orange),
+            HugeIcon(icon: HugeIcons.strokeRoundedCode, color: Colors.orange),
             SizedBox(width: 8),
             Text('Simulasi Webhook Pesanan Delivery'),
           ],
@@ -426,7 +426,7 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
                 borderRadius: BorderRadius.circular(10),
                 side: const BorderSide(color: Color(0xFF00B14F)),
               ),
-              leading: HugeIcon(icon: HugeIcons.strokeRoundedCircle, color: Color(0xFF00B14F)),
+              leading: HugeIcon(icon: HugeIcons.strokeRoundedStore01, color: Color(0xFF00B14F)),
               title: const Text('GrabFood • 2x Spanish Latte & 1x Croissant', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
               subtitle: const Text('Komisen 30% • Nilai: RM 36.00', style: TextStyle(fontSize: 11)),
               onTap: () async {
@@ -456,7 +456,7 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
                 borderRadius: BorderRadius.circular(10),
                 side: const BorderSide(color: Color(0xFFD70F64)),
               ),
-              leading: HugeIcon(icon: HugeIcons.strokeRoundedCircle, color: Color(0xFFD70F64)),
+              leading: HugeIcon(icon: HugeIcons.strokeRoundedStore01, color: Color(0xFFD70F64)),
               title: const Text('Foodpanda • 1x Iced Americano & 1x Pain au Choc', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
               subtitle: const Text('Komisen 28% • Nilai: RM 22.00', style: TextStyle(fontSize: 11)),
               onTap: () async {
@@ -486,7 +486,7 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
                 borderRadius: BorderRadius.circular(10),
                 side: const BorderSide(color: Color(0xFFEE4D2D)),
               ),
-              leading: HugeIcon(icon: HugeIcons.strokeRoundedCircle, color: Color(0xFFEE4D2D)),
+              leading: HugeIcon(icon: HugeIcons.strokeRoundedStore01, color: Color(0xFFEE4D2D)),
               title: const Text('ShopeeFood • 3x Teh Tarik Kaw & 2x Nasi Lemak', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
               subtitle: const Text('Komisen 25% • Nilai: RM 45.00', style: TextStyle(fontSize: 11)),
               onTap: () async {

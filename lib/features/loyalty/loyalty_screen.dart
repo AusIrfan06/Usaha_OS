@@ -38,7 +38,7 @@ class _LoyaltyScreenState extends ConsumerState<LoyaltyScreen> {
                 color: AppTheme.primaryCoffee.withOpacity(0.15),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: HugeIcon(icon: HugeIcons.strokeRoundedCircle,
+              child: HugeIcon(icon: HugeIcons.strokeRoundedGift,
                   color: AppTheme.primaryCoffee, size: 22),
             ),
             const SizedBox(width: 12),
@@ -85,7 +85,7 @@ class _LoyaltyScreenState extends ConsumerState<LoyaltyScreen> {
                       prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedSearch01),
                       suffixIcon: _searchQuery.isNotEmpty
                           ? IconButton(
-                              icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle),
+                              icon: HugeIcon(icon: HugeIcons.strokeRoundedSearch01),
                               onPressed: () {
                                 _searchCtrl.clear();
                                 setState(() => _searchQuery = '');
@@ -385,7 +385,7 @@ class _CustomerLoyaltyCard extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      HugeIcon(icon: HugeIcons.strokeRoundedCircle, size: 14, color: Colors.white),
+                      HugeIcon(icon: HugeIcons.strokeRoundedStar, size: 14, color: Colors.white),
                       const SizedBox(width: 4),
                       Text(
                         customer.tier.toUpperCase(),
@@ -457,7 +457,7 @@ class _CustomerLoyaltyCard extends StatelessWidget {
                   children: [
                     const Row(
                       children: [
-                        HugeIcon(icon: HugeIcons.strokeRoundedCircle, size: 14, color: AppTheme.primaryCoffee),
+                        HugeIcon(icon: HugeIcons.strokeRoundedUser, size: 14, color: AppTheme.primaryCoffee),
                         SizedBox(width: 4),
                         Text('Kad Cop Kopi Percuma', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700)),
                       ],
@@ -493,7 +493,7 @@ class _CustomerLoyaltyCard extends StatelessWidget {
                         child: isStamped
                             ? HugeIcon(icon: HugeIcons.strokeRoundedCheckmarkBadge01, size: 14, color: Colors.white)
                             : isLast
-                                ? HugeIcon(icon: HugeIcons.strokeRoundedCircle, size: 12, color: Color(0xFFE65100))
+                                ? HugeIcon(icon: HugeIcons.strokeRoundedCoffee01, size: 12, color: Color(0xFFE65100))
                                 : Text(
                                     '${idx + 1}',
                                     style: const TextStyle(fontSize: 9, color: AppTheme.mutedText, fontWeight: FontWeight.w700),
@@ -513,7 +513,7 @@ class _CustomerLoyaltyCard extends StatelessWidget {
               children: [
                 if (customer.stampsCount >= 10)
                   FilledButton.icon(
-                    icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle, size: 16),
+                    icon: HugeIcon(icon: HugeIcons.strokeRoundedTicket01, size: 16),
                     label: const Text('Tebus Kopi Percuma!'),
                     style: FilledButton.styleFrom(
                       backgroundColor: AppTheme.successGreen,

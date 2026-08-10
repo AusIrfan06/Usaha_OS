@@ -53,7 +53,7 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
           labelColor: AppColors.primary,
           unselectedLabelColor: AppColors.textMuted,
           tabs: const [
-            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle), text: 'Log Perbelanjaan'),
+            Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedSquare), text: 'Log Perbelanjaan'),
             Tab(icon: HugeIcon(icon: HugeIcons.strokeRoundedRegister), text: 'Imbangan Laci Tunai (Cash Drawer)'),
           ],
         ),
@@ -106,7 +106,7 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 ),
-                icon: HugeIcon(icon: HugeIcons.strokeRoundedAddCircle, size: 18),
+                icon: HugeIcon(icon: HugeIcons.strokeRoundedAdd01, size: 18),
                 label: const Text('Rekod Perbelanjaan'),
                 onPressed: () => _showAddExpenseDialog(context),
               ),
@@ -415,7 +415,7 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
                   backgroundColor: AppColors.primary,
                   foregroundColor: Colors.white,
                 ),
-                icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle),
+                icon: HugeIcon(icon: HugeIcons.strokeRoundedSquare),
                 label: const Text('Tindakan Tunai (In / Out)'),
                 onPressed: () => _showCashActionDialog(context),
               ),
@@ -459,7 +459,7 @@ class _ExpensesScreenState extends ConsumerState<ExpensesScreen>
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     child: ListTile(
                       leading: HugeIcon(icon: 
-                        isPositive ? HugeIcons.strokeRoundedCircle : HugeIcons.strokeRoundedCircle,
+                        isPositive ? HugeIcons.strokeRoundedSquare : HugeIcons.strokeRoundedSquare,
                         color: isPositive ? Colors.green : Colors.orange,
                       ),
                       title: Text(

@@ -240,7 +240,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
             text: 'Cash',
           ),
           Tab(
-            icon: HugeIcon(icon: HugeIcons.strokeRoundedCircle, size: 18),
+            icon: HugeIcon(icon: HugeIcons.strokeRoundedQrCode, size: 18),
             text: 'DuitNow QR',
           ),
           Tab(
@@ -448,7 +448,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
         ),
         child: Center(
           child: isBackspace
-              ? HugeIcon(icon: HugeIcons.strokeRoundedCircle,
+              ? HugeIcon(icon: HugeIcons.strokeRoundedDelete02,
                   color: AppTheme.dangerRed, size: 20)
               : Text(key,
                   style: const TextStyle(
@@ -495,7 +495,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
                     color: AppTheme.duitNowBlue,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: HugeIcon(icon: HugeIcons.strokeRoundedCircle,
+                  child: HugeIcon(icon: HugeIcons.strokeRoundedCheckmarkBadge01,
                       color: Colors.white, size: 28),
                 ),
                 const SizedBox(height: 12),
